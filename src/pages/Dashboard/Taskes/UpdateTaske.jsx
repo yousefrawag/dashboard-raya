@@ -7,12 +7,18 @@ import toast from 'react-hot-toast';
 import useQuerygetiteams from '../../../services/Querygetiteams';
 import useQuerygetSpacficIteam from '../../../services/QuerygetSpacficIteam'
 import useQueryupdate from '../../../services/useQueryupdate';
+import { useDashboardContext } from '../../../context/DashboardProviedr';
+import PopupCheckdelete from '../../../components/common/popupmdules/PopupCheckdelete';
+import useGetUserAuthentications from '../../../middleware/GetuserAuthencations';
+import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 const UpdateTaske = () => {
     const {id} = useParams()
     const {data:taskinfo , isLoading:getinfoloading} = useQuerygetSpacficIteam("missions" , "missions" , id)
     const {updateiteam , isLoading} = useQueryupdate("missions" , "missions")
-    const {data:Sections} = useQuerygetiteams("Section" , "Section")
+
+       const {  setModuleDelete } =  useDashboardContext()
+     const {CanAdd , CanDelte , CanEdit , CanView , isAdmin} = useGetUserAuthentications("Missions")
 
     const CurrenTask = taskinfo?.data
     const {data} = useQuerygetiteams("users" , "users")
@@ -70,7 +76,7 @@ const handleSubmit = (e) => {
         const data = Object.fromEntries(formData);
         data.assignedTo = selectedUsers
         data.missionType = missionType
-       
+         data.requirements = requirements
         if (missionType === "خدمة عامة") {
             if(!project) {
                 return toast.error("يجب إضافة مشروع عام")
@@ -118,7 +124,23 @@ console.log(data)
             toast.error(error.response?.data?.mesg || "An error occurred. Please try again.");
         }
     };
-
+const handelnewTask = () => {
+    const founItem = requirements.find((item) => item === newRequirement)
+    if(founItem){
+        return toast.error("لقد قمت بإدخال هذا الطلب من قبل")
+    }
+    const requirement = {
+        type: newRequirement.trim(), // Set the "type" field
+        completed: false, // Default value for "completed"
+        userEdit: null, // Default value for "userEdit"
+      }
+    setRequirements((prev) => ([...prev , requirement]))
+    setNewRequirement("")
+}
+const handelDeleteequire = (req) => {
+    const newRequermentsupdate = requirements.filter((item) => item !== req)
+    setRequirements([...newRequermentsupdate])
+}
     if (isLoading || getinfoloading) {
         return <Loader />;
     }
@@ -131,6 +153,25 @@ console.log(data)
                 </div>
                 <p className="font-semibold text-lg">ادخل بيانات المهمة</p>
             </div>
+               <span>
+                    إجراء
+                   </span>
+                   <div  className='flex gap-5 m-5'>
+                          
+                    {
+                      isAdmin || CanEdit ?    <Link to={`/edit-Taskes/${id}`} className='w-20 p-2 bg-main text-white rounded-md text-center'>تعديل</Link>
+                      : null
+                    }
+                     <Link to="/Taskes"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                                     عوده
+                                     </Link>
+                {
+                  isAdmin || CanDelte ? 
+                  <button onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+                  : null
+                }
+                
+                   </div>
 
             <div className='main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto'>
              
@@ -148,11 +189,11 @@ console.log(data)
                     ))}
                 </div>
 
-                {missionType === "خدمة عامة" ? (
+                {missionType === "مشروع عام" ? (
                     <SelectoptionHook
                         fectParentKEY="projects"
                         keyName="projects"
-                        title="خدمة عامة"
+                        title="مشروع عام"
                         value={project}
                         setvalue={setProject}
                     />
@@ -160,7 +201,7 @@ console.log(data)
                     <SelectoptionHook
                         fectParentKEY="Privetprojects"
                         keyName="Privetprojects"
-                        title="خدمة مخصصة"
+                        title="مشروع خاص"
                         value={privetProject}
                         setvalue={setPrivetProject}
                     />
@@ -231,7 +272,23 @@ console.log(data)
                         className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                     />
                 </div>
-
+       <span  className='text-lg mb-10 text-black dark:text-white'>متطلبات المهمة</span>
+                <div className='flex gap-3 flex-col lg:flex-row'>
+                    <input type="text"  
+                    value={newRequirement}
+                    onChange={(e) =>setNewRequirement(e.target.value)}
+                    className=" w-full lg:w-[80%] mb-2 focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+ />
+                <button onClick={handelnewTask} className='w-full lg:w-[20%] py-2 px-6 rounded-md bg-main text-white hover:bg-transparent hover:border hover:border-blue-600 hover:text-blue-600' type='button'>إضافة</button>
+                </div>
+                <ul className="mt-7 grid grid-cols-2 lg:grid-cols-3 gap-4">
+                        {requirements.map((req, index) => (
+                            <li key={index} className=" flex justify-between text-black dark:text-white shadow-md border-[1px] border-gary-500 p-4 rounded-[10px]">
+                                - {req.type}
+                                <button onClick={() => handelDeleteequire(req)} type='button' className='font-bold text-red-500 '>x</button>
+                            </li>
+                        ))}
+                    </ul>
                 <div className="mb-6 flex flex-col gap-2">
                     <label htmlFor="description" className="w-full text-lg font-medium text-black dark:text-white">
                         ملاحظات 
@@ -250,7 +307,7 @@ console.log(data)
                         type="submit"
                         className="py-2 px-6 rounded-md bg-main text-white hover:bg-transparent hover:border hover:border-blue-600 hover:text-blue-600"
                     >
-                        إضافة
+                        حفظ
                     </button>
                 </div>
                 <div className="return_btn">
@@ -259,6 +316,27 @@ console.log(data)
                     </NavLink>
                 </div>
             </div>
+            <PopupCheckdelete navigatepage='/Taskes' deleteKey="missions" titale="المهمة" id={id} />
+
+               <span>
+                    إجراء
+                   </span>
+                   <div  className='flex gap-5 m-5'>
+                          
+                    {
+                      isAdmin || CanEdit ?    <Link to={`/edit-Taskes/${id}`} className='w-20 p-2 bg-main text-white rounded-md text-center'>تعديل</Link>
+                      : null
+                    }
+                     <Link to="/Taskes"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                                     عوده
+                                     </Link>
+                {
+                  isAdmin || CanDelte ? 
+                  <button onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+                  : null
+                }
+                
+                   </div>
         </form>
     );
 };

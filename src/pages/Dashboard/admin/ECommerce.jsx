@@ -9,6 +9,7 @@ import useQuerygetiteams from '../../../services/Querygetiteams';
 import Loader from '../../../components/common/Loader';
 import Cutomestatict from '../../../hooks/Cutomestatict';
 import TopUsersChart from './TopUsersChart';
+import ExpensessCard from '../../../components/common/ExpensessCard';
 const ECommerce = () => {
   const {isLoading , data} = useQuerygetiteams("Systemstatistics" , "Systemstatistics")
   const {data:customers} = useQuerygetiteams("customers" , "customers")
@@ -61,42 +62,17 @@ const ECommerce = () => {
                 <CardDataStats title="إجمالى الإدمن" to={`/All-users/admin`} total={generalStats?.totalAdmins}  >
                 <FaUsers className="text-green-500" />
                 </CardDataStats>
-                <CardDataStats title="إجمالى الخدمات العامة"  to={`/privte-projects`}   total={generalStats?.totlaProjects}  >
+                <CardDataStats title="إجمالى المشاريع العامة"  to={`/privte-projects`}   total={generalStats?.totlaProjects}  >
                 <FaUsers className="text-green-500" />
                 </CardDataStats>
-                <CardDataStats title="إجمالى الخدمات الخاصة" to={`/projects-main`}  total={generalStats?.totalPrivetproject}  >
+                <CardDataStats title="إجمالى المشاريع الخاصة" to={`/projects-main`}  total={generalStats?.totalPrivetproject}  >
                 <FaUsers className="text-green-500" />
                 </CardDataStats>
-                <CardDataStats title="إجمالى  رسائل الموقع" to={`/website-Messages`}  total="3" >
-                <FaUsers className="text-green-500" />
-                </CardDataStats>
-                <CardDataStats title="إجمالى خدمات الشركه" to={`/website-Services`}  total={generalStats?.totalServices}  >
-                <FaUsers className="text-green-500" />
-                </CardDataStats>
-                <CardDataStats title="إجمالى التأشيرات" to={`/website-Visa`}  total={generalStats?.totalVisa}   >
-                <FaUsers className="text-green-500" />
-                </CardDataStats>
-                <CardDataStats title="إجمالى الرصيد"  total={formatNumber(financialStats?.totalSum) } >
-                 <GrTask />
 
-                 </CardDataStats>
-                 <CardDataStats title="إجمالى الرصيد المتاح"  total={formatNumber (financialStats?.totalArrivedCash)} >
-                 <GrTask />
 
-                 </CardDataStats>
-                 <CardDataStats title="إجمالى الرصيد المتبقى"  total={formatNumber(financialStats?.totalInProgressCash) } >
-                 <GrTask />
-
-                 </CardDataStats>
-                {
-TotalClientSections?.map((item) => {
-  return  <CardDataStats title={`إجمالى عملاء ${item?.sectionName}`} to={`/Section-Client/${item?.sectionId}`}  total={item?.customerCount}   >
-  <FaUsers className="text-green-500" />
-  </CardDataStats>
-})
-                }
         </div>
-
+          
+    
       <div className="mt-4 w-full">
       <span  className='
       

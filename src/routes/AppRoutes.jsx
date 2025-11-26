@@ -4,17 +4,16 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import SignIn from '../pages/Authentication/SignIn.jsx';
 import SignUp from '../pages/Authentication/SignUp.jsx';
 import Profile from '../pages/Profile.jsx';
-import Settings from '../pages/Settings.jsx';
+
 import DefaultLayout from '../layout/DefaultLayout.jsx';
 import DashboardProvider from '../context/DashboardProviedr.jsx';
 import { AdminRoutes } from './AdminRoutes.jsx';
 import { TaskesRoutes } from './TaskesRoutes.jsx';
 import { ProjectsRoutes } from './ProjectsRoutes.jsx';
 import { CustomerRoutes } from './CustomerRoutes.jsx';
-import { WebsiteRoutes } from './WebsiteRoutes.jsx';
 import { PermissionsRoutes } from './PermissionsRoutes.jsx';
 import { UserRoutes } from './UserRoutes.jsx';
-import { SectionRoutes } from './SectionRoutes.jsx';
+
 import Calnder from '../pages/Dashboard/Calnder.jsx';
 import ForgetPaassword from '../pages/Authentication/ForgetPaassword.jsx';
 import SetNewPassword from '../pages/Authentication/SetNewPassword.jsx';
@@ -35,10 +34,10 @@ const AppRoutes = () => {
        ...TaskesRoutes,
        ...ProjectsRoutes,
        ...CustomerRoutes,
-       ...WebsiteRoutes,
+   
        ...PermissionsRoutes,
        ...UserRoutes,
-       ...SectionRoutes,
+
        {
         path: "/calendar",
         element: <Calnder />,

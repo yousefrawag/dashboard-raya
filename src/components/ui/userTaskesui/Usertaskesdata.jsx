@@ -16,10 +16,7 @@ const Usertaskesdata = ({data}) => {
       });
     
       const filters = [
-        {
-          value: "title",
-          name: "عنوان المهمة "
-        },
+  
         {
           value: "missionType",
           name: " نوع المشروع"
@@ -42,26 +39,14 @@ const Usertaskesdata = ({data}) => {
         },
       ];
    const columns = [
-        {
-          name: "عنوان المهمة",
-          selector: (row) => row.title,
-          cell: (row) => <div   
-          style={{
-           
-           whiteSpace: "wrap",
-        
-    
-         }}
-        >{ row.title}</div>,
-    
-        },
+   
         {
           name: "نوع المشروع",
           selector: (row) => row?.missionType ,
         },
         {
           name: "المشروع",
-          selector: (row) =>  row?.missionType === "مشروع عام" ? row?.project?.name : row?.Privetproject?.name,
+          selector: (row) =>  row?.project?.projectName ? row?.project?.projectName : row?.Privetproject?.projectName || "غير متعارف عليه",
           cell: (row) => <div   
           style={{
            
@@ -69,7 +54,7 @@ const Usertaskesdata = ({data}) => {
         
     
          }}
-         >{ row?.missionType === "مشروع عام" ? row?.project?.name : row?.Privetproject?.name}</div>,
+         >{ row?.project?.projectName ? row?.project?.projectName : row?.Privetproject?.projectName || "غير معروف"}</div>,
         },
 
         {

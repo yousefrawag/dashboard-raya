@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDashboardContext } from '../../../context/DashboardProviedr';
 import useQueryupdate from '../../../services/useQueryupdate';
 import toast from 'react-hot-toast';
-const EditmainCategory = () => {
+const EditmainCategory = ({fetshkey , titale}) => {
   const {
     editmainCategory,
     setEditmaincategory,
@@ -11,8 +11,8 @@ const EditmainCategory = () => {
   } = useDashboardContext();
 
   const { isError, isLoading, updateiteam } = useQueryupdate(
-    'mainCategory',
-    'mainCategory',
+    fetshkey,
+    fetshkey,
   );
   // hande edit main category
   const handelsubmit = (e) => {
@@ -28,7 +28,7 @@ const EditmainCategory = () => {
           onSuccess: () => {
             setEditmaincategory(false);
             setmainCategory({});
-            toast.success('تم تعديل المستوى');
+            toast.success('تم تعديل  بنجاح');
           },
         },
       );
@@ -60,7 +60,7 @@ const EditmainCategory = () => {
             htmlFor="name"
             className="w-full  text-lg font-medium text-gray-700"
           >
-            تعديل المستوى
+            تعديل {titale}
           </label>
           <input
             type="text"
@@ -70,7 +70,7 @@ const EditmainCategory = () => {
             onChange={(e) =>
               setmainCategory({ ...mainCategory, name: e.target.value })
             }
-            placeholder="قم بكتابه المستوى"
+            placeholder={`قم بكتابة ${titale}`}
             className="mt-3 text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           />
         </div>

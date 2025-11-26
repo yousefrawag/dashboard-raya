@@ -11,10 +11,17 @@ import Loader from '../../../../components/common/Loader/index';
 import toast from 'react-hot-toast';
 import useQuerygetSpacficIteam from '../../../../services/QuerygetSpacficIteam';
 import useQueryupdate from '../../../../services/useQueryupdate';
+import useGetUserAuthentications from '../../../../middleware/GetuserAuthencations';
+import PopupCheckdelete from '../../../../components/common/popupmdules/PopupCheckdelete';
+import { Link } from 'react-router-dom';
+import { useDashboardContext } from '../../../../context/DashboardProviedr';
+
 const UpdatePrivetproject = () => {
   const {id} = useParams()
   const {data , isLoading:getLoading} = useQuerygetSpacficIteam("Privetprojects" , "Privetprojects" , id)
   const [images_video , setimages_video] = useState([])
+  const {CanAdd , CanDelte , CanEdit , CanView , isAdmin} = useGetUserAuthentications("PrivetProjects")
+  const {  setModuleDelete } =  useDashboardContext()
   const [docs , setDocs] = useState([])
   const [viewmenu , setViewmenu] = useState(false)
   const CurrentItem = data?.project 
@@ -42,15 +49,9 @@ const UpdatePrivetproject = () => {
         images_video.forEach((item) => {
           formData.append("files" , item)
         })
-    if(!data.name){
-      toast.error("يجب إضافه اسم الخدمة")
-        return ;
-    }
+  
 
-  if(!data.projectRequire){
-    toast.error("يجب إضافه  متطلبات  الخدمة")
-    return ;
-  }
+
 
     try {
     
@@ -87,34 +88,54 @@ const UpdatePrivetproject = () => {
       <div className="icon p-2 bg-main rounded-full">
         <FaRegPenToSquare />
       </div>
-      <p className="font-semibold text-lg">ادخل بيانات الخدمة</p>
+
+      <p className="font-semibold text-lg">ادخل بيانات المهمة</p>
     </div>
-   
+           <span>
+                   إجراء
+                  </span>
+                   
+                  <div  className='flex gap-5 m-5'>
+             
+                   {
+                     isAdmin || CanEdit ?    <Link to={`/edit-privte-projects/${id}`} className='w-20 p-2 bg-main text-white rounded-md text-center'>تعديل</Link>
+                     : null
+                   }
+                        <Link to="/privte-projects"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                                   عوده
+                                   </Link>
+               {
+                 isAdmin || CanDelte ? 
+                 <button type='button' onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+                 : null
+               }
+               
+                  </div>
    <div className='main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	'>
             <div className="mb-6 flex flex-col  gap-2">
                         <label
-                            htmlFor="name"
+                            htmlFor="projectName"
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                            إسم الخدمة
+                            عنوان المهمة 
                         </label>
                         <input
                             type="text"
-                            id="name"
-                            name="name"
-                            defaultValue={CurrentItem?.name}
+                            id="projectName"
+                            name="projectName"
+                            defaultValue={CurrentItem?.projectName}
                             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                         />
                     
             </div>
             <div className="mb-6 flex flex-col  gap-2">
                         <label
-                            htmlFor="projectRequire"
+                            htmlFor="projectDetails"
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                           متطلبات الخدمة
+                           متطلبات المهمة
                         </label>
-                        <textarea  defaultValue={CurrentItem?.projectRequire} name='projectRequire'  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
+                        <textarea  defaultValue={CurrentItem?.projectDetails} name='projectDetails'  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
 
                         </textarea>
                     
@@ -126,7 +147,7 @@ const UpdatePrivetproject = () => {
 
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                           ملاحظات الخدمة
+                           ملاحظات المهمة
                         </label>
                         <textarea   defaultValue={CurrentItem?.notes} name='notes'  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
 
@@ -171,8 +192,13 @@ const UpdatePrivetproject = () => {
             name="files"
             id="files"
             onChange={handelDoc}
-            accept="application/pdf"
-          />
+            accept="
+    application/pdf,
+    application/msword,
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+    application/vnd.ms-excel,
+    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+  "          />
           <label
             htmlFor="image-video"
             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
@@ -210,7 +236,7 @@ const UpdatePrivetproject = () => {
     <div className="add_return flex justify-between items-center mt-4 shadow-lg p-4 bg-white dark:bg-form-input">
     <div className="add_btn">
         <button type="submit"  className={` py-2 px-6 rounded-md bg-main text-white hover:bg-transparent hover:border hover:border-blue-600 hover:text-blue-600`}>
-         إضافة
+         حفظ
         </button>
       </div>
       <div className="return_btn">
@@ -218,6 +244,27 @@ const UpdatePrivetproject = () => {
       </div>
     
     </div>
+    <PopupCheckdelete navigatepage="/privte-projects" deleteKey="Privetprojects" titale="المشروع" id={id} />
+        <span>
+                إجراء
+               </span>
+                
+               <div  className='flex gap-5 m-5'>
+          
+                {
+                  isAdmin || CanEdit ?    <Link to={`/edit-privte-projects/${id}`} className='w-20 p-2 bg-main text-white rounded-md text-center'>تعديل</Link>
+                  : null
+                }
+                     <Link to="/privte-projects"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                                عوده
+                                </Link>
+            {
+              isAdmin || CanDelte ? 
+              <button type='button' onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+              : null
+            }
+            
+               </div>
   </form>
   )
 }

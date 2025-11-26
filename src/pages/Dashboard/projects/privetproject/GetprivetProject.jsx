@@ -26,18 +26,11 @@ const GetprivetProject = () => {
       });
     
       const filters = [
-        {
-          value: "name",
-          name: " إسم الخدمة "
-        },
-        {
-          value: "projectRequire",
-          name: " متطلبات الخدمة"
-        },
-        {
-          value: "addedBy.name",
-          name: " مضاف من قبل"
-        },
+        {value:"projectName", name:"إسم المهمة"}
+        ,{value:"projectNotes", name:"ملاحظات"}  ,
+        {value:"projectDetails", name:"تفاصيل المهمة"} , 
+        {value:"addedBy.fullName", name:"مضاف من قبل"} ,
+   
      
       ];
 
@@ -58,22 +51,23 @@ const GetprivetProject = () => {
 
 const columns = [
   {
-    name: "اسم الخدمة",
-    selector: (row) => row.name,
-    cell: (row) => <div   
+    name: "اسم المهمة",
+    selector: (row) => row?.projectName,
+    cell: (row) => <Link
+    to={`/privte-projects/${row?._id}`}  
     style={{
       
       whiteSpace: "wrap",
   
 
     }}
-    title={row.title }>{ row.name}</div>,
+    >{ row?.projectName}</Link>,
 
   },
 
   {
-    name: "متطلبات الخدمة",
-    selector: (row) =>  row.projectRequire,
+    name: "متطلبات المهمة",
+    selector: (row) =>  row.projectDetails,
     cell: (row) => <div   
     style={{
       
@@ -81,12 +75,12 @@ const columns = [
   
 
     }}
-  >{row?.projectRequire }</div>,
+  >{row?.projectDetails?.slice(0 ,50) + "..." }</div>,
   },
 
   {
     name: "مضافه من قبل",
-    selector: (row) => row?.addedBy?.name,
+    selector: (row) => row?.addedBy?.fullName,
   },
   {
     name:"تاريخ الإنشاء",
@@ -94,34 +88,7 @@ const columns = [
     cell: (row) => <span style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace:"wrap"}}>{format(new Date(row.createdAt), "dd MMMM, yyyy")}</span>
   },
 
-  {
-    name: "اجراء",
-    selector: (row) => row.procedure,
-    cell: (row) => (
-      
-      
-              <div className="flex items-center justify-center space-x-3.5">
-                    <Link to={`/privte-projects/${row._id}`} className="hover:text-primary">
-                    <GrFormView size={20} />
-                    </Link>
-                    {
-                      isAdmin || CanAdd ? 
-                      <Link to={`/edit-privte-projects/${row._id}`}  className="hover:text-primary">
-                      <MdOutlineEditNote size={20}/>
-                    </Link>
-                      : null
-                    }
-                  {
-                  isAdmin || CanDelte ? 
-                  <button className="hover:text-red-500" onClick={() => deleteIteam(row._id)}>
-                  <AiTwotoneDelete size={20}/>
-                </button>
-                    : null
-                  }
-                
-                  </div>
-    ),
-  },
+
 ];       
         
  if(isLoading){
@@ -129,7 +96,7 @@ const columns = [
  }    
   return (
     <div>
-        <HeadPagestyle isAdmin={isAdmin} CanAdd={CanAdd}  pageName="خدمات مخصصة" to="/Add-privte-projects" title="إضافة خدمة"/>
+        <HeadPagestyle isAdmin={isAdmin} CanAdd={CanAdd}  pageName="مهام مخصصة" to="/Add-privte-projects" title="إضافة مهمة خاصة"/>
        <FiltertionHook filteredData={filteredData} columns={columns} filters={filters} params={params} setParams={setParams}/>
         <CustomeTabel  data={filteredData} columns={columns}/>
     </div>

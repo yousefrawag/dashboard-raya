@@ -30,10 +30,10 @@ const GetTaskes = () => {
      
         {
           value: "missionType",
-          name: " نوع المشروع"
+          name: " نوع المهمة"
         },
         {
-          value: "assignedBy.name",
+          value: "assignedBy.fullName",
           name: " مضاف من قبل"
         },
         {
@@ -41,12 +41,12 @@ const GetTaskes = () => {
           name: " حالة المهمة "
         },
         {
-          value: "project.name",
+          value: "project.projectName",
           name: "مشروع عام"
         },
         
         {
-          value: "Privetproject.name",
+          value: "Privetproject.projectName",
           name: "مشروع خاص"
         },
       
@@ -70,12 +70,16 @@ const GetTaskes = () => {
 
     const columns = [
       {
-        name: "نوع الخدمة",
-        selector: (row) => row?.missionType ,
+        name: "نوع المهمة",
+        selector: (row) => <Link to={`/Taskes/${row?._id}`}>
+        {
+           row?.missionType 
+        }
+        </Link>,
       },
       {
-        name: "الخدمة",
-        selector: (row) =>  row?.missionType === "خدمة عامة" ? row?.project?.name : row?.Privetproject?.name,
+        name: "المشروع",
+        selector: (row) =>  row?.project?.projectName ? row?.project?.projectName : row?.Privetproject?.projectName || "غير متعارف عليه",
         cell: (row) => <div   
         style={{
          
@@ -83,27 +87,15 @@ const GetTaskes = () => {
       
   
        }}
-       >{ row?.missionType === "خدمة عامة" ? row?.project?.name : row?.Privetproject?.name}</div>,
+       >{ row?.project?.projectName ? row?.project?.projectName : row?.Privetproject?.projectName || "غير معروف"}</div>,
       },
 
-        {
-          name: "القسم",
-          selector: (row) => row.project?.section?.name ,
-          cell: (row) => <div   
-          style={{
-           
-           whiteSpace: "wrap",
-        
-    
-         }}
-        >{  row.project?.section?.name || "خدمه مخصصة"}</div>,
-    
-        },
+   
     
    
         {
           name: "مضافه من قبل",
-          selector: (row) => row?.assignedBy?.name,
+          selector: (row) => row?.assignedBy?.fullName,
         },
         {
           name:"تاريخ الإنشاء",
@@ -111,34 +103,7 @@ const GetTaskes = () => {
           cell: (row) => <span style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace:"wrap"}}>{format(new Date(row.createdAt), "dd MMMM, yyyy")}</span>
         },
       
-        {
-          name: "اجراء",
-          selector: (row) => row.procedure,
-          cell: (row) => (
-           
-            
-            <div className="flex items-center justify-center space-x-3.5">
-            <Link to={`/Taskes/${row._id}`} className="hover:text-primary">
-            <GrFormView size={20} />
-            </Link>
-            {
-              isAdmin || CanAdd ? 
-              <Link to={`/edit-Taskes/${row._id}`}  className="hover:text-primary">
-              <MdOutlineEditNote size={20}/>
-            </Link>
-              : null
-            }
-           {
-            isAdmin || CanDelte ? 
-            <button className="hover:text-red-500" onClick={() => deleteIteam(row._id)}>
-            <AiTwotoneDelete size={20}/>
-          </button>
-             : null
-           }
-         
-          </div>
-          ),
-        },
+   
       ];
  if(isLoading){
   return <Loader />

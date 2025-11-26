@@ -23,7 +23,7 @@ const Getpermissions = () => {
      const columns = [
       {
           name:"إسم الصلاحية",
-          selector: (row) =><span className='text-wrap'>{row.name}</span> ,
+          selector: (row) =><Link to={`/Edit-permission/${row._id}`}   className='text-wrap'>{row.name}</Link> ,
 
       },
       {
@@ -50,29 +50,7 @@ const Getpermissions = () => {
      
      
        
-           {
-                     name:"إجراء",
-                     cell:(row) => (
-                         <div className="flex items-center justify-center space-x-3.5">
-                     {
-                      isAdmin || CanEdit ? 
-                      <Link to={`/Edit-permission/${row._id}`}  className="hover:text-primary">
-                      <MdOutlineEditNote size={20}/>
-                    </Link>
-                      : null
-                     }
-                      {
-                        isAdmin || CanDelte ?
-                        <button className={`${loaddingDelete ? "cursor-wait" :""} hover:text-red-500`} onClick={() => deleteIteam(row._id)}>
-                        <AiTwotoneDelete size={20}/>
-                      </button>
-                         : null 
-                      }
-                       
-                       </div>
-                     )
-                
-                 }
+   
       ]
 if(isLoading){
   return <Loader />

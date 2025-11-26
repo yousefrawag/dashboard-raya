@@ -38,15 +38,6 @@ const AddPrivetproject = () => {
         images_video.forEach((item) => {
           formData.append("files" , item)
         })
-    if(!data.name){
-      toast.error("يجب إضافه اسم الخدمة")
-        return ;
-    }
-
-    if(!data.projectRequire){
-      toast.error("يجب إضافه  متطلبات  الخدمة")
-      return ;
-    }
 
     try {
     
@@ -89,15 +80,15 @@ const AddPrivetproject = () => {
    <div className='main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	'>
             <div className="mb-6 flex flex-col  gap-2">
                         <label
-                            htmlFor="name"
+                            htmlFor="projectName"
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                            إسم الخدمة
+                            إسم المهمة
                         </label>
                         <input
                             type="text"
-                            id="name"
-                            name="name"
+                            id="projectName"
+                            name="projectName"
                     
                             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                         />
@@ -105,12 +96,12 @@ const AddPrivetproject = () => {
             </div>
             <div className="mb-6 flex flex-col  gap-2">
                         <label
-                            htmlFor="projectRequire"
+                            htmlFor="projectDetails"
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                           متطلبات الخدمة
+                           متطلبات المهمة
                         </label>
-                        <textarea name='projectRequire'  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
+                        <textarea name='projectDetails'  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
 
                         </textarea>
                     
@@ -121,7 +112,7 @@ const AddPrivetproject = () => {
                             htmlFor="notes"
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                           ملاحظات الخدمة
+                           ملاحظات المهمة
                         </label>
                         <textarea name='notes'  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
 
@@ -166,7 +157,13 @@ const AddPrivetproject = () => {
             name="files"
             id="files"
             onChange={handelDoc}
-            accept="application/pdf"
+            accept="
+    application/pdf,
+    application/msword,
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+    application/vnd.ms-excel,
+    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+  "
           />
           <label
             htmlFor="image-video"

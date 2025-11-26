@@ -4,21 +4,25 @@ import { toast } from 'react-hot-toast';
 const useQueryDelete = (endpoint  , key ) => {
     const queryClient = useQueryClient();
     const {isError , mutate:deleteIteam , isLoading} = useMutation({
-        mutationFn: async (id) => await authFetch.delete(`/${endpoint}/${id}` ),
-        onSuccess:(response) => {
-            console.log(response);
+  mutationFn: async (id) => {
+    return new Promise((resolve, reject) => {
+      const confirmed = window.confirm("هل أنت متأكد أنك تريد الحذف؟");
+      if (!confirmed) return toast.error("تم إلغاء العملية من قبل المستخدم");
+
+      authFetch.delete(`/${endpoint}/${id}`)
+        .then(res => resolve(res))
+        .catch(err => reject(err));
+    });
+  },
+  onSuccess: () => {
             queryClient.invalidateQueries({queryKey:[`${key}`]})
-            toast.success("تم الحذف بنجاح")
-        } ,
-        onError:(error) => {
-            console.log(error);
-            
-            const errorMessage = error.response?.data?.message || error.message || "An error occurred";
 
-            // Display the error message using toast
-            toast.error(errorMessage);
+    toast.success("تم الحذف بنجاح ✅");
 
-        }
+  },
+  onError: (err) => {
+    toast.error(err?.message || "حدث خطأ أثناء الحذف ❌");
+  }
     })
 
   return{ 

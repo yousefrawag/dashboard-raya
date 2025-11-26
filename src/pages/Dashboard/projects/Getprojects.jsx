@@ -6,15 +6,22 @@ import { GrFormView } from "react-icons/gr";
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { MdOutlineEditNote } from 'react-icons/md';
 import { format } from "date-fns";
+import { FaUsers } from "react-icons/fa";
+import useQueryDelete from '../../../services/useQueryDelete';
 import useGetUserAuthentications from '../../../middleware/GetuserAuthencations';
 import useQuerygetiteams from '../../../services/Querygetiteams';
 import Loader from '../../../components/common/Loader';
-import useQueryDelete from '../../../services/useQueryDelete';
+import toast from 'react-hot-toast';
 import FiltertionHook from "../../../hooks/FiltertionHook";
-
+import CardDataStats from '../../../components/common/CardDataStats';
+import GetProjectStatusChart from '../../../components/common/GetProjectStatusChart';
+import GetprojectTypesChart from '../../../components/common/GetprojectTypesChart';
+import GetprojectsOpeartionType from '../../../components/common/GetprojectsOpeartionType';
+import useQueryupdate from '../../../services/useQueryupdate';
 const Getprojects = () => {
   const { data, isLoading } = useQuerygetiteams("projects", "projects");
   const { deleteIteam } = useQueryDelete("projects", "projects");
+  const {updateiteam} = useQueryupdate("projects" , "projects")
   const { CanAdd, CanDelte, CanEdit, CanView, isAdmin } = useGetUserAuthentications("Projects");
   const [params, setParams] = useState({
     field: "",
@@ -23,29 +30,32 @@ const Getprojects = () => {
     endDate: "",
   });
 
-  const filters = [
-    {
-      value: "name",
-      name: "إسم الخدمة"
-    },
-    {
-      value: "section.name",
-      name: "القسم"
-    },
- 
-    {
-      value: "customers.name",
-      name: " العميل"
-    },
-    {
-      value: "status",
-      name: " حالة الخدمة"
-    },
-    {
-      value: "addedBy.name",
-      name: "مضاف من قبل"
-    },
-  ];
+  const fillters = [
+    {value:"projectOwner", name:"مالك المشروع"},
+    {value:"projectOwnerPhone", name:"جوال مالك المشروع"},
+   
+     {value:"governoate", name:"المنطقة"}  ,
+     {value:"projectName", name:"إسم المشروع"} , 
+     {value:"addedBy.fullName", name:"الموظف"} ,
+     {value:"estateType", name:"نوع العقار"} ,
+     {value:"detailedAddress", name:"العنوان بالتفصيل"} ,
+     {value:"operationType", name:"نوع العملية"} ,
+     {value:"clientType", name:"الطوابق المتوفرة"} ,
+     {value:"areaMatter", name:"المساحة بالمتر"} ,
+     {value:"spaceOuteside", name:"المساحة الخارجية للعقار"} ,
+     {value:"typeOfSpaceoutside", name:"نوع المساحة الخارجية للعقار"} ,
+     {value:"pymentType", name:"العملة"} ,
+     {value:"estatePrice", name:"سعر العقار الإجمالى"} ,
+     {value:"materPriec", name:" سعر المتر"} ,
+     {value:"projectSatatus", name:"حالة المشروع"} ,
+     {value:"installments", name:"إمكانية التقسيط"} ,
+     {value:"installmentsFirstPyment", name:"الدفعة الإولى"} ,
+     {value:"InstallmentPeriod", name:"مده التقسيط"} ,
+     {value:"projectDetails", name:" تفاصيل المشروع"} ,
+     {value:"projectads", name:"نص الإعلان"} ,
+     {value:"projectNotes", name:"ملاحظات المشروع"} ,
+
+     ]
   const filteredData = useMemo(() => {
     if (!data?.data?.data) return [];
 
@@ -57,65 +67,243 @@ const Getprojects = () => {
       return true;
     });
   }, [data, params]);
+
+ const SendeProjectToarchev = (id , status) => {
+try {
+  const data = {
+    status
+  }
+     updateiteam( { id , data }, {
+        onSuccess: () => {
+    
+          toast.success("تم  إرسال مشروع الى الأرشيف بنجاح");
+        },
+      });
+} catch (error) {
+  
+}
+ } 
   const columns = [
+ 
     {
-      name: "اسم خدمة",
-      selector: (row) => row.name,
-      cell: (row) => <div style={{ whiteSpace: "wrap" }} title={row.title}>{row.name}</div>,
+      name: "الموظف",
+      selector: (row) => row?.addedBy?.fullName,
+    },
+
+ 
+    {
+      name: "اسم المشروع",
+      selector: (row) => row?.projectName ,
+       width:"150px" ,
+      cell: (row) => <Link to={`/projects-main/${row._id}`}>{row?.projectName} </Link>,
     },
     {
-      name: "القسم",
-      selector: (row) => row.section?.name,
-      cell: (row) => <div style={{ whiteSpace: "wrap" }} >{row.section?.name}</div>,
+      name: "نوع العقار",
+       width:"150px" ,
+      selector: (row) => row?.estateType,
+    },
+   {
+      name: "العملة",
+      selector: (row) => row?.estatePrice,
+     
+      cell: (row) => <div   
+      style={{
+       
+       whiteSpace: "wrap",
+    
+
+     }}
+     title={row?.pymentType}>{row?.pymentType}</div>,
+      
+    },
+  
+ 
+    {
+      name: "سعر العقار الإجمالى",
+      selector: (row) => row?.estatePrice,
+      width:"150px" ,
+        sortFunction: (rowA, rowB) => {
+    return Number(rowA.estatePrice) - Number(rowB.estatePrice);
+  },
+      cell: (row) => <div   
+      style={{
+       
+       whiteSpace: "wrap",
+    
+
+     }}
+     title={row?.estatePrice}>{ Number(row?.estatePrice).toLocaleString("en-US")}</div>,
+      
     },
     {
-      name: "العميل",
-      selector: (row) => row.customers?.name,
-      cell: (row) => <div style={{ whiteSpace: "wrap" }}>{row.customers?.name}</div>,
+      name: "  نوع العمليه",
+      selector: (row) => row?.operationType,
     },
-    {
-      name: " حالة الخدمة  ",
-      selector: (row) => row.status,
-      cell: (row) => <span style={{ color: row.status === "فى تقدم" ? "red" : "green" }}>{row.projectSatatus}</span>
-    },
-    {
-      name: "تاريخ الموعد",
-      selector: (row) => row.meetingDate,
-      cell: (row) => <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "wrap" }}>{ row.meetingDate ? format(new Date(row.meetingDate), "dd MMMM, yyyy") : "غير محدد"}</span>
-    },
-    {
-      name: "مضافه من قبل",
-      selector: (row) => row?.addedBy?.name,
+       {
+      name: " حاله المشروع",
+      selector: (row) => row?.projectSatatus,
+      cell: (row) => <div   
+      style={{
+       
+       whiteSpace: "wrap",
+    
+
+     }}
+     title={row?.projectSatatus}>{row?.projectSatatus}</div>,
     },
     {
       name: "تاريخ الإنشاء",
       selector: (row) => row.createdAt,
-      cell: (row) => <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "wrap" }}>{format(new Date(row.createdAt), "dd MMMM, yyyy")}</span>
+      cell: (row) => <div   
+       style={{
+        
+        whiteSpace: "wrap",
+       
+     
+
+      }}
+      title={format(new Date(row.createdAt), "dd MMMM, yyyy")}>{format(new Date(row.createdAt), "dd MMMM, yyyy")}</div>,
     },
-    {
+  
+
+   {
       name: "اجراء",
+      width:"170px",
       selector: (row) => row.procedure,
       cell: (row) => (
         <div className="flex items-center justify-center space-x-3.5">
-          <Link to={`/projects-main/${row._id}`} className="hover:text-primary">
-            <GrFormView size={20} />
-          </Link>
-          {
-            isAdmin || CanEdit ? <Link to={`/edtit-project/${row._id}`} className="hover:text-primary">
-              <MdOutlineEditNote size={20} />
-            </Link> : null
-          }
+ 
           {
             isAdmin || CanDelte ?
-              <button className="hover:text-red-500" onClick={() => deleteIteam(row._id)}>
-                <AiTwotoneDelete size={20} />
-              </button> : null
+             <button
+  className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-red-50 text-gray-700 hover:text-red-500 rounded-lg transition-all duration-200"
+  onClick={() => SendeProjectToarchev(row._id, "archiev")}
+>
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+  </svg>
+  أرشيف
+</button> : null
           }
         </div>
       ),
     },
   ];
+  const columnsfile = [
+    {
+      name: "مالك المشروع",
+      selector: (row) => row?.projectOwner,
+    },
+    {
+      name: "جوال مالك المشروع",
+      selector: (row) => row?.projectOwnerPhone,
+    },
+   {
+      name: "الموظف",
+      selector: (row) => row?.addedBy?.fullName,
+    },
+       {
+      name: "الدوله",
+      selector: (row) => row?.locations?.countryName,
+    },
+      {
+      name: "المنطقة",
+      selector: (row) => row?.governoate,
+    },
+    {
+      name: "اسم المشروع",
+      selector: (row) => row?.projectName,
+    },
+    {
+      name: "نوع العقار",
+      selector: (row) => row?.estateType,
+    },
+        {
+      name: "العنوان بالتفصيل",
+      selector: (row) => row?.detailedAddress,
+    },
+        {
+      name: " تفاصيل العقار",
+      selector: (row) => row?.projectDetails,
+    },
+       {
+      name: " نص الاعلان",
+      selector: (row) => row?.projectads,
+    },
+       {
+      name: "  نوع العمليه",
+      selector: (row) => row?.operationType,
+    },
+       {
+      name: " حاله المشروع",
+      selector: (row) => row?.projectSatatus,
+    },
 
+       {
+      name: "العملة",
+      selector: (row) => row?.pymentType,
+    },
+    {
+      name: " سعر العقار الإجمالى",
+      selector: (row) => row?.estatePrice,
+    },
+   
+      {
+      name: "سعر المتر",
+      selector: (row) => row?.materPriec,
+    },
+
+   
+    {
+      name: " امكانيه التقسيط",
+      selector: (row) => row?.installments,
+    },
+    {
+      name: "الدفعة الاولى",
+      selector: (row) => row?.installmentsFirstPyment,
+    },
+        {
+      name: " مده التقسيط",
+      selector: (row) => row?.InstallmentPeriod,
+    },
+    {
+      name: "الدفعة الشهريه",
+      selector: (row) => row?.installmentsFirstPermonth,
+    },
+        {
+      name: "الطوابق المتوفره",
+      selector: (row) => row?.clientType,
+    },
+   {
+      name: " المساحه / متر",
+      selector: (row) => row?.areaMatter,
+    },
+    {
+      name: " المساحه / الخارجيه للعقار",
+      selector: (row) => row?.spaceOuteside,
+    },
+    {
+      name: " نوع المساحه / الخارجيه للعقار",
+      selector: (row) => row?.typeOfSpaceoutside,
+    },
+
+    {
+      name: " ملاحظات المشروع",
+      selector: (row) => row?.projectNotes,
+    },
+ 
+    {
+      name: " حاله الترخيص",
+      selector: (row) => row?.RefereeStatus,
+    },
+    {
+      name: "تاريخ الإنشاء",
+      selector: (row) => format(new Date(row.createdAt ), "dd MMMM, yyyy"),
+   
+    },
+
+  
+  ];
  
 
   if (isLoading) {
@@ -124,8 +312,17 @@ const Getprojects = () => {
 
   return (
     <div>
-      <HeadPagestyle pageName="خدمات عامة" isAdmin={isAdmin} CanAdd={CanAdd} to="/Add-project" title="إضافة خدمة" />
-      <FiltertionHook filteredData={filteredData} columns={columns} filters={filters} params={params} setParams={setParams} />
+      <HeadPagestyle pageName="مشاريع عامة" isAdmin={isAdmin} CanAdd={CanAdd} to="/Add-project" title="إضافة مشروع" />
+      <div className='grid grid-cols-1 lg:grid-cols-3 gap-5'>
+        {/* <GetProjectStatusChart data={data} setParams={setParams} />
+        <GetprojectTypesChart  data={data} setParams={setParams} />
+        <GetprojectsOpeartionType  data={data} setParams={setParams} /> */}
+    
+      </div>
+      <Link  to="/dashboard">
+      جميع الإحصائيات
+      </Link>
+      <FiltertionHook filteredData={filteredData} columns={columnsfile} filters={fillters} params={params} setParams={setParams} />
       <CustomeTabel data={filteredData} columns={columns} />
     </div>
   );

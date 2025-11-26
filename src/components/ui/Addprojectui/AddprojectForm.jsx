@@ -12,14 +12,69 @@ import Loader from '../../common/Loader';
 import toast from 'react-hot-toast';
 import useQuerygetiteams from '../../../services/Querygetiteams';
 const AddprojectForm = () => {
-  const {data:Sections} = useQuerygetiteams("Section" , "Section")
-
+  const {addIteam , isLoading} = useQueryadditeam("projects" , "projects")
+  const { data:regionData } = useQuerygetiteams("region", "region");
+  const { data:projectStatuts } = useQuerygetiteams("projectStatuts", "projectStatuts");
+  const { data:locations } = useQuerygetiteams("location", "location");
+  const { data:Currency } = useQuerygetiteams("currency", "currency");
+  const { data:Area } = useQuerygetiteams("arae", "arae");
+  const [relatedTypes , setRelatedType] = useState([])
   const [images_video , setimages_video] = useState([])
+  const [projectData , setprojectData] = useState({
+    projectOwner:"" ,
+    projectOwnerPhone:"" ,
+    governoate:"" ,
+    projectName:"" ,
+    estateType:"" ,
+    detailedAddress:"" ,
+    projectDetails:"" ,
+    projectads:"" ,
+    projectSatatus:"" ,
+    pymentType:"" ,
+    estatePrice:"" ,
+    materPriec:"" ,
+    installmentsFirstPyment:"" ,
+    InstallmentPeriod:"" ,
+    installmentsFirstPermonth:"" ,
+    clientType:"" ,
+    areaMatter:"" ,
+    typeOfSpaceoutside:"" ,
+    spaceOuteside:"" ,
+    city:"" ,
+    relatedtype:""
+
+  })
+  const [relatedRegions , setRelatedRegion] = useState([])
+  
   const [docs , setDocs] = useState([])
   const [viewmenu , setViewmenu] = useState(false)
-  const [SelectedCustomer , setSelectedCustomer] = useState("")
-  const {addIteam , isLoading} = useQueryadditeam("projects" , "projects")
-  const [Section , setSection] = useState("")
+  const cashTypes = ["نعم" , "لا"]
+ const [chasSelectedtype , setCahselectedType] = useState("")
+
+  const handelInputschage = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setprojectData((prev) => ({ ...prev, [name]: value }));
+    if(name === "governoate"){
+      const CurrentRegion = locations?.data?.data?.find((item) => item.name === value)
+      if(CurrentRegion){
+setRelatedRegion(CurrentRegion?.relatedRegions)
+      } else{
+        setRelatedRegion([])
+      }
+      
+      
+    }
+        if(name === "estateType"){
+      const CurrentRegion = regionData?.data?.data?.find((item) => item.name === value)
+      if(CurrentRegion){
+setRelatedType(CurrentRegion?.relatedRegions)
+      } else{
+        setRelatedType([])
+      } }
+  };
+  const finishing_c = ["بيع" , "شراء" ,"تبديل"  , "ضمان" ,   "إستثمار" ]
+  const [opeartionType , setOpeartiontype] = useState("")
 
   const navigate = useNavigate()
   const handleFileChange = (e) => {
@@ -32,10 +87,14 @@ const AddprojectForm = () => {
     setDocs((prevFiles) => [...prevFiles, ...selectedFiles]);
     e.target.value = "";
   };
+
+
   const handelSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-  
+    formData.set("operationType" , opeartionType)
+    formData.set("installments" , chasSelectedtype)
+ 
     const data = Object.fromEntries(formData);
         docs.forEach((item) => {
           formData.append("files" , item)
@@ -43,20 +102,30 @@ const AddprojectForm = () => {
         images_video.forEach((item) => {
           formData.append("files" , item)
         })
-    if(!data.name){
-      toast.error("يجب إضافه اسم الخدمة")
-        return ;
-    }
+
+if(!data.projectName){
+  return toast.error("يجب إدخال اسم المشروع")
+}
 
 
-  if(!data.projectSatatus){
-  toast.error("يجب إضافه  حالة الخدمة")
-  return ;
-  }
-  if(!data.customers){
-    toast.error("يجب إضافه العميل")
-    return ;
-    }
+if(!data.governoate){
+  return toast.error("يجب إدخال  المنطقة")
+}
+if(!data.estateType){
+  return toast.error("يجب إدخال  نوع العقار")
+}
+if(!data.projectSatatus){
+  return toast.error("يجب إدخال حالة المشروع")
+}
+
+if(!data.pymentType){
+  return toast.error("يجب إدخال  العملة")
+}
+if(!data.estatePrice){
+  return toast.error("يجب إدخال  سعر العقار الاجمالى")
+}
+
+
     try {
     
         
@@ -66,7 +135,7 @@ const AddprojectForm = () => {
                 e.target.reset()
                 setDocs([])
                 setimages_video([])
-                toast.success("تم إضافه خدمة جديد")
+                toast.success("تم إضافه مشروع جديد")
                 navigate("/projects-main")
             },  
              onError: (error) => {
@@ -82,31 +151,51 @@ const AddprojectForm = () => {
         toast.error(error.response?.data?.mesg)
     }
    }
+
  if(isLoading){
   return <Loader />
  }  
   return (
-    <form onSubmit={handelSubmit} className='w-full h-full bg-white rounded-[10px] dark:bg-form-input' >
-    <div className="dark:bg-form-input flex items-center shadow-lg gap-4 mb-4 w-full h-full p-4 bg-white rounded-[10px]">
+    <form onSubmit={handelSubmit} className='w-full mt-[-20px] h-full bg-white rounded-[10px] dark:bg-form-input' >
+    {/* <div className="dark:bg-form-input flex items-center shadow-lg gap-4 mb-4 w-full h-full p-4 bg-white rounded-[10px]">
       <div className="icon p-2 bg-main rounded-full">
         <FaRegPenToSquare />
       </div>
-      <p className="font-semibold text-lg">ادخل بيانات الخدمة</p>
-    </div>
+      <p className="font-semibold text-lg">ادخل بيانات المشروع</p>
+    </div> */}
    
    <div className='main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	'>
             <div className="mb-6 flex flex-col  gap-2">
                         <label
-                            htmlFor="name"
+                            htmlFor="projectOwner"
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                            إسم الخدمة
+                            مالك العقار
                         </label>
                         <input
                             type="text"
-                            id="name"
-                            name="name"
+                            id="projectOwner"
+                            name="projectOwner"
+                            onChange={handelInputschage}
+                            value={projectData.projectOwner}
+                            className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                        />
                     
+            </div>
+         
+            <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="projectOwnerPhone"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                           رقم جوال مالك المشروع
+                        </label>
+                        <input
+                          onChange={handelInputschage}
+                            type="text"
+                            id="projectOwnerPhone"
+                            name="projectOwnerPhone"
+                            value={projectData.projectOwnerPhone}
                             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                         />
                     
@@ -114,73 +203,494 @@ const AddprojectForm = () => {
              
                 <div className="mb-6 flex flex-col  gap-2">
                         <label
-                            htmlFor="projectSatatus"
+                            htmlFor="governoate"
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                          حالة الخدمة
+                          المنطقة
                         </label>
-                        <select name="projectSatatus" id="projectSatatus"  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"                        >
+                        <select   onChange={handelInputschage}  value={projectData.governoate} name="governoate" defaultValue="القدس"  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"                        >
                         <option value="">
-                                أختر الحالة
+                                أختر المنطقة
                             </option>
-                            <option value="عاجلة">
-                              عاجله
-                            </option>
-                            <option value="متوسطة">
-                              متوسطة
-                            </option>
-                            <option value="طبيعية">
-                               طبيعية
-                            </option>
+                        {
+                          locations?.data?.data?.map((item) => {
+                            return    <option key={item?._id} value={item?.name}>
+                                  {
+                                    item?.name
+                                  }
+                        </option>
+                          })
+                        }
                          
                         </select>
                      
                     
                 </div>
-                <div className="mb-6 flex flex-col gap-2">
-                    <label htmlFor="deadline" className="w-full text-lg font-medium text-black dark:text-white">
-                        إختار القسم
-                    </label>
-                  <select 
-                  name='section' 
-                  value={Section}
-                  onChange={(e) => setSection(e.target.value)}
-                  className="mb-2 focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-                  >
-                    <option value="">قم بالاختيار</option>
-                    {
-                        Sections?.data?.map((item) => {
-                            return <option key={item?._id} value={item?._id}>{item?.name}</option>
-                        })
-                    }
-                  </select>
-                </div>
-              <SelectoptionHook fectParentKEY ="customers" keyName="customers" title ="أختر العميل" value ={SelectedCustomer} setvalue ={setSelectedCustomer} />
-               
-              <div className="mb-6 flex flex-col  gap-2">
+
+
+  <div className="mb-6 flex flex-col gap-2">
+  <label htmlFor="city" className="w-full text-lg font-medium text-black dark:text-white">
+    الموقع*
+  </label>
+  <select
+    name="city"
+    id="city"
+    required
+    value={projectData.city}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+    <option>قم بالإختيار</option>
+    {relatedRegions?.map((region, index) => (
+      <option key={index} value={region}>
+        {region}
+      </option>
+    ))}
+  </select>
+</div>
+
+                <div className="mb-6 flex flex-col  gap-2">
                         <label
-                            htmlFor="date"
+                            htmlFor="projectName"
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                           تاريخ الموعد
+                        إسم المشروع
                         </label>
                         <input
-                            type="date"
-                            id="meetingData"
-                            name="meetingDate"
-                    
+                          onChange={handelInputschage}
+                            type="text"
+                            id="projectName"
+                            name="projectName"
+                            value={projectData.projectName}
                             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                         />
                     
+            </div>
+
+       
+       <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="detailedAddress"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                       العنوان بالتفصيل
+                        </label>
+                        <input
+                            type="text"
+                            id="detailedAddress"
+                             name="detailedAddress"
+                              value={projectData.detailedAddress}
+                                onChange={handelInputschage}
+                            className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                        />
+                    
+            </div>
+
+            <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="estateType"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                          نوع العقار
+                        </label>
+                        <select   onChange={handelInputschage} value={projectData.estateType} name="estateType"  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"                        >
+                        <option value="">
+                                أختر النوع
+                            </option>
+                            {regionData?.data?.data?.map((item) => {
+                        return (
+                          <option key={item._id} value={item.name}>
+                            {item.name}
+                          </option>
+                        );
+                          })}
+                         
+                        </select>
+                     
+                    
+                </div> 
+                 <div className="mb-6 flex flex-col gap-2">
+  <label htmlFor="relatedtype" className="w-full text-lg font-medium text-black dark:text-white">
+    التابع*
+  </label>
+  <select
+    name="relatedtype"
+    id="relatedtype"
+    required
+    value={projectData.relatedtype}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+    <option>قم بالإختيار</option>
+    {relatedTypes?.map((region, index) => (
+      <option key={index} value={region}>
+        {region}
+      </option>
+    ))}
+  </select>
+</div>
+       
+            <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="projectDetails"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                           تفاصيل العقار
+                        </label>
+                        <textarea   onChange={handelInputschage} value={projectData.projectDetails}  name="projectDetails" className="focus:border-primary min-h-[150px] max-h-[200px]  active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
+
+                        </textarea>
+                    
+                </div>
+                <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="projectads"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                         نص الاعلان 
+                        </label>
+                        <textarea   onChange={handelInputschage} value={projectData.projectads} name='projectads'  className="focus:border-primary min-h-[150px] max-h-[200px]  active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
+
+                        </textarea>
+                    
+                </div>
+                <span>  وضع العقار</span>
+                <div className='flex gap-3 '>
+                {finishing_c.map((item, index) => {
+                  return (
+                    <button
+                      onClick={() => setOpeartiontype(item)}
+                      className={opeartionType === item ? "p-3  px-7 rounded-[10px] text-white   bg-main" : "p-3 px-7 rounded-[10px] dark:text-white  border-[1px] border-[#eee]"}
+                      type="button"
+                      key={index}
+                    >
+                      {item}
+                    </button>
+                  );
+                })}
+                </div>
+                <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="projectSatatus"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                         حالة المشروع
+                        </label>
+                        <select   onChange={handelInputschage} value={projectData.projectSatatus} name="projectSatatus"  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"                        >
+                        <option value="">
+                                أختر النوع
+                            </option>
+                            {projectStatuts?.data?.data?.map((item) => {
+                            return (
+                              <option key={item._id} value={item.name}>
+                                {item.name}
+                              </option>
+                            );
+                          })}
+                         
+                        </select>
+                     
+                    
+                </div> 
+                <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="pymentType"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                       العملة
+                        </label>
+                        <select   onChange={handelInputschage} value={projectData.pymentType} name="pymentType"  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"                        >
+                        <option value="">
+                                أختر النوع
+                            </option>
+                   {
+                    Currency?.data?.data?.map((item) => {
+                      return       <option key={item?._id} value={item?.name}>
+                      {
+                        item?.name
+                      }
+                  </option>
+                    })
+                   }
+                         
+                        </select>
+                     
+                    
+                </div> 
+                <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="estatePrice"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                    سعر العقار الإجمالى
+                        </label>
+                        <input
+                            type="text"
+                            id="estatePrice"
+                            name="estatePrice"
+                            value={projectData.estatePrice}
+                              onChange={handelInputschage}
+                            className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                        />
+                    
+            </div>
+            <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="materPriec"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                    سعر  المتر
+                        </label>
+                        <input
+                            type="text"
+                            id="materPriec"
+                            name="materPriec"
+                            value={projectData.materPriec}
+                              onChange={handelInputschage}
+                            className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                        />
+                    
+            </div>
+                <span  className='mb-5 text-lg'> حاله التقسيط</span>
+            <div className='flex gap-3'>
+                  {
+                    cashTypes?.map((item) => {
+                      return (
+                        <button
+                        onClick={() => setCahselectedType(item)}
+                        className={chasSelectedtype === item ? "p-3  px-7 rounded-[10px] text-white   bg-main" : "p-3 px-7 rounded-[10px] dark:text-white  border-[1px] border-[#eee]"}
+                        type="button"
+                        key={item}
+                      >
+                        {item}
+                      </button>
+                      )
+                    })
+                  }
+            </div>
+        
+            <div>
+              {
+                chasSelectedtype === "نعم"  ?
+                <div>
+         {/* الدفعة الأولى */}
+<div className="mb-6 flex flex-col gap-2">
+  <label
+    htmlFor="installmentsFirstPyment"
+    className="w-full text-lg font-medium text-black dark:text-white"
+  >
+    الدفعة الأولى*
+  </label>
+  <select
+    id="installmentsFirstPyment"
+    name="installmentsFirstPyment"
+    value={projectData.installmentsFirstPyment}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+    <option value="">اختر الدفعة الأولى</option>
+    {Array.from({ length: 100 }, (_, i) => (i + 1) * 100000)
+      .filter(v => v <= 10000000)
+      .map((value) => (
+        <option key={value} value={value}>
+          {value.toLocaleString()} 
+        </option>
+      ))}
+  </select>
+</div>
+
+{/* مدة التقسيط */}
+<div className="mb-6 flex flex-col gap-2">
+  <label
+    htmlFor="InstallmentPeriod"
+    className="w-full text-lg font-medium text-black dark:text-white"
+  >
+    مدة التقسيط*
+  </label>
+  <select
+    id="InstallmentPeriod"
+    name="InstallmentPeriod"
+    value={projectData.InstallmentPeriod}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+    <option value="">اختر مدة التقسيط</option>
+    <option value="شهري">شهري</option>
+    <option value="سنوي">سنوي</option>
+  </select>
+</div>
+
+{/* الدفعة الشهرية */}
+<div className="mb-6 flex flex-col gap-2">
+  <label
+    htmlFor="installmentsFirstPermonth"
+    className="w-full text-lg font-medium text-black dark:text-white"
+  >
+    الدفعة الشهرية*
+  </label>
+  <select
+    id="installmentsFirstPermonth"
+    name="installmentsFirstPermonth"
+    value={projectData.installmentsFirstPermonth}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+    <option value="">اختر الدفعة الشهرية</option>
+    {Array.from({ length: 56 }, (_, i) => (i + 1) * 1000 + 4000)
+      .filter(v => v <= 60000)
+      .map((value) => (
+        <option key={value} value={value}>
+          {value.toLocaleString()} 
+        </option>
+      ))}
+  </select>
+</div>
+
+          
+                </div>
+    : null
+
+              }
+            <div className="mb-6 flex flex-col gap-2 mb-3">
+  <label
+    htmlFor="availableFloors"
+    className="w-full text-lg font-medium text-black dark:text-white mb-5 mt-5"
+  >
+    الطوابق المتوفرة*
+  </label>
+
+  <select
+    id="availableFloors"
+    name="availableFloors"
+    value={projectData.availableFloors}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+    <option value="">اختر عدد الطوابق</option>
+    {[...Array(10)].map((_, index) => (
+      <option key={index + 1} value={index + 1}>
+        {index + 1}
+      </option>
+    ))}
+  </select>
+</div>
+
+            <div className="mb-6 flex flex-col gap-2">
+  <label
+    htmlFor="areaMatter"
+    className="w-full text-lg font-medium text-black dark:text-white"
+  >
+    المساحة / متر*
+  </label>
+  <select
+    id="areaMatter"
+    name="areaMatter"
+    value={projectData.areaMatter}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+   
+
+               <option value="">
+                                أختر المساحه
+                            </option>
+                            {Area?.data?.data?.map((item) => {
+                        return (
+                          <option key={item._id} value={item.name}>
+                            {item.name + "م²"}
+                          </option>
+                        );
+                          })}
+  </select>
+</div>
+
+<div className="mb-6 flex flex-col gap-2">
+  <label
+    htmlFor="spaceOuteside"
+    className="w-full text-lg font-medium text-black dark:text-white"
+  >
+    المساحة الخارجية للعقار
+  </label>
+  <select
+    id="spaceOuteside"
+    name="spaceOuteside"
+    value={projectData.spaceOuteside}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+        <option value="">
+                                أختر المساحه
+                            </option>
+                            {Area?.data?.data?.map((item) => {
+                        return (
+                          <option key={item._id} value={item.name}>
+                            {item.name + "م²"}
+                          </option>
+                        );
+                          })}
+  </select>
+</div>
+
+
+
+                <div className="mb-6 flex flex-col  gap-2">
+                  <label
+                      htmlFor="typeOfSpaceoutside"
+                      className="w-full text-lg font-medium text-black dark:text-white"
+                  >
+     نوع المساحه الخارجيه للعقار*
+                  </label>
+                  <input
+                      type="text"
+                      id="typeOfSpaceoutside"
+                      name="typeOfSpaceoutside"
+                      value={projectData.typeOfSpaceoutside}
+                        onChange={handelInputschage}
+                      className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                  />
+              
+                </div> 
+                <div className="mb-6 flex flex-col  gap-2">
+                  <label
+                      htmlFor="imageLink"
+                      className="w-full text-lg font-medium text-black dark:text-white"
+                  >
+     لينك الصوره*
+                  </label>
+                  <input
+                      type="text"
+                      id="imageLink"
+                      name="imageLink"
+            
+                      className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                  />
+              
+                </div> 
+                <div className="mb-6 flex flex-col  gap-2 mt-4">
+                  <label
+                      htmlFor="videoLink"
+                      className="w-full text-lg font-medium text-black dark:text-white"
+                  >
+    لينك الفيديو*
+                  </label>
+                  <input
+                      type="text"
+                      id="videoLink"
+                      name="videoLink"
+            
+                      className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                  />
+              
+                </div> 
             </div>
                 <div className="mb-6 flex flex-col  gap-2">
                         <label
                             htmlFor="notes"
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                           ملاحظات الخدمة
+                           ملاحظات المشروع
                         </label>
-                        <textarea name='notes'  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
+                        <textarea name='notes'  className="focus:border-primary min-h-[150px] max-h-[200px] active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
 
                         </textarea>
                     

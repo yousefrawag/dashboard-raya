@@ -5,7 +5,7 @@ const TopUsersChart = ({ topUsers }) => {
   if (!topUsers || topUsers.length === 0) return <p>No data available</p>;
 
   // Extract data for chart
-  const names = topUsers.map((user) => user.userDetails.name);
+  const names = topUsers.map((user) => user.userDetails.fullName);
   const images = topUsers.map((user) => user.userDetails.imageURL);
   const customersCount = topUsers.map((user) => user.totalCustomers);
 

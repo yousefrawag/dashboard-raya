@@ -111,7 +111,7 @@ console.log(res)
                           type="text"
                           name="name"
                           id="fullName"
-                          defaultValue={user?.name}
+                          defaultValue={user?.fullName}
                         
                           
                         />

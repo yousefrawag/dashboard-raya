@@ -6,10 +6,16 @@ import {  FaCheckCircle } from 'react-icons/fa';
 import { HiMiniViewfinderCircle } from "react-icons/hi2";
 import HeadPagestyle from '../../../components/common/HeadPagestyle'
 import Loader from '../../../components/common/Loader';
+import { Link } from 'react-router-dom';
+import { useDashboardContext } from '../../../context/DashboardProviedr';
+import PopupCheckdelete from '../../../components/common/popupmdules/PopupCheckdelete';
+import useGetUserAuthentications from '../../../middleware/GetuserAuthencations';
 const TaskOverview = () => {
     const {id} = useParams()
     const {data , isLoading} = useQuerygetSpacficIteam("missions" , "missions" , id)
     const Currentitem = data?.data
+     const {  setModuleDelete } =  useDashboardContext()
+     const {CanAdd , CanDelte , CanEdit , CanView , isAdmin} = useGetUserAuthentications("Missions")
     const Team = Currentitem?.assignedTo
   if(isLoading){
     return <Loader />
@@ -17,6 +23,26 @@ const TaskOverview = () => {
   return (
     <div className='w-full h-full'>
     <HeadPagestyle pageName="بيانات المهمة" to="/Taskes" title="عوده" />
+
+      <span>
+        إجراء
+       </span>
+       <div  className='flex gap-5 m-5'>
+              
+        {
+          isAdmin || CanEdit ?    <Link to={`/edit-Taskes/${id}`} className='w-20 p-2 bg-main text-white rounded-md text-center'>تعديل</Link>
+          : null
+        }
+         <Link to="/Taskes"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                         عوده
+                         </Link>
+    {
+      isAdmin || CanDelte ? 
+      <button onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+      : null
+    }
+    
+       </div>
 <div className='w-full h-full grid grid-cols-1 gap-2 xl:grid-cols-2	 shadow-md p-5	'>
          
         
@@ -26,7 +52,7 @@ const TaskOverview = () => {
                htmlFor="name"
                className="w-full text-lg font-medium text-gray-700 dark:text-white"
              >
-             نوع الخدمة
+             نوع المهمة
              </span>
              <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             
@@ -37,19 +63,19 @@ const TaskOverview = () => {
            </div>
        
            {
-            Currentitem?.missionType === "خدمة عامة"  ? (
+            Currentitem?.missionType === "مشروع عام"  ? (
     <>
        <div className="mb-6 flex flex-col  gap-2">
                 <span
                   htmlFor="name"
                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
                 >
-                الخدمة
+                المشروع
                 </span>
                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                
                >
-                     {Currentitem?.project?.name}
+                     {Currentitem?.project?.projectName}
                </p>
              
               </div>
@@ -59,12 +85,12 @@ const TaskOverview = () => {
                htmlFor="name"
                className="w-full text-lg font-medium text-gray-700 dark:text-white"
              >
-           قسم الخدمة
+           نوع العقار
              </span>
              <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             
             >
-               {Currentitem?.project?.section?.name}
+               {Currentitem?.project?.estateType}
             </p>
           
            </div>
@@ -74,12 +100,12 @@ const TaskOverview = () => {
                   htmlFor="name"
                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
                 >
-                العميل
+                المنطقة
                 </span>
                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                
                >
-                     {Currentitem?.project?.customers?.name}
+                     {Currentitem?.project?.governoate}
                </p>
              
               </div>
@@ -89,12 +115,13 @@ const TaskOverview = () => {
            htmlFor="name"
            className="w-full text-lg font-medium text-gray-700 dark:text-white"
          >
-         البريد الالكترونى
+         العنوان بالتفصيل
+
          </span>
          <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
         
         >
-              {Currentitem?.project?.customers?.email}
+              {Currentitem?.project?.detailedAddress}
         </p>
       
        </div>
@@ -104,12 +131,13 @@ const TaskOverview = () => {
                   htmlFor="name"
                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
                 >
-                رقم الجوال
+                تفاصيل العقار
+
                 </span>
                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                
                >
-                  {Currentitem?.project?.customers?.phoneNumber}
+                  {Currentitem?.project?.projectDetails}
                </p>
              
               </div>
@@ -118,12 +146,13 @@ const TaskOverview = () => {
                   htmlFor="name"
                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
                 >
-                نوع العميل
+                نص الاعلان
+
                 </span>
                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                
                >
-                          {Currentitem?.project?.customers?.AplicationType}
+                          {Currentitem?.project?.projectads}
                </p>
              
               </div> 
@@ -132,12 +161,13 @@ const TaskOverview = () => {
                   htmlFor="name"
                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
                 >
-               عدد الإشخاص
+              حالة المشروع
+
                 </span>
                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                
                >
-                {Currentitem?.project?.customers?.AplicationType === "فرد"  ? Currentitem?.project?.customers?.AplicationType : Currentitem?.project?.customers?.numberusers }
+                {Currentitem?.project?.projectSatatus }
                </p>
              
               </div>
@@ -146,15 +176,80 @@ const TaskOverview = () => {
                   htmlFor="name"
                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
                 >
-               ملاحظات العميل
+            العملة
                 </span>
                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                
                >
-                   {Currentitem?.project?.customers?.notes}
+                   {Currentitem?.project?.pymentType}
                </p>
              
               </div>
+
+
+              <div className="mb-6 flex flex-col  gap-2">
+                <span
+                  htmlFor="name"
+                  className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                >
+            سعر العقار الإجمالى
+
+                </span>
+                <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+               
+               >
+                   {Currentitem?.project?.estatePrice}
+               </p>
+             
+              </div>
+              <div className="mb-6 flex flex-col  gap-2">
+                <span
+                  htmlFor="name"
+                  className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                >
+            سعر المتر
+                </span>
+                <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+               
+               >
+                   {Currentitem?.project?.materPriec}
+               </p>
+             
+              </div>
+              <div className="mb-6 flex flex-col  gap-2">
+                <span
+                  htmlFor="name"
+                  className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                >
+            هل متاح التقسيط
+                </span>
+                <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+               
+               >
+                   {Currentitem?.project?.installments}
+               </p>
+             
+              </div>
+              {
+                Currentitem?.project?.installments === "نعم" && (
+                  <div className="mb-6 flex flex-col  gap-2">
+                  <span
+                    htmlFor="name"
+                    className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                  >
+                  الدفعة الأولى*
+                  </span>
+                  <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                 
+                 >
+                     {Currentitem?.project?.installmentsFirstPyment}
+                 </p>
+               
+                </div>
+                
+                )
+              }
+           
              
               </>
             ) :     <div className="mb-6 flex flex-col  gap-2">
@@ -167,7 +262,7 @@ const TaskOverview = () => {
             <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
            
            >
-                 {Currentitem?.Privetproject?.name}
+                 {Currentitem?.Privetproject?.projectName}
            </p>
          
           </div>
@@ -180,12 +275,12 @@ const TaskOverview = () => {
                htmlFor="name"
                className="w-full text-lg font-medium text-gray-700 dark:text-white"
              >
-           ملاحظات المشروع 
+         متطلبات المهمة
              </span>
              <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             
             >
-                {Currentitem?.notes} description
+                {Currentitem?.projectDetails} 
             </p>
           
            </div>
@@ -199,7 +294,7 @@ const TaskOverview = () => {
              <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             
             >
-                {Currentitem?.description} 
+                {Currentitem?.notes} 
             </p>
           
            </div>
@@ -351,6 +446,27 @@ const TaskOverview = () => {
     }
    
  </div>
+ <PopupCheckdelete navigatepage='/Taskes' deleteKey="missions" titale="المهمة" id={id} />
+
+    <span>
+        إجراء
+       </span>
+       <div  className='flex gap-5 m-5'>
+              
+        {
+          isAdmin || CanEdit ?    <Link to={`/edit-Taskes/${id}`} className='w-20 p-2 bg-main text-white rounded-md text-center'>تعديل</Link>
+          : null
+        }
+         <Link to="/Taskes"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                         عوده
+                         </Link>
+    {
+      isAdmin || CanDelte ? 
+      <button onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+      : null
+    }
+    
+       </div>
  </div>
 
 

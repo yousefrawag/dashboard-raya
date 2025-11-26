@@ -35,7 +35,7 @@ useEffect(() => {
     
       const filters = [
         {
-          value: "name",
+          value: "fullName",
           name: "الإسم الإول "
         },
         {
@@ -77,7 +77,7 @@ useEffect(() => {
     const columns = [
         {
           name: "الإسم",
-          selector: (row) => row.name,
+          selector: (row) => row.fullName,
           cell: (row) => <div   
           style={{
            

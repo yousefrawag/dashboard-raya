@@ -76,19 +76,26 @@ const Addpermission = () => {
   
     const data = [
       { id: 1, key: "Projects", validity: "المشاريع العامه" },
-      { id: 1, key: "PrivetProjects", validity: "المشاريع الخاصه" },
+      { id: 1, key: "PrivetProjects", validity: "المهام الخاصه" },
       { id: 2, key: "Reports", validity: "التقارير" },
+
       { id: 31, key: "clander", validity: " التقويم" },
-      { id: 4, key: "Missions", validity: "توزيع المهام" },
+        { id: 38, key: "clanderCustomer", validity: " تقويم العملاء" },
+      { id: 4, key: "Missions", validity: "المهام" },
       { id: 5, key: "Clients", validity: "العملاء" },
-      { id: 6, key: "Employees", validity: "المستخدمين" },
-      { id: 8, key: "Administration", validity: "صلاحيات" },
-      { id: 8, key: "Section", validity: "الإقسام" },
-      { id: 81, key: "Admin", validity: "لوحه تحكم" },
-      { id: 9, key: "Services", validity: "خدمات الموقع" },
-      { id: 11, key: "visa", validity: "تأشيرات الموقع" },
-      { id: 12, key: "massgaes", validity: "الرسائل" },
-      { id: 13, key: "Securty", validity: "سياسه الخصوصيه" },
+      { id: 6, key: "Employees", validity: "الموظفين" },
+       { id: 60, key: "expensee", validity: "المصروفات" },
+   
+      { id: 8, key: "Administration", validity: "إحصائيات النظام" },
+      { id: 9, key: "location", validity: "مناطق المشاريع" },
+       
+          { id: 11, key: "projectstypes", validity: "أنواع العقارات" },
+               { id: 12, key: "projectstuts", validity: "حالات العقارات" },
+                  { id: 120, key: "requiremnts", validity: "طلبات العملاء" },
+                { id: 13, key: "appCurency", validity: "العملات" },
+                         { id: 14, key: "CustomerTypes", validity: "انواع العملاء" }, 
+                          { id: 15, key: "isvewied", validity: "هل تمت المعاينة" },
+                             { id: 16, key: "callcentercustomer", validity: "حالات العميل قسم المتابعة" },
      
   
     ];

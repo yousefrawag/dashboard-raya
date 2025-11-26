@@ -5,10 +5,17 @@ const DashboardContext = createContext();
 const DashboardProvider = ({ children }) => {
     const [module, setmodule] = useState(false);
 const [editmainCategory , setEditmaincategory] = useState(false)
+const [moduleDelete , setModuleDelete] = useState(false)
+const [Deletestauts , setDelteSatuts] = useState("")
+const [AsigineclientTouser , setAsigine] = useState(false)
 const [mainCategory , setmainCategory] = useState({
     _id:"",
-    name:""
+    name:"" ,
+    relatedRegions:[]
 })
+const [expensesmodule , setExpensesmodule] = useState(false)
+const [expenssEidt , setExpensesEdit] = useState({})
+const [expenseemoduleEdit  , setExpensesmoduleedit] = useState(false)
 const handelEditmainCategory = (item) => {
 setEditmaincategory(true)
 setmainCategory(item)
@@ -22,7 +29,17 @@ setmainCategory(item)
                 setEditmaincategory,
                 handelEditmainCategory,
                 mainCategory,
-                setmainCategory
+                setmainCategory ,
+                moduleDelete ,
+                setModuleDelete ,
+                Deletestauts ,
+                setDelteSatuts ,
+                expensesmodule ,
+                setExpensesmodule ,
+                expenssEidt ,
+                setExpensesEdit ,
+                AsigineclientTouser , setAsigine ,
+                expenseemoduleEdit  , setExpensesmoduleedit
             }}
         >
             {children}

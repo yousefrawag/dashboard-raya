@@ -3,17 +3,16 @@ import DataTable from "react-data-table-component";
 
 const CustomeTabel = ({ columns, data }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(localStorage.getItem("customerTablePage") || 1)
+  );
 
   useEffect(() => {
-    // دالة للتحقق من وضع الدارك مود
     const checkDarkMode = () => {
       setIsDarkMode(document.body.classList.contains("dark"));
     };
 
-    // تشغيل الدالة مرة عند التحميل
     checkDarkMode();
-
-    // مراقبة تغييرات الـ class في body
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
 
@@ -27,7 +26,7 @@ const CustomeTabel = ({ columns, data }) => {
         color: "#79818F",
         fontSize: "18px",
         fontWeight: "normal",
-        border: "none"
+        border: "none",
       },
     },
     rows: {
@@ -39,6 +38,11 @@ const CustomeTabel = ({ columns, data }) => {
     },
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    localStorage.setItem("customerTablePage", page);
+  };
+
   return (
     <div className="p-4 space-y-4 rounded-md bg-[#fff] dark:bg-boxdark">
       <DataTable
@@ -46,7 +50,10 @@ const CustomeTabel = ({ columns, data }) => {
         data={data}
         selectableRows
         fixedHeader
+        fixedHeaderScrollHeight="300px"
         pagination
+        paginationDefaultPage={currentPage}
+        onChangePage={handlePageChange}
         customStyles={customStyles}
         className="rounded-lg text-sm text-gray-700 border-none"
       />

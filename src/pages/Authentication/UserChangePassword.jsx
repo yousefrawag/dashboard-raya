@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import authFetch from '../../utils/axiosAuthfetch';
 import toast from 'react-hot-toast';
 import { useSelector } from "react-redux";
-import logo from "../../images/logo/logo2.jpg"
+import logo from "../../images/logo/logo.png"
 
 const UserChangePassword = () => {
     const user = useSelector((state) => state.userState.userinfo);

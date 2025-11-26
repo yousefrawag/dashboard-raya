@@ -9,8 +9,8 @@ import useQuerygetiteams from '../../../services/Querygetiteams';
 
 const AddTask = () => {
     const {data} = useQuerygetiteams("users" , "users")
-    const types = ["خدمة عامة", "خدمة مخصصة"];
-    const [missionType, setMissionType] = useState("خدمة عامة");
+    const types = ["مشروع عام", "مشروع خاص"];
+    const [missionType, setMissionType] = useState("مشروع عام");
     const [project, setProject] = useState("");
     const [privetProject, setPrivetProject] = useState("");
     const [selectedUsers, setSelectedUsers] = useState([]); // Array for selected users
@@ -23,7 +23,7 @@ const AddTask = () => {
 
 
     const filteredUsers = users?.filter((user) =>
-        user?.name?.toLowerCase().includes(search.toLowerCase())
+        user?.fullName?.toLowerCase().includes(search.toLowerCase())
       );
     
       const handleUserSelect = (userId) => {
@@ -47,16 +47,16 @@ useEffect(() => {
         data.assignedTo = selectedUsers
         data.missionType = missionType
         data.requirements = requirements
-        if (missionType === "خدمة عامة") {
+        if (missionType === "مشروع عام") {
             if(!project) {
                 return toast.error("يجب إضافة مشروع عام")
             }
             data.project = project; // Set public project
 
             data.Privetproject = null; // Ensure Privetproject is null for public projects
-        } else if (missionType === "خدمة مخصصة") {
+        } else if (missionType === "مشروع خاص") {
             if(!privetProject) {
-                return toast.error("يجب إضافة خدمة مخصصة")
+                return toast.error("يجب إضافة مشروع خاص")
             }
             data.Privetproject = privetProject; // Set private project
             data.project = null; // Ensure project is null for private projects
@@ -70,7 +70,9 @@ useEffect(() => {
             toast.error("يجب إضافه الموظفين المعنين بالمهمة");
             return;
         }
-        
+        if(requirements.length === 0) {
+         return   toast.error("يجب إضافة متطلبات المهمة")
+        }
      
 
         try {
@@ -94,7 +96,23 @@ useEffect(() => {
             toast.error(error.response?.data?.mesg || "An error occurred. Please try again.");
         }
     };
-
+const handelnewTask = () => {
+    const founItem = requirements.find((item) => item === newRequirement)
+    if(founItem){
+        return toast.error("لقد قمت بإدخال هذا الطلب من قبل")
+    }
+    const requirement = {
+        type: newRequirement.trim(), // Set the "type" field
+        completed: false, // Default value for "completed"
+        userEdit: null, // Default value for "userEdit"
+      }
+    setRequirements((prev) => ([...prev , requirement]))
+    setNewRequirement("")
+}
+const handelDeleteequire = (req) => {
+    const newRequermentsupdate = requirements.filter((item) => item !== req)
+    setRequirements([...newRequermentsupdate])
+}
     if (isLoading) {
         return <Loader />;
     }
@@ -134,11 +152,11 @@ useEffect(() => {
                     ))}
                 </div>
 
-                {missionType === "خدمة عامة" ? (
+                {missionType === "مشروع عام" ? (
                     <SelectoptionHook
                         fectParentKEY="projects"
                         keyName="projects"
-                        title="خدمة عامة"
+                        title="مشروع عام"
                         value={project}
                         setvalue={setProject}
                     />
@@ -146,7 +164,7 @@ useEffect(() => {
                     <SelectoptionHook
                         fectParentKEY="Privetprojects"
                         keyName="Privetprojects"
-                        title="خدمة مخصصة"
+                        title="مشروع خاص"
                         value={privetProject}
                         setvalue={setPrivetProject}
                     />
@@ -173,7 +191,7 @@ useEffect(() => {
                                     onChange={() => handleUserSelect(user?._id)}
                                     className="accent-main"
                                 />
-                                <span className="text-black dark:text-white">{user?.name}</span>
+                                <span className="text-black dark:text-white">{user?.fullName}</span>
                                 </label>
                             ))}
                             </div>
@@ -190,7 +208,23 @@ useEffect(() => {
                         className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                     />
                 </div>
-
+                <span  className='text-lg mb-10 text-black dark:text-white'>متطلبات المهمة</span>
+                <div className='flex gap-3 flex-col lg:flex-row'>
+                    <input type="text"  
+                    value={newRequirement}
+                    onChange={(e) =>setNewRequirement(e.target.value)}
+                    className=" w-full lg:w-[80%] mb-2 focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+ />
+                <button onClick={handelnewTask} className='w-full lg:w-[20%] py-2 px-6 rounded-md bg-main text-white hover:bg-transparent hover:border hover:border-blue-600 hover:text-blue-600' type='button'>إضافة</button>
+                </div>
+                <ul className="mt-7 grid grid-cols-2 lg:grid-cols-3 gap-4">
+                        {requirements.map((req, index) => (
+                            <li key={index} className=" flex justify-between text-black dark:text-white shadow-md border-[1px] border-gary-500 p-4 rounded-[10px]">
+                                - {req.type}
+                                <button onClick={() => handelDeleteequire(req)} type='button' className='font-bold text-red-500 '>x</button>
+                            </li>
+                        ))}
+                    </ul>
                 <div className="mb-6 flex flex-col gap-2">
                     <label htmlFor="description" className="w-full text-lg font-medium text-black dark:text-white">
                         ملاحظات 

@@ -10,11 +10,16 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import HeadPagestyle from '../../../components/common/HeadPagestyle';
 import Loader from "../../../components/common/Loader";
+import { useDashboardContext } from "../../../context/DashboardProviedr";
+import PopupCheckdelete from "../../../components/common/popupmdules/PopupCheckdelete";
+import useGetUserAuthentications from "../../../middleware/GetuserAuthencations";
 const EditPermissions = () => {
  const {id} =  useParams()
 const navigate =  useNavigate()
   const { isError:errorGet , isLoading:loaddingGet , data:powerData} = useQuerygetSpacficIteam("roles" , "roles" , id)
  const { isError , isLoading , updateiteam , isPending}  = useQueryupdate("roles" , "roles")
+     const {  setModuleDelete } =  useDashboardContext()
+     const {CanAdd , CanDelte , CanEdit , CanView , isAdmin} = useGetUserAuthentications("Administration")
  const [permissions, setPermissions] = useState([]);
 useEffect(() => {
   if(powerData && powerData.permissions){
@@ -86,24 +91,31 @@ useEffect(() => {
 ];
 
   
-const data = [
-  { id: 1, key: "Projects", validity: "المشاريع العامه" },
-  { id: 1, key: "PrivetProjects", validity: "المشاريع الخاصه" },
-  { id: 2, key: "Reports", validity: "التقارير" },
-  { id: 31, key: "clander", validity: " التقويم" },
-  { id: 4, key: "Missions", validity: "توزيع المهام" },
-  { id: 5, key: "Clients", validity: "العملاء" },
-  { id: 6, key: "Employees", validity: "المستخدمين" },
-  { id: 8, key: "Administration", validity: "صلاحيات" },
-  { id: 8, key: "Section", validity: "الإقسام" },
-  { id: 81, key: "Admin", validity: "لوحه تحكم" },
-  { id: 9, key: "Services", validity: "خدمات الموقع" },
-  { id: 11, key: "visa", validity: "تأشيرات الموقع" },
-  { id: 12, key: "massgaes", validity: "الرسائل" },
-  { id: 13, key: "Securty", validity: "سياسه الخصوصيه" },
- 
+    const data = [
+      { id: 1, key: "Projects", validity: "المشاريع العامه" },
+      { id: 1, key: "PrivetProjects", validity: "المهام الخاصه" },
+      { id: 2, key: "Reports", validity: "التقارير" },
 
-];
+      { id: 31, key: "clander", validity: " التقويم" },
+        { id: 38, key: "clanderCustomer", validity: " تقويم العملاء" },
+      { id: 4, key: "Missions", validity: "المهام" },
+      { id: 5, key: "Clients", validity: "العملاء" },
+      { id: 6, key: "Employees", validity: "الموظفين" },
+       { id: 60, key: "expensee", validity: "المصروفات" },
+   
+      { id: 8, key: "Administration", validity: "إحصائيات النظام" },
+      { id: 9, key: "location", validity: "مناطق المشاريع" },
+       
+          { id: 11, key: "projectstypes", validity: "أنواع العقارات" },
+               { id: 12, key: "projectstuts", validity: "حالات العقارات" },
+                    { id: 120, key: "requiremnts", validity: "طلبات العملاء" },
+                { id: 13, key: "appCurency", validity: "العملات" },
+                         { id: 14, key: "CustomerTypes", validity: "انواع العملاء" },
+                          { id: 15, key: "isvewied", validity: "هل تمت المعاينة" }, 
+                             { id: 16, key: "callcentercustomer", validity: "حالات العميل قسم المتابعة" },
+     
+   { id: 150, key: "work", validity: "وظائف العملاء" }, 
+    ];
 
 
 const handleSubmit = (event) => {
@@ -142,6 +154,21 @@ if(isLoading || loaddingGet){
 
           {/* update permissions box */}
 
+   <span>
+           إجراء
+          </span>
+          <div  className='flex gap-5 m-5'>
+                  <Link to="/permissions"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                            عوده
+                            </Link>
+      
+       {
+         isAdmin || CanDelte ? 
+         <button type='button' onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+         : null
+       }
+       
+          </div>
           <div className="updatePermissions_box">
          
                 <form onSubmit={handleSubmit}>
@@ -175,7 +202,22 @@ if(isLoading || loaddingGet){
             
           </div>
 
-        
+          <PopupCheckdelete navigatepage='/permissions' deleteKey="roles" titale="الصلاحية" id={id} />
+             <span>
+           إجراء
+          </span>
+          <div  className='flex gap-5 m-5'>
+                  <Link to="/permissions"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                            عوده
+                            </Link>
+      
+       {
+         isAdmin || CanDelte ? 
+         <button type='button' onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+         : null
+       }
+       
+          </div>
     </section>
   )
 }

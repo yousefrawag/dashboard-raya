@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const authFetch = axios.create({
-    baseURL:"https://trcolors.com/api" /* "http://localhost:3300/api" */,
+    baseURL:"https://new-raya.vercel.app/api" /* "http://localhost:3300/api" */,
+    // "https://new-raya.vercel.app/api"
 })
 
 authFetch.interceptors.request.use((request) => {
@@ -12,14 +13,14 @@ authFetch.interceptors.request.use((request) => {
       const token = JSON.parse(localStorage.getItem('token')) || "" ;
     request.withCredentials = true
     request.headers.Authorization = `Bearer ${token}`
-    console.log("request send8")
+   
     return request
 } , (error) => {
     console.log(error);
     return Promise.reject(error)
 })
 authFetch.interceptors.response.use((respones) => {
-    console.log(respones);
+    // console.log(respones);
     return respones
 } , (error) => {
     console.log(error);

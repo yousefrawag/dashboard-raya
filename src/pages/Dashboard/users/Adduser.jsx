@@ -32,7 +32,7 @@ const Adduser = () => {
   
     const data = Object.fromEntries(formData);
     formData.append("image" , image.file)
-    if(!data.name){
+    if(!data.fullName){
       toast.error("يجب إضافه اسم المستخدم")
         return ;
     }
@@ -109,8 +109,8 @@ const Adduser = () => {
                         </label>
                         <input
                             type="text"
-                            id="name"
-                            name="name"
+                            id="fullName"
+                            name="fullName"
                     
                             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                         />

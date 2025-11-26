@@ -33,15 +33,15 @@ const Privetform = () => {
      <div className='main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	'>
               <div className="mb-6 flex flex-col  gap-2">
                           <label
-                              htmlFor="assetsName"
+                              htmlFor="projectName"
                               className="w-full text-lg font-medium text-black dark:text-white"
                           >
-                              إسم المشروع
+                              عنوان المهمة
                           </label>
                           <input
                               type="text"
-                              id="assetsName"
-                              name="assetsName"
+                              id="projectName"
+                              name="projectName"
                       
                               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                           />
@@ -50,12 +50,12 @@ const Privetform = () => {
            
               <div className="mb-6 flex flex-col  gap-2">
                           <label
-                              htmlFor="assetsName"
+                              htmlFor="projectDetails"
                               className="w-full text-lg font-medium text-black dark:text-white"
                           >
                              متطلبات المشروع 
                           </label>
-                          <textarea  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
+                          <textarea name='projectDetails'  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
   
                           </textarea>
                       
@@ -67,7 +67,7 @@ const Privetform = () => {
                           >
                              ملاحظات المشروع
                           </label>
-                          <textarea  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
+                          <textarea name='notes'  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500" >
   
                           </textarea>
                       

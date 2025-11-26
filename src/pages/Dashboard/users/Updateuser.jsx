@@ -9,15 +9,22 @@ import UploadSingalefile from '../../../hooks/UploadSingalefile';
 import useQuerygetSpacficIteam from '../../../services/QuerygetSpacficIteam';
 import useQueryupdate from '../../../services/useQueryupdate';
 import useQuerygetiteams from '../../../services/Querygetiteams';
+import { Link } from 'react-router-dom';
+import PopupCheckdelete from '../../../components/common/popupmdules/PopupCheckdelete';
+import useGetUserAuthentications from '../../../middleware/GetuserAuthencations';
+import { useDashboardContext } from '../../../context/DashboardProviedr';
 const Updateuser = () => {
     const {id} = useParams()
     const {data:roles } = useQuerygetiteams("roles" , "roles")
 
     const {isLoading:loadingGet , data} = useQuerygetSpacficIteam("users" , "users" , id)
     const {updateiteam , isLoading} = useQueryupdate("users" , "users")
+    const {  setModuleDelete } =  useDashboardContext()
+    const {CanAdd , CanDelte , CanEdit , CanView , isAdmin} = useGetUserAuthentications("Employees")
     const Currentuser = data?.data
     const [image , setimage] = useState({})
     const [Selectedtype , setSelectedtype] = useState("")
+    const [permssion , setPermission] = useState()
      const navigate = useNavigate()
 
   const handleFileChange = (e) => {
@@ -35,7 +42,7 @@ const Updateuser = () => {
   
     const data = Object.fromEntries(formData);
     formData.set("image" , image.file)
-    if(!data.name){
+    if(!data.fullName){
       toast.error("يجب إضافه اسم المستخدم")
         return ;
     }
@@ -85,8 +92,9 @@ const Updateuser = () => {
 useEffect(() => {
     if(Currentuser){
         setSelectedtype(Currentuser?.type)
+        setPermission(Currentuser?.role?._id)
     }
-} , [])
+} , [Currentuser])
  if(isLoading || loadingGet){
   return <Loader />
  }  
@@ -98,7 +106,21 @@ useEffect(() => {
       </div>
       <p className="font-semibold text-lg">تعديل بيانات المستخدم</p>
     </div>
-   
+       <span>
+           إجراء
+          </span>
+          <div  className='flex gap-5 m-5'>
+                  <Link to="/All-users"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                            عوده
+                            </Link>
+      
+       {
+         isAdmin || CanDelte ? 
+         <button type='button' onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+         : null
+       }
+       
+          </div>
    <div className='main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	'>
             <div className="mb-6 flex flex-col  gap-2">
                         <label
@@ -110,8 +132,8 @@ useEffect(() => {
                         <input
                             type="text"
                             id="name"
-                            name="name"
-                            defaultValue={Currentuser?.name}
+                            name="fullName"
+                            defaultValue={Currentuser?.fullName}
                             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                         />
                     
@@ -186,7 +208,7 @@ useEffect(() => {
                         >
                          الصلاحية 
                         </label>
-                        <select name='role' className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                        <select name='role' value={permssion} onChange={(e) => setPermission(e.target.value)} className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                         >
                         <option value="">اختر</option>
                         {
@@ -218,6 +240,22 @@ useEffect(() => {
       </div>
     
     </div>
+       <PopupCheckdelete navigatepage='/All-users' deleteKey="users" titale="الموظف" id={id} />
+          <span>
+           إجراء
+          </span>
+          <div  className='flex gap-5 m-5'>
+                  <Link to="/All-users"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                            عوده
+                            </Link>
+      
+       {
+         isAdmin || CanDelte ? 
+         <button type='button' onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+         : null
+       }
+       
+          </div>
   </form>
   )
 }

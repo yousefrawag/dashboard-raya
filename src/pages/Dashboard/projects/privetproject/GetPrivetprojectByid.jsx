@@ -8,10 +8,16 @@ import { HiMiniViewfinderCircle } from "react-icons/hi2";
 import HeadPagestyle from '../../../../components/common/HeadPagestyle';
 import useQuerygetSpacficIteam from '../../../../services/QuerygetSpacficIteam';
 import Loader from '../../../../components/common/Loader';
+import useGetUserAuthentications from '../../../../middleware/GetuserAuthencations';
+import PopupCheckdelete from '../../../../components/common/popupmdules/PopupCheckdelete';
+import { Link } from 'react-router-dom';
+import { useDashboardContext } from '../../../../context/DashboardProviedr';
 import { useParams } from 'react-router-dom';
 const GetPrivetprojectByid = () => {
   const {id} = useParams()
   const {data , isLoading} = useQuerygetSpacficIteam("Privetprojects" , "Privetprojects" , id)
+    const {CanAdd , CanDelte , CanEdit , CanView , isAdmin} = useGetUserAuthentications("PrivetProjects")
+    const {  setModuleDelete } =  useDashboardContext()
   const CurrentItem = data?.project 
   if(isLoading) {
     return <Loader />
@@ -19,19 +25,40 @@ const GetPrivetprojectByid = () => {
   return (
     <div className='w-full h-full'>
     <HeadPagestyle pageName="بيانات الخدمة" to="/privte-projects" title="عوده" />
+
+           <span>
+                إجراء
+               </span>
+                
+               <div  className='flex gap-5 m-5'>
+          
+                {
+                  isAdmin || CanEdit ?    <Link to={`/edit-privte-projects/${id}`} className='w-20 p-2 bg-main text-white rounded-md text-center'>تعديل</Link>
+                  : null
+                }
+                     <Link to="/privte-projects"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                                عوده
+                                </Link>
+            {
+              isAdmin || CanDelte ? 
+              <button type='button' onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+              : null
+            }
+            
+               </div>
 <div className='w-full h-full grid grid-cols-1 gap-2 xl:grid-cols-2	 shadow-md p-5	'>
            <div className="mb-6 flex flex-col  gap-2">
              <span
                htmlFor="name"
                className="w-full text-lg font-medium text-gray-700 dark:text-white"
              >
-                    إسم الخدمة
+                    إسم المهمة
              </span>
              <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             
             >
               {
-                CurrentItem?.name
+                CurrentItem?.projectName
               }
             </p>
           
@@ -43,13 +70,13 @@ const GetPrivetprojectByid = () => {
                htmlFor="name"
                className="w-full text-lg font-medium text-gray-700 dark:text-white"
              >
-              متطلبات الخدمة
+              متطلبات المهمة
              </span>
              <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             
             >
                 {
-                CurrentItem?.projectRequire
+                CurrentItem?.projectDetails
               }
             </p>
           
@@ -59,7 +86,7 @@ const GetPrivetprojectByid = () => {
                htmlFor="name"
                className="w-full text-lg font-medium text-gray-700 dark:text-white"
              >
-             ملاحظات الخدمة
+             ملاحظات المهمة
              </span>
              <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             
@@ -74,7 +101,7 @@ const GetPrivetprojectByid = () => {
       
  </div>
  <br />
-    <h2 className='mb-10 mt-5'>مرفقات الخدمة</h2>
+    <h2 className='mb-10 mt-5'>مرفقات المهمة</h2>
      <div className='w-full h-full grid grid-cols-1 gap-2 xl:grid-cols-2'>
       {
         CurrentItem?.imagesURLs?.map((item) => {
@@ -126,6 +153,27 @@ const GetPrivetprojectByid = () => {
              
       
      </div>
+     <PopupCheckdelete navigatepage="/privte-projects" value={true} deleteKey="Privetprojects" titale="المشروع" id={id} />
+             <span>
+                إجراء
+               </span>
+                
+               <div  className='flex gap-5 m-5'>
+          
+                {
+                  isAdmin || CanEdit ?    <Link to={`/edit-privte-projects/${id}`} className='w-20 p-2 bg-main text-white rounded-md text-center'>تعديل</Link>
+                  : null
+                }
+                     <Link to="/privte-projects"  className='w-20 p-2 text-center bg-main text-white rounded-md'>
+                                عوده
+                                </Link>
+            {
+              isAdmin || CanDelte ? 
+              <button type='button' onClick={() => setModuleDelete(true)} className='w-20 p-2 bg-main text-white rounded-md'>حذف</button>
+              : null
+            }
+            
+               </div>
 </div>
   )
 }

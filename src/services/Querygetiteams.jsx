@@ -6,7 +6,7 @@ const useQuerygetiteams = (endpoint  , key  , params) => {
             queryKey:[`${key}` , params],
         queryFn: async () => {
             const resp = await authFetch(`/${endpoint}/` , {params} )
-            console.log(resp);
+            // console.log(resp);
             return resp
         },
             

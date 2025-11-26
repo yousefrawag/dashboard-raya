@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useDashboardContext } from '../../../context/DashboardProviedr';
 import useQueryadditeam from "../../../services/Queryadditeam"
 import toast from 'react-hot-toast';
-const MdouleAddCategoray = () => {
+const MdouleAddCategoray = ({fetshkey , titale}) => {
     const {module, setmodule} = useDashboardContext()
     const [requerFiled , setRequirefiled] = useState("")
-    const { isError , isLoading , addIteam} = useQueryadditeam("mainCategory" , "mainCategory")
+    const { isError , isLoading , addIteam} = useQueryadditeam(fetshkey , fetshkey)
 // handel add new main category 
 const handelsubmit = (e) => {
     e.preventDefault();
@@ -56,13 +56,13 @@ if(module) {
             htmlFor="name"
             className="w-full  text-lg font-medium text-gray-700"
           >
-            المستوى
+            {titale}
           </label>
           <input
             type="text"
             id="name"
             name="name"
-            placeholder="قم بكتابه المستوى"
+            placeholder={`قم بكتابة ${titale}`}
             className="mt-3 text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           />
           {

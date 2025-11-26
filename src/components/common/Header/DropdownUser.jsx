@@ -6,16 +6,21 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../../store/userSlice';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import authFetch from '../../../utils/axiosAuthfetch';
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = useSelector((state) => state.userState.userinfo)
 
   const navigate = useNavigate()
 const dispatch = useDispatch()
-const handelLogout = () => {
+const handelLogout = async () => {
+  const res = await authFetch.post("/users/logout")
+ 
+  
   dispatch(logout());
-  navigate('/auth/signin');
-  toast.success("تم تسجيل الخروج بنجاح");
+    toast.success("تم تسجيل الخروج بنجاح");
+ return  navigate('/auth/signin');
+
 };
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -26,13 +31,13 @@ const handelLogout = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-bold text-black dark:text-white">
-            {user?.name}
+            {user?.fullName}
           </span>
           <span className="block text-xs mt-2">{user?.type} </span>
         </span>
 
-        <span className="h-12 w-12 rounded-full" style={{borderRadius:"50%"}}>
-          <img src={user?.imageURL} alt="User" className='rounded-full' style={{borderRadius:"50%"}} />
+        <span className="h-12 w-12 rounded-full" >
+          <img src={user?.imageURL} alt="User" className='w-10 h-10 rounded-full vite-cover'  />
         </span>
 
         <svg

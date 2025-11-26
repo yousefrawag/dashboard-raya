@@ -2,7 +2,9 @@ import React from 'react'
 import useQuerygetiteams from '../services/Querygetiteams'
 
 const SelectoptionHook = ({fectParentKEY  , keyName , title , value , setvalue , params}) => {
-    const {data , isLoadding} = useQuerygetiteams(fectParentKEY , fectParentKEY , params)
+    const {data , isLoadding} = useQuerygetiteams(fectParentKEY , fectParentKEY, params)
+    console.log("users-daat" , data);
+    
     return (
       <div className="mb-2 flex flex-col  gap-5">
       <label
@@ -21,14 +23,8 @@ const SelectoptionHook = ({fectParentKEY  , keyName , title , value , setvalue ,
                       data?.data?.data?.map((item) => (
                           <option key={item._id} value={item._id}>
                         {
-                        keyName === "customers" ? (
-                          <p className="w-full flex gap-4">
-                            <span>{item.name}</span>
-                            {' - '}
-                            <span>{item.phoneNumber}</span>
-                          </p>
-                        ) : (
-                          item.name
+                         (
+                          item.name || item.projectName 
                         )
                     }
 

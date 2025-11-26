@@ -39,17 +39,17 @@ const DropdownNotification = () => {
           >
             <div className='w-full flex flex-col gap-3 items-center'>
               <div className='w-full flex gap-3'>
-                <img src={notify?.employee?.imageURL} alt={notify?.employee?.name} className='w-10 h-10 rounded-full' />
-                {notify?.employee?.name}
+                <img src={notify?.employee?.imageURL} alt={notify?.employee?.fullName} className='w-10 h-10 rounded-full' />
+                {notify?.employee?.fullName}
               </div>
               <p className="text-sm text-main font-bold">
                 <span className="text-main font-bold">
-                  {notify.levels === "projects" ? "خدمات عامة" : notify.levels === "clients" ? "عملاء" : "مهامى"}
+                  {notify.levels === "projects" ? "خدمات عامة" : notify.levels === "clients" ? "عملاء" : notify.levels === "expensess" ?"رصيد جديد 🎉" : "مهامى"}
                 </span>{' '}
                 {notify?.message}
               </p>
               <span>
-                {notify?.allowed?.name || notify?.allowed?.project?.name || notify?.allowed?.Privetproject?.name}
+                {notify?.allowed?.fullName || notify?.allowed?.project?.projectName || notify?.allowed?.Privetproject?.projectName || `${notify?.allowed?.total} - ${notify?.allowed?.curenccy}`}
               </span>
             </div>
             {notify?.createdAt ? formatDistanceToNow(new Date(notify?.createdAt), { addSuffix: true }) : "N/A"}

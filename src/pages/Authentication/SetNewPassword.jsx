@@ -101,7 +101,7 @@ const SetNewPassword = () => {
               
 
               <p className="2xl:px-20 text-3xl text-white dark:text-white">
-لوحة تحكم ألوان المسافر               </p>
+لوحة تحكم  الراية للتطوير العقارى               </p>
 
               <span className="mt-15 inline-block">
                 <svg

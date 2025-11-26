@@ -12,14 +12,7 @@ import GetCustomers from "./Dashboard/Customer/GetCustomers";
 import AddCustomer from "./Dashboard/Customer/AddCustomer";
 import GetCustomerByid from "./Dashboard/Customer/GetCustomerByid";
 import UpdateCutomer from "./Dashboard/Customer/UpdateCutomer";
-import Services from "./Website/services/Services";
-import AddServices from "./Website/services/AddServices";
-import GetServicesByid from "./Website/services/GetServicesByid";
-import UpdateServices from "./Website/services/UpdateServices";
-import GetVisarequire from "./Website/ViezAplications/GetVisarequire";
-import GetVisavByid from "./Website/ViezAplications/GetVisavByid";
-import AddVisaRequire from "./Website/ViezAplications/AddVisaRequire";
-import UpdateVisaRequire from "./Website/ViezAplications/UpdateVisaRequire";
+
 import GetTaskes from "./Dashboard/Taskes/GetTaskes";
 import AddTask from "./Dashboard/Taskes/AddTask";
 import UpdateTaske from "./Dashboard/Taskes/UpdateTaske";
@@ -31,16 +24,46 @@ import GetReports from "./Dashboard/Reports/GetReports";
 import TaskOverview from "./Dashboard/Taskes/TaskOverview";
 import ReportChat from "./Dashboard/Reports/ReportChat";
 import Addpermission from "./Dashboard/permissions/Addpermission";
-import GetMessages from "./Website/Messages/GetMessages";
+
 import EditPermissions from "./Dashboard/permissions/EditPermissions";
-import PrivcyPolicy from "./Website/PrivcyPolicy";
-import GetSections from "./Dashboard/Sections/GetSections"
-import AddSection from "./Dashboard/Sections/AddSection";
-import GetsectionByid from "./Dashboard/Sections/GetsectionByid";
-import UpdateSection from "./Dashboard/Sections/UpdateSection";
+
+
 import TaskwithSatuts from "./Dashboard/Taskes/TaskwithSatuts";
 import UsersStatus from "./Dashboard/users/UsersStatus";
 import SectionClients from "./Dashboard/Customer/SectionClients";
+import BoardingReports from "./Dashboard/Reports/BoardingReports"
+import CustomerReports from "./Dashboard/Reports/CutsomerRepoarts"
+import EmployeeRepoarts from "./Dashboard/Reports/EmployeeRepoarts";
+import GoogaleCalnder from "./Dashboard/GoogaleCalnder";
+import GetprojectTypes from "./Dashboard/projectTypes/GetprojectTypes";
+import GetProjectLocation from "./Dashboard/projectLocation/GetProjectLocation";
+import GetprojectSatuts from "./Dashboard/projectStauts/GetprojectSatuts";
+import CurrencyAPP from "./Dashboard/CurrencyAPP";
+import ClientTypes from "./Dashboard/ClientTypes";
+import ClientCheckstauts from "./Dashboard/ClientCheckstauts";
+import Callcentercustomerstauts from "./Dashboard/Callcentercustomerstauts";
+import Expensess from "./Expensess";
+import AddContact from "./Dashboard/Customer/AddContact";
+import CustomersRecommendations from "./Dashboard/CustomerRecomandion/CustomersRecomndions";
+import ClientRequirments from "./Dashboard/ClientRequirments";
+import ProjectArchiev from "./Dashboard/projects/ProjectArchiev";
+import UserDealyReport from "./Dashboard/DealyReport/UserDealyReport";
+import GetallDealyReport from "./Dashboard/DealyReport/GetallDealyReport";
+import AddDealyReport from "./Dashboard/DealyReport/AddDealyReport";
+import UserExpenses from "./UserExpenses";
+import UpdateDealyReport from "./Dashboard/DealyReport/UpdateDealyReport";
+import ClientWork from "./Dashboard/ClientWork";
+import ArchiveBoarding from "./Dashboard/Archive/ArchiveBoarding";
+import CustomersArchiev from "./Dashboard/Archive/CustomersArchiev";
+import WhatsappBoarding from "./Dashboard/whatssap/WhatsappBoarding";
+import PrievtProjectArchiev from "./Dashboard/projects/privetproject/PrievtProjectArchiev";
+import LeadsBoard from "./Dashboard/Customer/LeadsBoard";
+import TodayReminders from "./Dashboard/Customer/TodayReminder";
+import WhatsAppFilterCampaign from "./Dashboard/whatssap/WhatsAppFilterCampaign";
+import WhatsAppExcelCampaign from "./Dashboard/whatssap/WhatsAppExcelCampaign";
+import CompaiginPage from "./Dashboard/whatssap/CompaiginPage";
+import GetcompainByid from "./Dashboard/whatssap/GetcompainByid";
+import ProjectArea from "./Dashboard/ProjectArea";
 export {
     UserTaskes ,
     Getprojects,
@@ -55,14 +78,9 @@ export {
     AddCustomer,
     GetCustomerByid,
     UpdateCutomer,
-    Services,
-    AddServices,
-    GetServicesByid,
-    UpdateServices,
-    GetVisarequire,
-    GetVisavByid,
-    AddVisaRequire,
-    UpdateVisaRequire,
+  
+WhatsAppFilterCampaign ,
+   
     AddPrivetproject,
     GetTaskes,
     AddTask,
@@ -75,15 +93,45 @@ export {
     TaskOverview,
     ReportChat,
     Addpermission,
-    GetMessages , 
+ 
     EditPermissions , 
-    PrivcyPolicy ,
-    GetSections ,
-    AddSection , 
-    GetsectionByid , 
-    UpdateSection ,
+
+
+CompaiginPage ,
+
     TaskwithSatuts ,
     UsersStatus ,
-    SectionClients
+    SectionClients ,
+    BoardingReports ,
+    CustomerReports ,
+    EmployeeRepoarts ,
+    GoogaleCalnder ,
+    GetprojectTypes ,
+    GetProjectLocation ,
+    GetprojectSatuts , 
+    CurrencyAPP ,
+    ClientTypes ,
+    ClientCheckstauts ,
+    Callcentercustomerstauts ,
+    Expensess ,
+    AddContact ,
+    CustomersRecommendations ,
+    ClientRequirments ,
+    ProjectArchiev ,
+    UserDealyReport ,
+    GetallDealyReport ,
+    AddDealyReport ,
+    UserExpenses ,
+    UpdateDealyReport ,
+    ClientWork ,
+    ArchiveBoarding ,
+    CustomersArchiev ,
+    WhatsappBoarding , 
+    PrievtProjectArchiev ,
+    LeadsBoard ,
+    TodayReminders ,
+    WhatsAppExcelCampaign ,
+    GetcompainByid ,
+    ProjectArea
 
 }

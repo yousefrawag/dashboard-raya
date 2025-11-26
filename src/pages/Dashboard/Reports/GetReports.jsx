@@ -42,13 +42,10 @@ const GetReports = () => {
       });
     
       const filters = [
-        {
-          value: "title",
-          name: "عنوان المهمة "
-        },
+      
         {
           value: "missionType",
-          name: " نوع المشروع"
+          name: " نوع المهمة"
         },
         {
           value: "assignedBy.name",
@@ -90,12 +87,16 @@ const GetReports = () => {
     const columns = [
         
         {
-          name: "نوع الخدمة",
-          selector: (row) => row?.missionType ,
+          name: "نوع المهمة",
+        selector: (row) => <Link to={`/team-chat/${row._id}/${row?.chatID}`} >
+           {
+              row?.missionType 
+           }
+           </Link>,
         },
         {
-          name: "الخدمة",
-          selector: (row) =>  row?.missionType === "خدمة عامة" ? row?.project?.name : row?.Privetproject?.name,
+          name: "المشروع",
+          selector: (row) =>  row?.project?.projectName ? row?.project?.projectName : row?.Privetproject?.projectName || "غير متعارف عليه",
           cell: (row) => <div   
           style={{
            
@@ -103,25 +104,12 @@ const GetReports = () => {
         
     
          }}
-         >{ row?.missionType === "خدمة عامة" ? row?.project?.name : row?.Privetproject?.name}</div>,
-        },
-        {
-          name: "القسم",
-          selector: (row) => row.project?.section?.name ,
-          cell: (row) => <div   
-          style={{
-           
-           whiteSpace: "wrap",
-        
-    
-         }}
-        >{  row.project?.section?.name || "خدمه مخصصة"}</div>,
-    
+         >{ row?.project?.projectName ? row?.project?.projectName : row?.Privetproject?.projectName || "غير معروف"}</div>,
         },
 
         {
             name: "الموظفين",
-            selector: (row) => row.name,
+            selector: (row) => row.fullName,
             cell: (row) => (
               <div
                 style={{
@@ -130,16 +118,33 @@ const GetReports = () => {
                 className='flex  items-center w-full h-full'
               >
                 <div className='w-full h-full grid items-center grid-cols-2 lg:grid-cols-2'>
-                  {row?.assignedTo?.slice(0, 2).map((item, index) => (
-                    <img
-                      key={index}
-                      className='w-[30px] h-[30px] object-cover rounded-full border-[1px] border-main'
-                      src={item?.imageURL}
-                      alt='user-image'
-                      style={{borderRadius:"50%"}}
-                      title={item?.name} // Show user name on hover
-                    />
-                  ))}
+                  {
+                    row.assignedTo?.length === 0 ? <div>
+                            <img
+                    
+                        className='w-[30px] h-[30px] object-cover rounded-full border-[1px] border-main'
+                        src={row.assignedTo[0]?.imageURL}
+                        alt='user-image'
+                        style={{borderRadius:"50%"}}
+                        title={row.assignedTo[0]?.fullName} // Show user name on hover
+                      />
+                      <span>
+                        {
+                          row.assignedTo[0]?.fullName || row.assignedTo?.fullName
+                        }
+                      </span>
+                    </div> :   (row?.assignedTo?.slice(0, 2).map((item, index) => (
+                      <img
+                        key={index}
+                        className='w-[30px] h-[30px] object-cover rounded-full border-[1px] border-main'
+                        src={item?.imageURL}
+                        alt='user-image'
+                        style={{borderRadius:"50%"}}
+                        title={item?.name} // Show user name on hover
+                      />
+                    )))
+                  }
+                
                 </div>
                 {row.assignedTo?.length > 2 && (
                   <span style={{borderRadius:"50%"}} className='w-[30px] h-[30px] bg-main text-white flex items-center justify-center text-xs'>

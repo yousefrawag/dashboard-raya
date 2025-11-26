@@ -149,7 +149,7 @@ const UpdateformPrivte = () => {
       <div className="add_return flex justify-between items-center mt-4 shadow-lg p-4 bg-white dark:bg-form-input">
       <div className="add_btn">
           <button type="submit"  className={` py-2 px-6 rounded-md bg-main text-white hover:bg-transparent hover:border hover:border-blue-600 hover:text-blue-600`}>
-           إضافة
+           حفظ
           </button>
         </div>
         <div className="return_btn">

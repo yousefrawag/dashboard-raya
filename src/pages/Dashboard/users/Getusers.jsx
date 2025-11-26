@@ -27,30 +27,7 @@ const Getusers = () => {
         endDate: "",
       });
     
-      const filters = [
-        {
-          value: "name",
-          name: "الإسم الإول "
-        },
-        {
-          value: "phoneNumber",
-          name: "الجوال"
-        },
-        {
-          value: "email",
-          name: " الإيميل "
-        },
-        {
-          value: "type",
-          name: "نوع المستخدم"
-        },
-        {
-          value: "role.name",
-          name: "صلاحية"
-        },
-    
-     
-      ];
+      const filters = [{value:"fullName", name:"الإسم"} ,{value:"email", name:"الإيميل"}  ,{value:"job", name:"الوظيفة"} ]
 
 
    
@@ -71,8 +48,9 @@ const Getusers = () => {
     const columns = [
         {
           name: "الإسم",
-          selector: (row) => row.name,
-          cell: (row) => <div   
+          selector: (row) =>  row.fullName,
+          cell: (row) => <Link   
+          to={`/edtit-user/${row._id}`}
           style={{
            
            whiteSpace: "wrap",
@@ -83,8 +61,8 @@ const Getusers = () => {
 
       > 
       <img className='w-[30px] h-[30px] rounded-full' src={row?.imageURL} alt='user-image' />
-      <span>{ row.name}</span>
-      </div>,
+      <span>{ row.fullName}</span>
+      </Link>,
     
         },
         {
@@ -130,31 +108,7 @@ const Getusers = () => {
           cell: (row) => <span style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace:"wrap"}}>{format(new Date(row.createdAt), "dd MMMM, yyyy")}</span>
         },
       
-        {
-          name: "اجراء",
-          selector: (row) => row.procedure,
-          cell: (row) => (
-           
-            
-            <div className="flex items-center justify-center space-x-3.5">
-          {
-            isAdmin || CanEdit ? 
-            <Link to={`/edtit-user/${row._id}`}  className="hover:text-primary">
-            <MdOutlineEditNote size={20}/>
-          </Link>
-             : null
-          }
-         {
-          isAdmin || CanDelte ? 
-          <button className="hover:text-red-500" onClick={() => deleteIteam(row._id)}>
-          <AiTwotoneDelete size={20}/>
-        </button>
-          : null
-         }
-         
-          </div>
-          ),
-        },
+     
       ];
  if(isLoading){
   return <Loader />
