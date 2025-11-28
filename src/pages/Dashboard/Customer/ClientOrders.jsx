@@ -11,13 +11,13 @@ const ClientOrders = ({clientRequirements}) => {
               key={index}
               className="border border-gray-200 rounded-xl p-5 bg-gray-50 shadow-sm flex flex-col gap-2 relative"
             >
-              <button
+              {/* <button
                 onClick={() => handleDelete(index)}
                 type="button"
                 className="absolute top-2 left-2 text-red-500 hover:text-red-700"
               >
                 ✕
-              </button>
+              </button> */}
 
               <h4 className="text-lg font-semibold text-main mb-2">
                 طلب رقم {index + 1}

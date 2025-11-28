@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useQuerygetiteams from "../../../services/Querygetiteams";
+import toast from "react-hot-toast";
 
 const ClientRequireSection = ({ setClientRequiremnts, clientRequirements }) => {
   const { data } = useQuerygetiteams("requirements", "requirements");
@@ -59,7 +60,13 @@ const ClientRequireSection = ({ setClientRequiremnts, clientRequirements }) => {
 
   // حذف الطلب
   const handleDelete = (index) => {
-    setClientRequiremnts((prev) => prev.filter((_, i) => i !== index));
+    new Promise((resolve , reject) => {
+       const confirmed = window.confirm("هل أنت متأكد أنك تريد الحذف؟");
+       if(!confirmed) return toast.error("تم الغاء الحذف")
+            setClientRequiremnts((prev) => prev.filter((_, i) => i !== index));
+ return   toast.success("تم الحذف بنجاح")
+    })
+
   };
 
   return (

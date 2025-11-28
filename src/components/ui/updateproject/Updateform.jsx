@@ -42,6 +42,8 @@ const Updateform = ({ id }) => {
   const CurrentProject = data?.data;
   const navigate = useNavigate();
   const [images_video, setimages_video] = useState([]);
+    const [relatedTypes , setRelatedType] = useState([])
+  
  const [projectData , setprojectData] = useState({
     projectOwner:"" ,
     projectOwnerPhone:"" ,
@@ -62,7 +64,8 @@ const Updateform = ({ id }) => {
     areaMatter:"" ,
     typeOfSpaceoutside:"" ,
     spaceOuteside:"" ,
-    city:""
+    city:"" ,
+    relatedtype:""
 
   })
   const [relatedRegions , setRelatedRegion] = useState([])
@@ -86,14 +89,14 @@ const Updateform = ({ id }) => {
     const formData = new FormData(e.currentTarget);
 
     const data = Object.fromEntries(formData);
-    formData.set("operationType" , opeartionType)
-    formData.set("installments" , chasSelectedtype)
+ 
     docs.forEach((item) => {
       formData.append('files', item);
     });
     images_video.forEach((item) => {
       formData.append('files', item);
     });
+console.log(data);
 
    
     try {
@@ -125,6 +128,7 @@ const Updateform = ({ id }) => {
       toast.error(error.response?.data?.mesg);
     }
   };
+
   const handelInputschage = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -138,13 +142,20 @@ setRelatedRegion(CurrentRegion?.relatedRegions)
       }
       
     }
+           if(name === "estateType"){
+      const CurrentRegion = regionData?.data?.data?.find((item) => item.name === value)
+      if(CurrentRegion){
+setRelatedType(CurrentRegion?.relatedRegions)
+      } else{
+        setRelatedType([])
+      } }
   };
   useEffect(() => {
     if (CurrentProject) {
     setprojectData({
     governoate:CurrentProject?.governoate ,
     projectName:"" ,
-    estateType:"" ,
+    estateType:CurrentProject?.estateType ,
     detailedAddress:"" ,
     projectDetails:"" ,
     projectads:"" ,
@@ -153,18 +164,34 @@ setRelatedRegion(CurrentRegion?.relatedRegions)
     InstallmentPeriod:CurrentProject?.InstallmentPeriod ,
     installmentsFirstPermonth:CurrentProject?.installmentsFirstPermonth ,
 
-    city:CurrentProject?.city
+    city:CurrentProject?.city ,
+    relatedtype:CurrentProject?.relatedtype
     })
     
       setOpeartiontype(CurrentProject?.operationType);
-      setEstateType(CurrentProject?.estateType);
+      
       setProjectSatuts(CurrentProject?.projectSatatus)
       setCurrency(CurrentProject?.pymentType)
       setCahselectedType(CurrentProject?.installments)
+
+
+
+    }
+  }, [CurrentProject ]);
+
+  useEffect(() => {
+    if(!CurrentProject ||  !locations?.data?.data) return ;
           const CurrentRegionsRelated = locations?.data?.data?.find((item) => item.name === CurrentProject?.governoate )
       setRelatedRegion(CurrentRegionsRelated?.relatedRegions)
-    }
-  }, [CurrentProject]);
+  } , [CurrentProject , locations])
+
+    useEffect(() => {
+    if(!CurrentProject ||  !regionData?.data?.data) return ;
+                 const CurrenttypesRelated = regionData?.data?.data?.find((item) => item.name === CurrentProject?.estateType )
+      setRelatedType(CurrenttypesRelated?.relatedRegions)
+  } , [CurrentProject , regionData])
+
+
   if (isLoading || SubmitLoading) {
     return <Loader />;
   }
@@ -185,6 +212,7 @@ setRelatedRegion(CurrentRegion?.relatedRegions)
             className="w-full text-lg font-medium text-black dark:text-white"
           >
             مالك العقار
+         
           </label>
           <input
             type="text"
@@ -297,8 +325,7 @@ setRelatedRegion(CurrentRegion?.relatedRegions)
           </label>
           <select
             name="estateType"
-            value={EstateType}
-            onChange={(e) => setEstateType(e.target.value)}
+          onChange={handelInputschage} value={projectData.estateType} 
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           >
             <option value="">أختر النوع</option>
@@ -311,7 +338,26 @@ setRelatedRegion(CurrentRegion?.relatedRegions)
             })}
           </select>
         </div>
-
+                         <div className="mb-6 flex flex-col gap-2">
+  <label htmlFor="relatedtype" className="w-full text-lg font-medium text-black dark:text-white">
+    التابع*
+  </label>
+  <select
+    name="relatedtype"
+    id="relatedtype"
+    required
+    value={projectData.relatedtype}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+    <option>قم بالإختيار</option>
+    {relatedTypes?.map((region, index) => (
+      <option key={index} value={region}>
+        {region}
+      </option>
+    ))}
+  </select>
+</div>
     
         <div className="mb-6 flex flex-col  gap-2">
           <label
@@ -359,6 +405,7 @@ setRelatedRegion(CurrentRegion?.relatedRegions)
             );
           })}
         </div>
+
         <div className="mb-6 flex flex-col  gap-2">
           <label
             htmlFor="projectSatatus"
@@ -479,27 +526,31 @@ setRelatedRegion(CurrentRegion?.relatedRegions)
                 <input
                   type="text"
                   id="installmentsFirstPyment"
-                  name="installmentsFirstPyment"
+          
                   defaultValue={CurrentProject?.installmentsFirstPyment}
                   className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                 />
               </div>
-              <div className="mb-6 flex flex-col  gap-2">
-                <label
-                  htmlFor="InstallmentPeriod"
-                  className="w-full text-lg font-medium text-black dark:text-white"
-                >
-                  مده التقسيط*
-                </label>
-                <input
-                  type="text"
-                  id="InstallmentPeriod"
-                  name="InstallmentPeriod"
-                  defaultValue={CurrentProject?.InstallmentPeriod}
-                  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-                />
-              </div>
-              <div className="mb-6 flex flex-col  gap-2">
+        <div className="mb-6 flex flex-col gap-2">
+  <label
+    htmlFor="InstallmentPeriod"
+    className="w-full text-lg font-medium text-black dark:text-white"
+  >
+    مدة التقسيط*
+  </label>
+  <select
+    id="InstallmentPeriod"
+    name="InstallmentPeriod"
+    value={projectData.InstallmentPeriod}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+    <option value="">اختر مدة التقسيط</option>
+    <option value="شهري">شهري</option>
+    <option value="سنوي">سنوي</option>
+  </select>
+</div>
+              {/* <div className="mb-6 flex flex-col  gap-2">
                 <label
                   htmlFor="installmentsFirstPermonth"
                   className="w-full text-lg font-medium text-black dark:text-white"
@@ -513,7 +564,7 @@ setRelatedRegion(CurrentRegion?.relatedRegions)
                   defaultValue={CurrentProject?.installmentsFirstPermonth}
                   className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                 />
-              </div>
+              </div> */}
          
 
 
@@ -543,26 +594,7 @@ setRelatedRegion(CurrentRegion?.relatedRegions)
   </select>
 </div>
 
-{/* مدة التقسيط */}
-<div className="mb-6 flex flex-col gap-2">
-  <label
-    htmlFor="InstallmentPeriod"
-    className="w-full text-lg font-medium text-black dark:text-white"
-  >
-    مدة التقسيط*
-  </label>
-  <select
-    id="InstallmentPeriod"
-    name="InstallmentPeriod"
-    value={projectData.InstallmentPeriod}
-    onChange={handelInputschage}
-    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-  >
-    <option value="">اختر مدة التقسيط</option>
-    <option value="شهري">شهري</option>
-    <option value="سنوي">سنوي</option>
-  </select>
-</div>
+
 
 {/* الدفعة الشهرية */}
 <div className="mb-6 flex flex-col gap-2">

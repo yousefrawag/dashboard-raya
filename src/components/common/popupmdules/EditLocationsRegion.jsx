@@ -56,10 +56,16 @@ const EditLocationsRegion = ({ fetshkey, titale }) => {
   };
 
   const delateRegion = (regionToDelete) => {
-    const updated = AllRelatedRegion.filter((item) => item !== regionToDelete);
+    new Promise((resolve, reject) => {
+      const confirmed = window.confirm("هل أنت متأكد أنك تريد الحذف؟");
+      if(!confirmed) return toast.error("تم الغاء الحذف")
+            const updated = AllRelatedRegion.filter((item) => item !== regionToDelete);
     setAllRelatedRegion(updated);
+    return toast.success("تم الحذف")
+    })
+
   };
-console.log("location" ,mainCategory);
+
 
   useEffect(() => {
     if (editmainCategory) {
