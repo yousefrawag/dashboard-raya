@@ -11,6 +11,9 @@ import { format, differenceInDays, differenceInHours, differenceInMinutes  , for
 import { useState } from 'react';
 import authFetch from '../../../utils/axiosAuthfetch';
 import TeaxtareGenralSearch from '../../../components/common/TeaxtareGenralSearch';
+import Loader from '../../../components/common/Loader';
+import { useNavigate } from "react-router-dom";
+
 const CustomersRecommendations = () => {
        const [formData, setFormData] = useState({
       addBy: "",
@@ -38,7 +41,8 @@ const CustomersRecommendations = () => {
     });
      const [allwords , setWords] = useState([])
     const [data , setData] = useState([])
-
+    const [isloading , setIsloading] = useState(false)
+const navigate  = useNavigate()
      const statusConfig = {
      
         info: {
@@ -466,6 +470,7 @@ const CustomersRecommendations = () => {
 const handelSubmit =  async (e) => {
   e.preventDefault();
   try {
+    setIsloading(true)
        const cleanedData = Object.fromEntries(
       Object.entries(formData).filter(([_, value]) => {
         // إزالة القيم الفارغة، ولكن الاحتفاظ بـ 0
@@ -473,21 +478,26 @@ const handelSubmit =  async (e) => {
       })
     );
     if(CurrenTap === "info"){
-   const respones = await authFetch.get("customers/recomandion" , {params:{...cleanedData , CurrenTap} })
+  //  const respones = await authFetch.get("customers/recomandion" , {params:{...cleanedData , CurrenTap} })
+         navigate(`/customers-search-results?${new URLSearchParams({...cleanedData , CurrenTap})}`);
+
    
-   
-    setData(respones?.data?.data)
+    // setData(respones?.data?.data)
+    //   setIsloading(false)
     } else {
-         const respones = await authFetch.get("customers/recomandion" , {params:{allwords , CurrenTap} })
-   
-   
-    setData(respones?.data?.data)
+
+            navigate(`/customers-search-results?${new URLSearchParams({ allwords, CurrenTap })}`);
+
+    //      const respones = await authFetch.get("customers/recomandion" , {params:{allwords , CurrenTap} })
+    // setData(respones?.data?.data)
+    // setIsloading(false)
     }
  
 
     
   } catch (error) {
     console.log(error);
+    setIsloading(false)
     
   }
 }
@@ -501,8 +511,8 @@ const handelReset = () => {
       region: "",
       project: [],
       cashOption: "",
-      firstPaymentFrom: null ,
-      firstPaymentTo:null,
+      firstPaymentFrom: "" ,
+      firstPaymentTo:"",
       InstallmentType: "",
       followFrom: "",
       followTo: "",
@@ -785,17 +795,17 @@ const downloadWhatsAppData = (filename = "بيانات_الواتساب.xlsx") =
   }
 };
   return (
-    <div className="min-h-screen  p-4 text-center rounded-lg ">
+    <div className="min-h-screen  text-center rounded-lg ">
 
 
       <form  onSubmit={handelSubmit}>
 
       
-            <div className="flex gap-2 w-full lg:w-auto m-5">
+            <div className="flex gap-2 lg:flex-row flex-col w-full lg:w-auto m-5">
                   <button
                
                 type='submit'
-                className="flex items-center gap-2 bg-main  text-white p-4  rounded-lg shadow-md"
+                className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600  text-white p-4  rounded-lg shadow-md"
               >
                بحث
               </button>
@@ -806,23 +816,7 @@ const downloadWhatsAppData = (filename = "بيانات_الواتساب.xlsx") =
               >
                 <FiRefreshCcw /> إعادة تعيين
               </button>
-              
-  <div className="mb-6 flex gap-2">
-  <button
-    onClick={downloadExcel}
-    type='button'
-    className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md"
-  >
-    تحميل جميع البيانات
-  </button>
-  <button
-    onClick={downloadWhatsAppData}
-    type='button'
-    className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md"
-  >
-    تحميل البيانات لحمله واتساب
-  </button>
-</div>
+
       
             </div>
 
@@ -842,9 +836,13 @@ const downloadWhatsAppData = (filename = "بيانات_الواتساب.xlsx") =
 
 
 </form>
-<div className='mt-10 bg-gray-50 w-full p-4 rounded-md border-dashed'>
+{/* {
+  isloading ? <Loader /> : 
+  <div className='mt-10 bg-gray-50 w-full p-4 rounded-md border-dashed'>
   <CustomeTabel  data={data} columns={columns}/>
 </div>
+} */}
+
     </div>
   );
 };

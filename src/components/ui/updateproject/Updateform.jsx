@@ -27,6 +27,8 @@ const Updateform = ({ id }) => {
   const { data:locations } = useQuerygetiteams("location", "location");
   const { data:Currencydata } = useQuerygetiteams("currency", "currency");
   const { data: regionData } = useQuerygetiteams('region', 'region');
+    const { data:Area } = useQuerygetiteams("arae", "arae");
+  
   const { data: projectStatuts } = useQuerygetiteams(
     'projectStatuts',
     'projectStatuts',
@@ -51,6 +53,7 @@ const Updateform = ({ id }) => {
     projectName:"" ,
     estateType:"" ,
     detailedAddress:"" ,
+    availableFloors:"",
     projectDetails:"" ,
     projectads:"" ,
     projectSatatus:"" ,
@@ -62,6 +65,7 @@ const Updateform = ({ id }) => {
     installmentsFirstPermonth:"" ,
     clientType:"" ,
     areaMatter:"" ,
+   
     typeOfSpaceoutside:"" ,
     spaceOuteside:"" ,
     city:"" ,
@@ -160,12 +164,15 @@ setRelatedType(CurrentRegion?.relatedRegions)
     projectDetails:"" ,
     projectads:"" ,
     projectSatatus:"" ,
+    areaMatter:CurrentProject?.areaMatter,
+    spaceOuteside:CurrentProject?.spaceOuteside ,
      installmentsFirstPyment:CurrentProject?.installmentsFirstPyment ,
     InstallmentPeriod:CurrentProject?.InstallmentPeriod ,
     installmentsFirstPermonth:CurrentProject?.installmentsFirstPermonth ,
 
     city:CurrentProject?.city ,
-    relatedtype:CurrentProject?.relatedtype
+    relatedtype:CurrentProject?.relatedtype ,
+    availableFloors:CurrentProject?.availableFloors
     })
     
       setOpeartiontype(CurrentProject?.operationType);
@@ -623,51 +630,86 @@ setRelatedType(CurrentRegion?.relatedRegions)
 </div>
             </div>
           ) : null}
-          <div className="mb-6 flex flex-col  gap-2">
-            <label
-              htmlFor="clientType"
-              className="w-full text-lg font-medium text-black dark:text-white"
-            >
-              الطوابق المتوفره*
-            </label>
-            <input
-              type="text"
-              id="clientType"
-              name="clientType"
-              defaultValue={CurrentProject?.clientType}
-              className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-            />
-          </div>
-          <div className="mb-6 flex flex-col  gap-2">
-            <label
-              htmlFor="areaMatter"
-              className="w-full text-lg font-medium text-black dark:text-white"
-            >
-              المساحة / متر*
-            </label>
-            <input
-              type="text"
-              id="areaMatter"
-              name="areaMatter"
-              defaultValue={CurrentProject?.areaMatter}
-              className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-            />
-          </div>
-          <div className="mb-6 flex flex-col  gap-2">
-            <label
-              htmlFor="spaceOuteside"
-              className="w-full text-lg font-medium text-black dark:text-white"
-            >
-              المساحة / الخارجيه للعقار
-            </label>
-            <input
-              type="text"
-              id="spaceOuteside"
-              name="spaceOuteside"
-              defaultValue={CurrentProject?.spaceOuteside}
-              className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-            />
-          </div>
+                  <div className="mb-6 flex flex-col gap-2 mb-3">
+  <label
+    htmlFor="availableFloors"
+    className="w-full text-lg font-medium text-black dark:text-white mb-5 mt-5"
+  >
+    الطوابق المتوفرة*
+  </label>
+
+  <select
+    id="availableFloors"
+    name="availableFloors"
+    value={projectData.availableFloors}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+    <option value="">اختر عدد الطوابق</option>
+    {[...Array(10)].map((_, index) => (
+      <option key={index + 1} value={index + 1}>
+        {index + 1}
+      </option>
+    ))}
+  </select>
+</div>
+                   <div className="mb-6 flex flex-col gap-2">
+  <label
+    htmlFor="areaMatter"
+    className="w-full text-lg font-medium text-black dark:text-white"
+  >
+    المساحة / متر*
+  </label>
+  <select
+    id="areaMatter"
+    name="areaMatter"
+    value={projectData.areaMatter}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+   
+
+               <option value="">
+                                أختر المساحه
+                            </option>
+                            {Area?.data?.data?.map((item) => {
+                        return (
+                          <option key={item._id} value={item.name}>
+                            {item.name + "م²"}
+                          </option>
+                        );
+                          })}
+  </select>
+</div>
+
+<div className="mb-6 flex flex-col gap-2">
+  <label
+    htmlFor="spaceOuteside"
+    className="w-full text-lg font-medium text-black dark:text-white"
+  >
+    المساحة الخارجية للعقار
+  </label>
+  <select
+    id="spaceOuteside"
+    name="spaceOuteside"
+    value={projectData.spaceOuteside}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+        <option value="">
+                                أختر المساحه
+                            </option>
+                            {Area?.data?.data?.map((item) => {
+                        return (
+                          <option key={item._id} value={item.name}>
+                            {item.name + "م²"}
+                          </option>
+                        );
+                          })}
+  </select>
+</div>
+
+
           <div className="mb-6 flex flex-col  gap-2">
             <label
               htmlFor="typeOfSpaceoutside"

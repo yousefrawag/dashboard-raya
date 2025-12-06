@@ -8,7 +8,8 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
     ClientRequirments ,
     ClientWork ,
     LeadsBoard ,
-    TodayReminders
+    TodayReminders ,
+    Customerdata
   
   } from "../pages";
     import store from "../store/index"
@@ -27,5 +28,6 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
          { path: "/client-work", element: <ClientWork /> } ,
          { path: "/customers-leads", element: <LeadsBoard /> } ,
          { path: "/User-Reminder", element: <TodayReminders /> } ,
+         { path: "/customers-search-results", element: <Customerdata /> } ,
 
       ];

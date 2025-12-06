@@ -176,7 +176,7 @@ const [clientRequirements , setClientRequiremnts] = useState([
             onSuccess: () => {
               e.target.reset();
               toast.success('تم تعديل عميل بنجاح');
-              navigate('/cutomers');
+             
             },
             onError: (error) => {
               if (
@@ -213,7 +213,7 @@ const [clientRequirements , setClientRequiremnts] = useState([
             onSuccess: () => {
               e.target.reset();
               toast.success('تم تعديل عميل بنجاح');
-              navigate('/cutomers');
+             
             },
             onError: (error) => {
               if (

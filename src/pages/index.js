@@ -64,6 +64,7 @@ import WhatsAppExcelCampaign from "./Dashboard/whatssap/WhatsAppExcelCampaign";
 import CompaiginPage from "./Dashboard/whatssap/CompaiginPage";
 import GetcompainByid from "./Dashboard/whatssap/GetcompainByid";
 import ProjectArea from "./Dashboard/ProjectArea";
+import Customerdata from "./Dashboard/CustomerRecomandion/Customerdata";
 export {
     UserTaskes ,
     Getprojects,
@@ -132,6 +133,7 @@ CompaiginPage ,
     TodayReminders ,
     WhatsAppExcelCampaign ,
     GetcompainByid ,
-    ProjectArea
+    ProjectArea ,
+    Customerdata
 
 }

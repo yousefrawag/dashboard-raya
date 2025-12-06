@@ -92,7 +92,7 @@ const ProjectByid = () => {
                    htmlFor="name"
                    className="w-full text-lg font-medium text-gray-700 dark:text-white"
                  >
-                 مالك العقار
+                 مالك العقار   
                  </span>
                  <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                 
@@ -143,6 +143,21 @@ const ProjectByid = () => {
                 </p>
               
                </div> 
+                  <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+            التابع
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                           {Currentitem?.relatedtype}
+                </p>
+              
+               </div> 
+
                <div className="mb-6 flex flex-col  gap-2">
                  <span
                    htmlFor="name"
@@ -153,7 +168,21 @@ const ProjectByid = () => {
                  <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                 
                 >
-                 {Currentitem?.governorate}
+                 {Currentitem?.governoate}
+                </p>
+              
+               </div>
+                 <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+            الموقع
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.city}
                 </p>
               
                </div>

@@ -189,8 +189,8 @@ const removeclientwork = (statusToRemove) => {
     
   
   return (
-    <div className='w-full  bg-gray-100 max-h-[200px] p-4 overflow-y-auto rounded-10'>
-        <div className='grid grid-cols-4 gap-2 p-3'>
+    <div className='w-full  bg-gray-100 max-h-[200px] overflow-y-auto rounded-10'>
+        <div className='grid grid-cols-1 lg:grid-cols-4 gap-2 p-3'>
              <div className="mb-6 flex flex-col  gap-2">
                         <label
                             htmlFor="addBy"

@@ -92,6 +92,42 @@ console.log("sidpare toggale" , sidebarOpen);
                   <FaTasks className="text-lg" /> لوحه تحكم
                 </NavLink>
               </li>
+                          {
+     isAdmin || HasPermission("canViewClients") ? 
+     <li>
+ 
+                <NavLink
+                  to="/cutomers"
+                  className={`${liststyle} ${pathname.includes('cutomers') && itemstyle}`}
+                >
+                  <FaUsers className="text-lg" /> العملاء
+                </NavLink>
+ </li> : null
+     
+  }
+
+       {
+     isAdmin || HasPermission("canViewClients") ? 
+     <li>
+ 
+                <NavLink
+                  to="/Recommendations"
+                  className={`${liststyle} ${pathname.includes('Recommendations') && itemstyle}`}
+                >
+                  <FaUsers className="text-lg" />  بحث متقدم
+                </NavLink>
+ </li> : null
+     
+  }
+        <li>
+                <NavLink
+                  to="/User-Reminder"
+                  className={`${liststyle} ${pathname === '/User-Reminder' && itemstyle}`}
+                >
+                  <FaTasks className="text-lg" /> تنبيهات العملاء
+                </NavLink>
+              </li>
+
                 <li>
                 <NavLink
                   to="/User-Reports"
@@ -100,14 +136,18 @@ console.log("sidpare toggale" , sidebarOpen);
                   <FaTasks className="text-lg" /> تقاريرى
                 </NavLink>
               </li>
-                  <li>
-                <NavLink
-                  to="/User-Reminder"
-                  className={`${liststyle} ${pathname === '/User-Reminder' && itemstyle}`}
-                >
-                  <FaTasks className="text-lg" /> تنبيهات المتابعة
-                </NavLink>
-              </li>
+            
+            {
+   isAdmin || HasPermission("canViewReports") ? 
+   <li>
+   <NavLink
+     to="/Boardin-Reports"
+     className={`${liststyle} ${pathname === '/Boardin-Reports' && itemstyle}`}
+   >
+     <FaChartLine className="text-lg" /> التقارير والتوصيات
+   </NavLink>
+ </li>:null
+}
               {
 isAdmin || HasPermission("canViewProjects") ?     <li>
 <NavLink
@@ -131,63 +171,6 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
   </NavLink>
 </li> :null
 }
-            {
-     isAdmin || HasPermission("canViewClients") ? 
-     <li>
- 
-                <NavLink
-                  to="/customers-leads"
-                  className={`${liststyle} ${pathname.includes('customers-leads') && itemstyle}`}
-                >
-                  <FaUsers className="text-lg" />  عملاء الحملات
-                </NavLink>
- </li> : null
-     
-  }
-            {
-     isAdmin || HasPermission("canViewClients") ? 
-     <li>
- 
-                <NavLink
-                  to="/Recommendations"
-                  className={`${liststyle} ${pathname.includes('Recommendations') && itemstyle}`}
-                >
-                  <FaUsers className="text-lg" /> توصيات العملاء
-                </NavLink>
- </li> : null
-     
-  }
-  {
-   isAdmin || HasPermission("canViewAdministration") ? 
-   <li>
-                <NavLink
-                  to="/whatsap-boarding"
-                  className={`${liststyle} ${pathname.includes('permissions') && itemstyle}`}
-                >
-                  <FaWhatsapp className="text-lg text-green-500" />  أتوميشن الواتساب
-                </NavLink>
-              </li> : null
-
-} 
-
-            {
-     isAdmin || HasPermission("canViewClients") ? 
-     <li>
- 
-                <NavLink
-                  to="/cutomers"
-                  className={`${liststyle} ${pathname.includes('cutomers') && itemstyle}`}
-                >
-                  <FaUsers className="text-lg" /> العملاء
-                </NavLink>
- </li> : null
-     
-  }
-
-           
- 
-        
-
            
 {
   isAdmin || HasPermission("canViewMissions") ?       <li>
@@ -201,17 +184,7 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
 
 }
          
-{
-   isAdmin || HasPermission("canViewReports") ? 
-   <li>
-   <NavLink
-     to="/Boardin-Reports"
-     className={`${liststyle} ${pathname === '/Boardin-Reports' && itemstyle}`}
-   >
-     <FaChartLine className="text-lg" /> التقارير والتواصل
-   </NavLink>
- </li>:null
-}
+
 {
    isAdmin || HasPermission("canViewclander") ? 
    <li>
@@ -234,6 +207,41 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
    </NavLink>
  </li>:null
 }
+
+     
+  {
+   isAdmin || HasPermission("canViewAdministration") ? 
+   <li>
+                <NavLink
+                  to="/whatsap-boarding"
+                  className={`${liststyle} ${pathname.includes('permissions') && itemstyle}`}
+                >
+                  <FaWhatsapp className="text-lg text-green-500" />  أتوميشن الواتساب
+                </NavLink>
+              </li> : null
+
+} 
+
+            {
+     isAdmin || HasPermission("canViewClients") ? 
+     <li>
+ 
+                <NavLink
+                  to="/customers-leads"
+                  className={`${liststyle} ${pathname.includes('customers-leads') && itemstyle}`}
+                >
+                  <FaUsers className="text-lg" />  عملاء الحملات
+                </NavLink>
+ </li> : null
+     
+  }
+
+
+           
+ 
+        
+
+
            
 
 
@@ -260,7 +268,7 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
                 to="/All-users"
                 className={`${liststyle} ${pathname.includes('All-users') && itemstyle}`}
               >
-                <FaUsers className="text-lg" /> جميع الموظفين
+                <FaUsers className="text-lg" />  الموظفين
               </NavLink>
             </li> : null
           }
@@ -275,18 +283,7 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
               </NavLink>
             </li> : null
           }
-{
-   isAdmin || HasPermission("canViewAdministration") ? 
-   <li>
-                <NavLink
-                  to="/archive-boarding"
-                  className={`${liststyle} ${pathname.includes('permissions') && itemstyle}`}
-                >
-                  <FaArchive className="text-lg text-red-500" /> أرشيف البيانات
-                </NavLink>
-              </li> : null
-
-}            
+           
 {
    isAdmin || HasPermission("canViewAdministration") ? 
    <li>
@@ -299,6 +296,18 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
               </li> : null
 
 }
+{
+   isAdmin || HasPermission("canViewAdministration") ? 
+   <li>
+                <NavLink
+                  to="/archive-boarding"
+                  className={`${liststyle} ${pathname.includes('permissions') && itemstyle}`}
+                >
+                  <FaArchive className="text-lg text-red-500" /> أرشيف البيانات
+                </NavLink>
+              </li> : null
+
+} 
 <span  className='mb-5 text-lg text-bold mt-5'> إداره حقول المشاريع</span>
 {
    isAdmin || HasPermission("canViewprojectstypes") ? 
@@ -307,7 +316,7 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
                   to="/projects-Types"
                   className={`${liststyle} ${pathname.includes('projects-Types') && itemstyle}`}
                 >
-                  <MdOutlineSecurity className="text-lg" /> أنواع العقارات
+                  <MdOutlineSecurity className="text-lg" />  نوع العقار
                 </NavLink>
               </li> : null
 
@@ -319,7 +328,7 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
                   to="/projects-location"
                   className={`${liststyle} ${pathname.includes('projects-location') && itemstyle}`}
                 >
-                  <MdOutlineSecurity className="text-lg" /> المناطق 
+                  <MdOutlineSecurity className="text-lg" /> منطقة العقار 
                 </NavLink>
               </li> : null
 
@@ -331,7 +340,7 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
                   to="/projects-stauts"
                   className={`${liststyle} ${pathname.includes('projects-stauts') && itemstyle}`}
                 >
-                  <MdOutlineSecurity className="text-lg" /> حالات العقارات 
+                  <MdOutlineSecurity className="text-lg" />  حاله العقار 
                 </NavLink>
               </li> : null
 
@@ -343,7 +352,7 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
                   to="/projects-area"
                   className={`${liststyle} ${pathname.includes('projects-area') && itemstyle}`}
                 >
-                  <MdOutlineSecurity className="text-lg" /> مساحه العقارات
+                  <MdOutlineSecurity className="text-lg" /> مساحه العقار
                 </NavLink>
               </li> : null
 
@@ -371,7 +380,7 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
                   to="/cutomers-types"
                   className={`${liststyle} ${pathname.includes('cutomers-types') && itemstyle}`}
                 >
-                  <MdOutlineSecurity className="text-lg" />   أنواع العملاء 
+                  <MdOutlineSecurity className="text-lg" />    وصف العميل 
                 </NavLink>
               </li> : null
 
@@ -396,7 +405,7 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
                   to="/customer-callcenter-stauts"
                   className={`${liststyle} ${pathname.includes('customer-callcenter-stauts') && itemstyle}`}
                 >
-                  <MdOutlineSecurity className="text-lg" />   حالات العميل قسم الاتصال
+                  <MdOutlineSecurity className="text-lg" />   حاله العميل فى  قسم الاتصالات
                 </NavLink>
               </li> : null
 
