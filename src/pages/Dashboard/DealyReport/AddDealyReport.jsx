@@ -9,6 +9,7 @@ import useQuerygetiteams from '../../../services/Querygetiteams';
 import UploadDealyFiles from '../../../hooks/UploadDealyFiles';
 const AddDealyReport = () => {
     const {data} = useQuerygetiteams("customers" , "customers")
+   const { data:ReportTypes, isLoading:loaddingGetReporttYPE } = useQuerygetiteams('ReportType', 'ReportType');
 
     const [selectedUsers, setSelectedUsers] = useState([]); // Array for selected users
 const [docs , setDocs] = useState([])
@@ -16,8 +17,36 @@ const [docs , setDocs] = useState([])
     const [users , setUsers] = useState()
     const { addIteam, isLoading } = useQueryadditeam("Dealiy-reports", "Dealiy-reports");
     const navigate = useNavigate();
+ const [retlatedReportType, setRelatedReportType] = useState([])
+const [formdata , setFormdata] = useState({
+
+  ReportType:"" ,
+  ReportTypeDescriep:"",
+  Customer:"",
+  endcontact:"",
+  notes:""
 
 
+
+
+})
+const handelInputschage = (e) => {
+  const name = e.target.name
+  const value = e.target.value
+  setFormdata((prev) => ({
+    ...prev,
+    [name]:value
+  }))
+   
+           if (name === "ReportType") {
+    const selectedRegion = ReportTypes?.data?.data?.find((item) => item.name === value);
+    if (selectedRegion) {
+      setRelatedReportType(selectedRegion.relatedRegions || []);
+    } else {
+      setRelatedReportType([]);
+    }
+    
+  }}
     const filteredUsers = users?.filter((user) =>
         user?.fullName?.toLowerCase().includes(search.toLowerCase())
       );
@@ -86,36 +115,61 @@ useEffect(() => {
             </div>
 
             <div className='main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto'>
-        
- <div className="mb-6 flex flex-col  gap-2">
-    <label
+
+  {
+  loaddingGetReporttYPE ? "loadding ..." : <div className="mb-6 flex flex-col  gap-2 w-full">
+        <label
       htmlFor="ReportType"
       className="w-full text-lg font-medium text-black dark:text-white"
     >
        نوع التقرير *
 
     </label>
-    <select
-      name="ReportType"
+            <select 
+                 name="ReportType"
       id="ReportType"
-   
-      required
-    
-      className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-    >
-  <option value="">اختر نوع التقرير</option>
-<option value="إضافة عميل">إضافة عميل</option>
-<option value="متابعة مع عميل">متابعة مع عميل</option>
-<option value="اجتماع مع عميل">اجتماع مع عميل</option>
-<option value="مكالمة هاتفية">مكالمة هاتفية</option>
-<option value="إرسال عرض سعر">إرسال عرض سعر</option>
-<option value="استلام دفعة">استلام دفعة</option>
-<option value="تحديث بيانات عميل">تحديث بيانات عميل</option>
-<option value="زيارة ميدانية">زيارة ميدانية</option>
-<option value="أخرى">أخرى</option>
- 
-    </select>
-  </div>
+   value={formdata.ReportType}
+   onChange={handelInputschage}
+            required
+            
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالإختيار</option>
+{
+  ReportTypes?.data?.data?.map((item) => {
+    return <option key={item?._id} value={item?.name}>{item?.name}</option>
+  })
+}
+</select>
+          </div>
+}
+  <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="ReportTypeDescriep"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+       وصف التقرير 
+
+            </label>
+            <select 
+            value={formdata.ReportTypeDescriep}
+            onChange={handelInputschage}
+            required
+            name='ReportTypeDescriep'
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالاختيار</option>
+{
+  retlatedReportType?.map((item) => {
+    return <option key={item} value={item}>{item}</option>
+  })
+}
+</select>
+          </div>
       
 
 

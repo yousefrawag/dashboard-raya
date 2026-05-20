@@ -12,7 +12,7 @@ import useGetUserAuthentications from '../../../middleware/GetuserAuthencations'
 import useQuerygetiteams from "../../../services/Querygetiteams"
 import Loader from '../../../components/common/Loader';
 import { MdOutlineAddIcCall } from "react-icons/md";
-
+import { FiFilter, FiX } from "react-icons/fi";
 import { useState , useMemo } from 'react';
 import FiltertionHook from '../../../hooks/FiltertionHook';
 
@@ -35,8 +35,7 @@ const GetCustomers = () => {
   const { isError , isLoading , data} = useQuerygetiteams("customers" , "customers" , paramsapi)
   const {deleteIteam} = useQueryDelete("customers" , "customers")
   const {CanAdd , CanDelte , CanEdit , CanView , isAdmin} = useGetUserAuthentications("Clients")
-// handel filter 
-   console.log("customer" , data);
+const [isSectionOpen , setIssectionOpen] = useState(false)
    
     
       const filters = [
@@ -116,8 +115,8 @@ const filteredData = useMemo(() => {
 
     const columns = [
           {
-    name: "إضافة إتصال",
-    width:"120px" ,
+    name: " إتصال",
+    width:"100px" ,
     selector: (row) => row?.fullName,
     cell: (row) => (
       <Link to={`/customer-add-contact/${row._id}`} className='flex items-center justify-center'>
@@ -126,9 +125,18 @@ const filteredData = useMemo(() => {
       </Link>
     )
   },
+  //      {
+  //       name: "إسم المشترى",
+  //       width:"110px" ,
+  //       selector: (row) => row?.fullName,
+  //       cell: (row) => (
+  //                 <Link   target="_blank" 
+  // rel="noopener noreferrer" to={`/cutomers/${row._id}`} >{row._id}</Link>
+  //       )
+  //     },
       {
         name: "إسم المشترى",
-        width:"160px" ,
+        width:"110px" ,
         selector: (row) => row?.fullName,
         cell: (row) => (
                   <Link   target="_blank" 
@@ -190,7 +198,7 @@ const filteredData = useMemo(() => {
         {
         name: "وظيفة العميل",
         selector: (row) => row?.clientwork,
-         width:"160px" ,
+         width:"110px" ,
         cell: (row) => (
           <span
             style={{
@@ -205,10 +213,28 @@ const filteredData = useMemo(() => {
           </span>
         )
       },
+           {
+        name: "المنطقه",
+        selector: (row) => row?.region,
+         width:"110px" ,
+        cell: (row) => (
+          <span
+            style={{
+          
+              whiteSpace: "wrap",
+           
+    
+            }}
+          >
+            {" "}
+           { row?.region || "غير متوفر" }
+          </span>
+        )
+      },
       {
-        name: "إسم المسوق /ة",
+        name: " المسوق /ة",
         selector: (row) => row?.addBy,
-         width:"160px" ,
+         width:"110px" ,
         cell: (row) => (
           <span
             style={{
@@ -224,9 +250,9 @@ const filteredData = useMemo(() => {
         )
       },
        {
-        name: "إسم المتابع /ة",
+        name: " المتابع /ة",
         selector: (row) => row?.userfollow,
-         width:"160px" ,
+         width:"110px" ,
         cell: (row) => (
           <span
             style={{
@@ -243,7 +269,7 @@ const filteredData = useMemo(() => {
       },
        {
         name: "حالة العميل",
-      width:"120px" ,
+      width:"99px" ,
         cell: (row) => (
           <span
             style={{
@@ -273,7 +299,7 @@ const filteredData = useMemo(() => {
       },
          {
         name: "المشروع المهتم به",
-      width:"120px" ,
+      width:"180px" ,
         cell: (row) => (
           <span
             style={{
@@ -289,7 +315,7 @@ const filteredData = useMemo(() => {
 {
   name: "الدفعة الإولى",
   sortable: true,
-  width:"200px",
+  width:"170px",
   sortFunction: (rowA, rowB) => {
     return Number(rowA.firstPayment) - Number(rowB.firstPayment);
   },
@@ -302,7 +328,7 @@ const filteredData = useMemo(() => {
 
          {
         name: "العملة",
-     width:"120px" ,
+     width:"80px" ,
         cell: (row) => (
           <span
          
@@ -314,24 +340,24 @@ const filteredData = useMemo(() => {
         
       },
      
-      {
-        name: " اخر ماتم التواصل",
-          width:"140px" ,
-        selector: (row) => row.clientendRequr,
-        cell: (row) => (
-          <span
+      // {
+      //   name: " اخر ماتم التواصل",
+      //     width:"160px" ,
+      //   selector: (row) => row.clientendRequr,
+      //   cell: (row) => (
+      //     <span
       
-            title={row?.clientendRequr}
-          >
-            {" "}
-           {handelStringLength (row?.clientendRequr)}
-          </span>
-        )
-      },
+      //       title={row?.clientendRequr}
+      //     >
+      //       {" "}
+      //      {handelStringLength (row?.clientendRequr)}
+      //     </span>
+      //   )
+      // },
       {
-        name: "هل تمت المعاينة",
+        name: "  المعاينة",
         selector: (row) => row.isViwed,
-        width:"150px",
+        width:"100px",
         cell: (row) => (
           <span
             style={{
@@ -348,25 +374,40 @@ const filteredData = useMemo(() => {
         ),
       },
 
-      {
-        name: "متطلبات العميل",
-        selector: (row) => row?.clientRequire,
-          width:"120px" ,
-        cell: (row) => (
-          <span
-  
-            title={row?.clientRequire}
-          >
-            {" "}
-           { row?.clientRequire}
-          </span>
-        )
-      },
+{
+  name: "متطلبات العميل",
+  width: "160px",
+  cell: (row) => {
+    const firstRequirement = row?.clientRequirements?.[0];
+
+    const text = firstRequirement
+      ? `${firstRequirement.requireType || ""} - ${
+          firstRequirement.rquireLocation || ""
+        }`
+      : "-";
+
+    return (
+      <div
+        title={text}
+        style={{
+          maxWidth: "120px",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          fontSize: "12px",
+        }}
+      >
+        {text}
+      </div>
+    );
+  },
+}
+ , 
          {
-        name: "عدد متطلبات العميل",
+        name: "عدد متطلبات ",
           sortable: true ,
             selector: (row) => row?.clientRequirements?.length,
-          width:"140px" ,
+          width:"150px" ,
         cell: (row) => (
           <span
   className='flex items-center justify-center w-6 h-6 bg-green-500 text-white rounded-full'
@@ -381,7 +422,7 @@ const filteredData = useMemo(() => {
         name: "عدد المتابعات",
           sortable: true ,
         selector: (row) => row?.SectionFollow?.length,
-          width:"140px" ,
+          width:"150px" ,
         cell: (row) => (
           <span
   className='flex items-center justify-center w-6 h-6 bg-red-500 text-white rounded-full'
@@ -448,7 +489,7 @@ const filteredData = useMemo(() => {
   {
   name: " أخر اتصال",
   selector: (row) => row.clientendRequr,
-  width:"230px" ,
+  width:"120px" ,
   cell: (row) => {
     const lastFollow = row.SectionFollow?.length
       ? [...row.SectionFollow].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]
@@ -484,6 +525,41 @@ const filteredData = useMemo(() => {
   },
 }
 ,
+  {
+  name: " أخر حالة",
+  selector: (row) => row.clientendRequr,
+  width:"120px" ,
+  cell: (row) => {
+    const lastFollow = row.SectionFollow?.length
+      ? [...row.SectionFollow].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]
+      : null;
+
+    if (!lastFollow) return <span>لا يوجد</span>;
+
+
+
+ 
+
+    return (
+      <div
+    className='flex flex-col gap-3'
+    title={lastFollow.details}
+      >
+        <span className='flex flex-col ' >
+
+   
+        </span>
+        {
+         lastFollow?.CustomerDealsatuts
+        }
+      {
+      
+      }
+      </div>
+    );
+  },
+}
+,
       {
         name: "ملاحظات",
         selector: (row) => row?.notes,
@@ -510,130 +586,319 @@ const filteredData = useMemo(() => {
 
 
       const columnsfile = [
-        {
-          name: "إسم المسوق",
-          selector: (row) => row.addBy,
-        },
+                {
+               name: "إسم المشترى",
+               selector: (row) => row.fullName,
+             },
+                 {
+               name: "جوال 1",
+               selector: (row) => row.phoneNumber,
+             },
+             {
+               name: "جوال 2",
+               selector: (row) => row.secondaryPhoneNumber,
+             },
+     {
+       name: "تاريخ أخر اتصال",
+       selector: (row) => {
+         const lastFollow = row.SectionFollow?.length
+           ? [...row.SectionFollow].sort(
+               (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+             )[0]
+           : null;
+     
+         return lastFollow
+           ? new Date(lastFollow.createdAt).toLocaleDateString("ar-EG")
+           : "لا يوجد";
+       },
+       cell: (row) => {
+         const lastFollow = row.SectionFollow?.length
+           ? [...row.SectionFollow].sort(
+               (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+             )[0]
+           : null;
+     
+         if (!lastFollow) return <span>لا يوجد</span>;
+     
+         return <span>{new Date(lastFollow.createdAt).toLocaleDateString("ar-EG")}</span>;
+       }
+     }
+      ,
+     {
+       name: "أخر حالة اتصال",
+       selector: (row) => {
+         const lastFollow = row.SectionFollow?.length
+           ? [...row.SectionFollow].sort(
+               (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+             )[0]
+           : null;
+     
+         return lastFollow?.CustomerDealsatuts || "لا يوجد";
+       },
+       cell: (row) => {
+         const lastFollow = row.SectionFollow?.length
+           ? [...row.SectionFollow].sort(
+               (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+             )[0]
+           : null;
+     
+         return <span>{lastFollow?.CustomerDealsatuts || "لا يوجد"}</span>;
+       }
+     }
+     
+     ,
+     {
+       name: "أخر اتصال",
+       selector: (row) => {
+         if (!row.SectionFollow?.length) return "لا يوجد";
+     
+         const lastFollow = [...row.SectionFollow].sort(
+           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+         )[0];
+     
+         return [
+           lastFollow.CustomerDealsatuts,
+           lastFollow.details,
+           lastFollow.user?.fullName,
+           new Date(lastFollow.createdAt).toLocaleDateString("ar-EG")
+         ]
+           .filter(Boolean)
+           .join(" - ");
+       }
+     }
+     
+     ,
+     
+   {
+  name: "كل المتابعات",
+  selector: (row) => {
+    if (!row.SectionFollow?.length) return "لا يوجد";
+
+    return [...row.SectionFollow]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .map((follow) =>
+        [
+          follow.CustomerDealsatuts,
+          follow.details,
+          follow.user?.fullName,
+          new Date(follow.createdAt).toLocaleDateString("ar-EG"),
+        ]
+          .filter(Boolean)
+          .join(" - ")
+      )
+      .join(" | ");
+  },
+},
+     
+     
            {
-        name: "إسم المتابع /ة",
-        selector: (row) => row?.userfollow,
-
-      },
-        {
-          name: "إسم المشترى",
-          selector: (row) => row.fullName,
-        },
-        {
-          name: "جوال 1",
-          selector: (row) => row.phoneNumber,
-        },
-        {
-          name: "جوال 2",
-          selector: (row) => row.secondaryPhoneNumber,
-        },
-            {
-        name: "عدد المتابعات",
-          sortable: true ,
-        selector: (row) => row?.SectionFollow?.length || 0,
-          width:"140px" ,
-        cell: (row) => (
-          <span
-  className='flex items-center justify-center w-6 h-6 bg-red-500 text-white rounded-full'
-          
-          >
-            {" "}
-           {row.SectionFollow?.length || 0}
-          </span>
-        )
-      },
-                       {
-        name: "وظيفة العميل",
-        selector: (row) => row?.clientwork,
-
-      },
-            {
-          name: "مصدر العميل",
-          selector: (row) => row.source,
-        },
-        {
-          name: "حالة العميل",
-          selector: (row) => row.clientStatus,
-          cell: (row) => (
-            <span
-              style={{
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-              }}
-            >
-              {" "}
-              {row.clientStatus }
-            </span>
-          ),
-        },
-        {
-          name: "موقع المشروع",
-          selector: (row) => row.region,
-        },
-        {
-          name: "المشروع المهتم به",
-          selector: (row) => row?.project,
-        },
-        {
-          name: "نوع العملة",
-          selector: (row) => row?.currency,
-        },
-      
-    
-    
-        {
-          name: "الدفع كاش",
-          selector: (row) => row.cashOption,
-        },
-        {
-          name: " الدفعة الأولى",
-          selector: (row) => row.firstPayment,
-        },
-        {
-          name: "تقسيط على كام سنة",
-          selector: (row) => row.installmentsPyYear ,
-        },
+       name: "متطلبات العميل جديد",
+       selector: (row) => {
+         if (!row.clientRequirements?.length) return "لا يوجد";
+     
+         return row.clientRequirements
+           .map(req =>
+             [
+               req.rquireLocation,
+               req.requireRegion,
+               req.require,
+               req.requireType
+             ]
+               .filter(Boolean)
+               .join(" - ")
+           )
+           .join(" | ");
+       },
+       cell: (row) => (
+         <div className="flex flex-col gap-1">
+           {row.clientRequirements?.map(item => (
+             <div key={item._id} className="text-xs">
+               {item.rquireLocation} - {item.requireRegion} - {item.require} - {item.requireType}
+             </div>
+           ))}
+         </div>
+       )
+     }
+     ,
      
      
+                 {
+               name: "عدد متطلبات العميل",
+               selector: (row) => row?.clientRequirements?.length ?  row?.clientRequirements?.length : 0
+               
+             },
+           
+                 {
+             name: "عدد المتابعات",
+               sortable: true ,
+             selector: (row) => row?.SectionFollow?.length ? row?.SectionFollow?.length  : 0,
+               width:"140px" ,
+         
+           },
+     
+              {
+               name: "المشروع المهتم به",
+               selector: (row) => row?.project,
+             },
+     
         {
-          name: "اخر ماتم التواصل مع  العميل",
-          selector: (row) => row.clientendRequr ,
-        },
- 
-        {
-          name: "هل تمت المعاينة",
-          selector: (row) => row.isViwed
-       
-        },
-        {
-          name: "متطلبات العميل",
-          selector: (row) => row.clientRequire ,
-        },
-        {
-          name: "ملاحظات",
-          selector: (row) => row.notes ,
-        },
-
+               name: "ملاحظات",
+               selector: (row) => row.notes ,
+             },
+     
+     
+     
+     
+             {
+               name: "إسم المسوق",
+               selector: (row) => row.addBy,
+             },
+                {
+             name: "إسم المتابع /ة",
+             selector: (row) => row?.userfollow,
+     
+           },
+               {
+               name: " الدفعة الأولى",
+               selector: (row) => row.firstPayment,
+             },
+     
+           {
+               name: "نوع العملة",
+               selector: (row) => row?.currency,
+             },
+     
         
-   
-    
-      ];
+             {
+               name: "هل تمت المعاينة",
+               selector: (row) => row.isViwed
+            
+             },
+     
+            {
+               name: "مصدر العميل",
+               selector: (row) => row.source,
+             }, 
+         {
+               name: "اخر ماتم التواصل مع  العميل",
+               selector: (row) => row.clientendRequr ,
+             },
+     
+     
+                            {
+             name: "وظيفة العميل",
+             selector: (row) => row?.clientwork,
+     
+           },
+          
+             {
+               name: "حالة العميل",
+               selector: (row) => row.clientStatus,
+               cell: (row) => (
+                 <span
+                   style={{
+                     textOverflow: "ellipsis",
+                     whiteSpace: "nowrap",
+                     overflow: "hidden",
+                   }}
+                 >
+                   {" "}
+                   {row.clientStatus }
+                 </span>
+               ),
+             },
+     
+      {
+               name:"تاريخ الإنشاء",
+               selector: (row) => format(new Date(row.createdAt), "dd MMMM, yyyy"),
+                sortable: true ,
+                width:"150px",
+               cell: (row) => <span style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace:"wrap"}}>{format(new Date(row.createdAt), "dd MMMM, yyyy")}</span>
+             },
+     
+     
+             //  {
+             //   name: "وصف حالة العميل",
+             //   selector: (row) => row.relatedStauts,
+             //   cell: (row) => (
+             //     <span
+             //       style={{
+             //         textOverflow: "ellipsis",
+             //         whiteSpace: "nowrap",
+             //         overflow: "hidden",
+             //       }}
+             //     >
+             //       {" "}
+             //       {row.relatedStauts }
+             //     </span>
+             //   ),
+             // },
+             // {
+             //   name: "منطقة المشروع",
+             //   selector: (row) => row.region,
+             // },
+             //     {
+             //   name: "موقع المشروع",
+             //   selector: (row) => row.governote,
+             // },
+             // {
+             //   name: "المشروع المهتم به",
+             //   selector: (row) => row?.project,
+             // },
+         
+           
+         
+         
+             // {
+             //   name: "الدفع كاش",
+             //   selector: (row) => row.cashOption,
+             // },
+       
+             // {
+             //   name: "تقسيط على كام سنة",
+             //   selector: (row) => row.installmentsPyYear ,
+             // },
+          
+          
+         
+     
+           
+          
+     
+             
+        
+         
+           ];
 if(isLoading){
   return <Loader />
 }      
   return (
     <div>
         <HeadPagestyle isAdmin={isAdmin} CanAdd={CanAdd}  pageName="العملاء" to="/Add-Customer" title="إضافة عميل"/>
-        <div  className='mt-[-20px]'>
-        <FiltertionHook setParamsapi={setParamsapi} paramsapi={paramsapi} filteredData={filteredData} columns={columnsfile} key="المشاريع العامه.xlsx" filters={filters} params={params} setParams={setParams}/>
+                
+                <Link 
+               className="w-[150px] block flex items-center gap-2 mb-3 px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
+                to="/drop-customers">
+                إضافة عملاء بالاكسيل
+                </Link>
+                 <button 
+                         className="flex items-center gap-2 mb-3 px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
+
+                 onClick={() => setIssectionOpen(!isSectionOpen)}>
+                {open ? <FiX size={20} /> : <FiFilter size={20} />}
+        {isSectionOpen ? "إخفاء الفلاتر" : "عرض الفلاتر"}
+          </button>
+          {
+               isSectionOpen &&        <div  >
+
+      
+       <FiltertionHook setParamsapi={setParamsapi} paramsapi={paramsapi} filteredData={filteredData} columns={columnsfile} key="المشاريع العامه.xlsx" filters={filters} params={params} setParams={setParams}/>
+       
 
         </div>
-<div  className='mt-[-20px]'>
+          }
+
+<div  >
         <CustomeTabel   defaultSortField="firstPayment"
   defaultSortAsc={false}  data={filteredData} columns={columns}/>
 </div>

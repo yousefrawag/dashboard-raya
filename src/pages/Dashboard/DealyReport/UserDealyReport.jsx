@@ -18,6 +18,8 @@ import GetProjectStatusChart from '../../../components/common/GetProjectStatusCh
 import GetprojectTypesChart from '../../../components/common/GetprojectTypesChart';
 import GetprojectsOpeartionType from '../../../components/common/GetprojectsOpeartionType';
 import useQueryupdate from '../../../services/useQueryupdate';
+import { FiFilter, FiX } from "react-icons/fi";
+
 const UserDealyReport = () => {
        const [paramsapi, setParamsapi] = useState({
             field: "",
@@ -35,6 +37,7 @@ const UserDealyReport = () => {
     startDate: "",
     endDate: "",
   });
+const [isSectionOpen , setIssectionOpen] = useState(false)
 
   const fillters = [
     {value:"ReportType", name:" نوع التقرير"},
@@ -88,6 +91,12 @@ const filteredData = useMemo(() => {
       selector: (row) => row?.ReportType ,
        width:"150px" ,
       cell: (row) => <span>{row?.ReportType} </span>,
+    },
+            {
+      name: "وصف التقرير",
+      selector: (row) => row?.ReportTypeDescriep ,
+       width:"150px" ,
+      cell: (row) => <span>{row?.ReportTypeDescriep} </span>,
     },
 {
   name: "العملاء",
@@ -231,8 +240,17 @@ const filteredData = useMemo(() => {
     <div>
       <HeadPagestyle pageName="التقرير اليومى" isAdmin={isAdmin} CanAdd={CanAdd} to="/Add-dealyReport" title="إضافة تقرير" />
 
+                     <button 
+                             className="flex items-center gap-2 mb-6 px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
     
-      <FiltertionHook setParamsapi={setParamsapi} paramsapi={paramsapi} filteredData={filteredData} columns={columnsfile} filters={fillters} params={params} setParams={setParams} />
+                     onClick={() => setIssectionOpen(!isSectionOpen)}>
+                    {open ? <FiX size={20} /> : <FiFilter size={20} />}
+            {isSectionOpen ? "إخفاء الفلاتر" : "عرض الفلاتر"}
+              </button>
+    {
+      isSectionOpen &&  <FiltertionHook setParamsapi={setParamsapi} paramsapi={paramsapi} filteredData={filteredData} columns={columnsfile} filters={fillters} params={params} setParams={setParams} />
+    } 
+     
       <CustomeTabel data={filteredData} columns={columns} />
     </div>
   );

@@ -83,7 +83,7 @@ const columns = [
   {
     name: "آخر اتصال",
     width: "150px",
-    cell: (row) => <span>{row?.followDetails || "—"}</span>,
+    cell: (row) => <span title={row?.followDetails}>{row?.followDetails?.substring(0 , 50) || "—"}</span>,
   },
   {
     name: "تاريخ التنبيه",
@@ -101,7 +101,7 @@ const columns = [
 
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-sm border border-gray-100">
+    <div className="p-6 bg-white rounded-md shadow-sm border border-gray-100">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
@@ -137,7 +137,7 @@ const columns = [
           <p className="text-gray-500 text-sm">لا توجد تنبيهات لليوم 🎉</p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
+        <div >
          
               <CustomeTabel   defaultSortField="firstPayment"
   defaultSortAsc={false}  data={data?.data?.data} columns={columns}/>

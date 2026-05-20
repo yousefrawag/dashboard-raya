@@ -174,8 +174,10 @@ const Adduser = () => {
                         <select name='type' className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                         >
                         <option value="">اختر</option>
+                        
                         <option value="admin">أدمن</option>
                         <option value="employee">موظف</option>
+                            <option value="brokker">مسوق تحت التدريب</option>
                         </select>
                     
             </div>

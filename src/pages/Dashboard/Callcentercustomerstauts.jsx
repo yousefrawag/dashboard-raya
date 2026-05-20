@@ -13,11 +13,13 @@ import { format } from 'date-fns'
 import useQueryDelete from '../../services/useQueryDelete'
 import EditmainCategory from "../../components/common/popupmdules/EditmainCategory"
 import Loader from '../../components/common/Loader'
+import AddLocationRegions from '../../components/common/popupmdules/AddLocationRegions'
+import EditLocationsRegion from '../../components/common/popupmdules/EditLocationsRegion'
 const Callcentercustomerstauts = () => {
     const {data , isLoading , isError} = useQuerygetiteams("callcenterCustomerstauts", "callcenterCustomerstauts")
     const {deleteIteam} = useQueryDelete("callcenterCustomerstauts" , "callcenterCustomerstauts")
     const {module, setmodule , setmainCategory , setEditmaincategory} = useDashboardContext()
-    console.log("regione" , data);
+
     
     const {CanAdd , CanDelte , CanEdit , CanView , isAdmin } = useGetUserAuthentications("isvewied")
 
@@ -85,8 +87,8 @@ const handelEdit = (item) => {
 <div className='shadow-md p-3 mt-10'>
 <CustomeTabel  data={data?.data?.data} columns={columns}/>
 </div>
- <MdouleAddCategoray  fetshkey="callcenterCustomerstauts" titale="حالة العميل"/>
- <EditmainCategory  fetshkey="callcenterCustomerstauts" titale="حالة العميل "/>
+ <AddLocationRegions  fetshkey="callcenterCustomerstauts" titale="حالة العميل"/>
+ <EditLocationsRegion  fetshkey="callcenterCustomerstauts" titale="حالة العميل "/>
     </div>
   )
 }

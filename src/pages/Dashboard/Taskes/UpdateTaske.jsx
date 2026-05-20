@@ -39,7 +39,7 @@ const UpdateTaske = () => {
 
 
     const filteredUsers = users?.filter((user) =>
-        user?.name?.toLowerCase().includes(search.toLowerCase())
+        user?.fullName?.toLowerCase().includes(search.toLowerCase())
       );
     
       const handleUserSelect = (userId) => {
@@ -207,7 +207,7 @@ const handelDeleteequire = (req) => {
                     />
                 )}
 
-                    <div className="mb-6 flex flex-col gap-2">
+                   <div className="mb-6 flex flex-col gap-2">
                             <label className="w-full text-lg font-medium text-black dark:text-white">
                             الموظفين المعينون
                             </label>
@@ -228,7 +228,7 @@ const handelDeleteequire = (req) => {
                                     onChange={() => handleUserSelect(user?._id)}
                                     className="accent-main"
                                 />
-                                <span className="text-black dark:text-white">{user?.name}</span>
+                                <span className="text-black dark:text-white">{user?.fullName} -  {user?.type ==="admin" ? "أدمن" : user?.type === "employee" ? "مسوق أساسى" :"مسوق تحت التدريب"} </span>
                                 </label>
                             ))}
                             </div>

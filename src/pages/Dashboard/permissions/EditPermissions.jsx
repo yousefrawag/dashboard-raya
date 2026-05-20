@@ -93,7 +93,7 @@ useEffect(() => {
   
     const data = [
       { id: 1, key: "Projects", validity: "المشاريع العامه" },
-      { id: 1, key: "PrivetProjects", validity: "المهام الخاصه" },
+      { id: 190, key: "PrivetProjects", validity: "المهام الخاصه" },
       { id: 2, key: "Reports", validity: "التقارير" },
 
       { id: 31, key: "clander", validity: " التقويم" },

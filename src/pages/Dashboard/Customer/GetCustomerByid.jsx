@@ -12,6 +12,7 @@ import PopupCheckdelete from '../../../components/common/popupmdules/PopupCheckd
 import { useDashboardContext } from '../../../context/DashboardProviedr';
 import ClientOrders from './ClientOrders';
 import CustomerReports from './CustomerReports';
+import CustomerStatusTimeline from '../../../components/common/CustomerStatusTimeline';
 const GetCustomerByid = () => {
   const { id } = useParams();
   const { data, isLoading } = useQuerygetSpacficIteam("customers", "customers", id);
@@ -77,7 +78,7 @@ useEffect(() => {
        { label: "حالة العميل", value: customer?.clientStatus },
   
           { label: "موقع المشروع ", value: customer?.region },
-                  { label: "منظقة المشروع ", value: customer?.governote },
+                  { label: "منطقة المشروع ", value: customer?.governote },
           { label: "المشروع المهتم به", value: customer?.project },
            { label: "العملة", value: customer?.currency },
            { label: "ألية الدفع*", value: customer?.cashOption },
@@ -85,11 +86,11 @@ useEffect(() => {
         { label: "الدفعة الشهرية", value: customer?.Paymentpermonth || "غير متوفر" },
         { label: "تقسيط على كام سنة *", value: customer?.installmentsPyYear || "غير متوفر" },
     { label: "تاريخ أخر تواصل", value: lastFollow?.createdAt ? format(new Date(lastFollow?.createdAt ), "dd MMMM, yyyy") : "غير مضاف" },
-    { label: "اخر ماتم التواصل", value: customer?.clientendRequr || "غير متوفر" },
+    // { label: "اخر ماتم التواصل", value: customer?.clientendRequr || "غير متوفر" },
     { label: "هل تمت المعاينة", value: customer?.isViwed },
  
-    { label: "متطلبات العميل", value: customer?.clientRequire || "غير متوفر" }, 
-    { label: "موقع الطلب", value: customer?.clientRequireLocation || "غير متوفر" }, 
+    // { label: "متطلبات العميل", value: customer?.clientRequire || "غير متوفر" }, 
+    // { label: "موقع الطلب", value: customer?.clientRequireLocation || "غير متوفر" }, 
     { label: "ملاحظات", value: customer?.notes || "غير متوفر" },
     { label: "تاريخ الإنشاء", value: customer?.createdAt ? format(new Date(customer?.createdAt), "dd MMMM, yyyy") : "غير متوفر" },
  
@@ -119,8 +120,11 @@ useEffect(() => {
 
    </div>
     {
-      CurrenTap === "info" &&   <div className='w-full h-full grid grid-cols-1 gap-4 xl:grid-cols-2 shadow-md p-5'>
+      CurrenTap === "info" &&  <div>
+         <CustomerStatusTimeline  customer={customer}/>
+            <div className='w-full h-full grid grid-cols-1 gap-4 xl:grid-cols-2 shadow-md p-5'>
       {/* Map through customer details */}
+     
       {customerDetails.map((item, index) => (
         <div key={index} className="mb-4 flex flex-col gap-2">
           <span className="text-lg font-medium text-gray-700 dark:text-white">{item.label}</span>
@@ -133,6 +137,8 @@ useEffect(() => {
 
    
     </div>
+      </div> 
+   
     }
     
     {

@@ -9,7 +9,7 @@ const AddprovetBoarding = () => {
         <p className="text-black dark:text-white font-semibold text-lg">ادخل بيانات المشروع</p>
       </div>
       <div className="main_project_content flex gap-5 flex-col lg:flex-row justify-between w-full h-full">
-        <PrivetSteps />
+        {/* <PrivetSteps /> */}
         <div className="bg-white dark:bg-transparent  w-full h-full lg:w-[80%] shadow-lg rounded-md ">
             <Privetform />
         </div>

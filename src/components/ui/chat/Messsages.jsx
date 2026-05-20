@@ -103,7 +103,7 @@ console.log(formData);
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
                             <img src={item?.senderID?.imageURL} alt="user" className="w-10 h-10 rounded-full" />
-                            <span className="ml-2 font-medium text-gray-900 dark:text-white">{item?.senderID?.name}</span>
+                            <span className="ml-2 font-medium text-gray-900 dark:text-white">{item?.senderID?.name || item?.senderID?.fullName }</span>
                         </div>
                         <span className="text-sm text-gray-500 dark:text-gray-400">
                             {arabicTimeAgo(item?.createdAt)}

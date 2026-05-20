@@ -11,19 +11,46 @@ import useQueryadditeam from '../../../services/Queryadditeam';
 import Loader from '../../common/Loader';
 import toast from 'react-hot-toast';
 import useQuerygetiteams from '../../../services/Querygetiteams';
+import StatusFilterTabs from '../../common/StatusFilterTabs';
+import { current } from '@reduxjs/toolkit';
+import AddProperty from './AddProperty';
 const AddprojectForm = () => {
   const {addIteam , isLoading} = useQueryadditeam("projects" , "projects")
   const { data:regionData } = useQuerygetiteams("region", "region");
   const { data:projectStatuts } = useQuerygetiteams("projectStatuts", "projectStatuts");
   const { data:locations } = useQuerygetiteams("location", "location");
   const { data:Currency } = useQuerygetiteams("currency", "currency");
+  const { data:FirsPaymentData } = useQuerygetiteams("firstpayment", "firstpayment");
+  const { data:MonthlyPaymentData } = useQuerygetiteams("monthPayment", "monthPayment");
+  const { data:FloorNumbertData } = useQuerygetiteams("FloorNumber", "FloorNumber");
+  const statusConfig = {
+ 
+    info: {
+      label: "بيانات المشروع" ,
+      className: "text-yellow-600 hover:text-yellow-700",
+      icon: "clock"
+    },
+    properties: {
+      label: "إضافه شقة" ,
+      className: "text-green-600 hover:text-green-700",
+      icon: "check-circle"
+    },
+
+ 
+ 
+ 
+
+  }; 
+  const [CurrenTap , setCurrentTap] = useState("info")
   const { data:Area } = useQuerygetiteams("arae", "arae");
   const [relatedTypes , setRelatedType] = useState([])
   const [images_video , setimages_video] = useState([])
+  const [projectCheck, setProjectCheck] = useState(false);
   const [projectData , setprojectData] = useState({
     projectOwner:"" ,
     projectOwnerPhone:"" ,
     governoate:"" ,
+    Barkaaraemater:"" ,
     projectName:"" ,
     estateType:"" ,
     detailedAddress:"" ,
@@ -41,7 +68,10 @@ const AddprojectForm = () => {
     typeOfSpaceoutside:"" ,
     spaceOuteside:"" ,
     city:"" ,
-    relatedtype:""
+    relatedtype:"" ,
+    availableFloors:[] ,
+    countOfperiod:"" ,
+    installmentPeriod:""
 
   })
   const [relatedRegions , setRelatedRegion] = useState([])
@@ -50,6 +80,19 @@ const AddprojectForm = () => {
   const [viewmenu , setViewmenu] = useState(false)
   const cashTypes = ["نعم" , "لا"]
  const [chasSelectedtype , setCahselectedType] = useState("")
+const [properties, setProperties] = useState([]);
+const [propertyForm, setPropertyForm] = useState({
+  unitName: "",
+  floor: "",
+  rooms: "",
+  bathrooms: "",
+  area: "",
+  price: "",
+  downPayment: "",
+  monthlyInstallment: "",
+  propertyNote:""
+});
+
 
   const handelInputschage = (e) => {
     const name = e.target.name;
@@ -87,14 +130,73 @@ setRelatedType(CurrentRegion?.relatedRegions)
     setDocs((prevFiles) => [...prevFiles, ...selectedFiles]);
     e.target.value = "";
   };
+const toggleFloor = (floor) => {
+  setprojectData(prev => ({
+    ...prev,
+    availableFloors: prev.availableFloors.includes(floor)
+      ? prev.availableFloors.filter(f => f !== floor)
+      : [...prev.availableFloors, floor],
+  }));
+};
 
+const removeFloor = (floor) => {
+  setprojectData(prev => ({
+    ...prev,
+    availableFloors: prev.availableFloors.filter(f => f !== floor),
+  }));
+};
 
+const addProperty = () => {
+  if (!propertyForm.unitName || !propertyForm.price) {
+    return toast.error("يجب إدخال بيانات الشقة");
+  }
+
+  setProperties((prev) => [...prev, propertyForm]);
+
+  setPropertyForm({
+    unitName: "",
+    floor: "",
+    rooms: "",
+    bathrooms: "",
+    area: "",
+    price: "",
+    downPayment: "",
+    monthlyInstallment: "",
+  });
+
+  toast.success("تم إضافة الشقة");
+};
+const removeProperty = (index) => {
+  setProperties((prev) => prev.filter((_, i) => i !== index));
+};
+const handelPropertyForm = (e) => {
+  const { name, value } = e.target;
+  setPropertyForm((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
   const handelSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData();
+
+  // ✅ ضيف كل projectData
+  Object.entries(projectData).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((item) => formData.append(`${key}[]`, item));
+    } else {
+      formData.append(key, value);
+    }
+  });
     formData.set("operationType" , opeartionType)
     formData.set("installments" , chasSelectedtype)
- 
+    projectData.installments = chasSelectedtype
+ projectData.availableFloors.forEach((floor) => {
+  formData.append("availableFloors[]", floor);
+});
+ formData.append("properties", JSON.stringify(properties));
+
+
     const data = Object.fromEntries(formData);
         docs.forEach((item) => {
           formData.append("files" , item)
@@ -103,27 +205,53 @@ setRelatedType(CurrentRegion?.relatedRegions)
           formData.append("files" , item)
         })
 
-if(!data.projectName){
+if(!projectData.projectName){
   return toast.error("يجب إدخال اسم المشروع")
 }
 
 
-if(!data.governoate){
+if(!projectData.governoate){
   return toast.error("يجب إدخال  المنطقة")
 }
-if(!data.estateType){
+if(!projectData.estateType){
   return toast.error("يجب إدخال  نوع العقار")
 }
-if(!data.projectSatatus){
+if(!projectData.projectSatatus){
   return toast.error("يجب إدخال حالة المشروع")
 }
 
-if(!data.pymentType){
+if(!projectData.pymentType){
   return toast.error("يجب إدخال  العملة")
 }
-if(!data.estatePrice){
+if(!projectData.estatePrice){
   return toast.error("يجب إدخال  سعر العقار الاجمالى")
 }
+if(!projectData.installments){
+  return toast.error("يجب إدخال  حالة التقسيط")
+}
+
+if(chasSelectedtype === "نعم"){ 
+  if(!projectData.installmentPeriod){
+  return toast.error("يجب إدخال   مده التقسيط")
+  }
+    if(!projectData.countOfperiod){
+  return toast.error("يجب إدخال  مده التقسيط سواء على كام سنه او شهر")
+  }
+      if(!projectData.installmentsFirstPyment){
+  return toast.error("يجب إدخال  الدفعة الاولى")
+  }
+        if(!projectData.installmentsFirstPermonth){
+  return toast.error("يجب إدخال  الدفعة الشهرية")
+  }
+
+
+}
+         if(!projectData.availableFloors.length){
+  return toast.error("يجب إدخال   عدد الطوابق")
+  }
+           if(!projectData.areaMatter){
+  return toast.error("يجب إدخال  المساحه متر")
+  }
 
 
     try {
@@ -157,14 +285,9 @@ if(!data.estatePrice){
  }  
   return (
     <form onSubmit={handelSubmit} className='w-full mt-[-20px] h-full bg-white rounded-[10px] dark:bg-form-input' >
-    {/* <div className="dark:bg-form-input flex items-center shadow-lg gap-4 mb-4 w-full h-full p-4 bg-white rounded-[10px]">
-      <div className="icon p-2 bg-main rounded-full">
-        <FaRegPenToSquare />
-      </div>
-      <p className="font-semibold text-lg">ادخل بيانات المشروع</p>
-    </div> */}
-   
-   <div className='main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	'>
+            <StatusFilterTabs  statusConfig={statusConfig} onStatusChange={(key) => setCurrentTap(key)} selectedStatus={CurrenTap}/>
+{
+  CurrenTap === "info" &&  <div className='main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	'>
             <div className="mb-6 flex flex-col  gap-2">
                         <label
                             htmlFor="projectOwner"
@@ -200,6 +323,7 @@ if(!data.estatePrice){
                         />
                     
             </div>
+
              
                 <div className="mb-6 flex flex-col  gap-2">
                         <label
@@ -208,7 +332,7 @@ if(!data.estatePrice){
                         >
                           المنطقة
                         </label>
-                        <select   onChange={handelInputschage}  value={projectData.governoate} name="governoate" defaultValue="القدس"  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"                        >
+                        <select required   onChange={handelInputschage}  value={projectData.governoate} name="governoate" defaultValue="القدس"  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"                        >
                         <option value="">
                                 أختر المنطقة
                             </option>
@@ -262,6 +386,7 @@ if(!data.estatePrice){
                             id="projectName"
                             name="projectName"
                             value={projectData.projectName}
+                            required
                             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                         />
                     
@@ -281,10 +406,13 @@ if(!data.estatePrice){
                              name="detailedAddress"
                               value={projectData.detailedAddress}
                                 onChange={handelInputschage}
+                                required
                             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                         />
                     
             </div>
+
+
 
             <div className="mb-6 flex flex-col  gap-2">
                         <label
@@ -425,7 +553,7 @@ if(!data.estatePrice){
                     سعر العقار الإجمالى
                         </label>
                         <input
-                            type="text"
+                            type="number"
                             id="estatePrice"
                             name="estatePrice"
                             value={projectData.estatePrice}
@@ -474,6 +602,50 @@ if(!data.estatePrice){
                 chasSelectedtype === "نعم"  ?
                 <div>
          {/* الدفعة الأولى */}
+            <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="installmentPeriod"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                        مده التقسيط
+                        </label>
+                        <select   onChange={handelInputschage} value={projectData.installmentPeriod} name="installmentPeriod"  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"                        >
+                        <option value="">
+                                أختر النوع
+                            </option>
+                              <option value="سنوى">
+                                سنوى
+                            </option>
+                                  <option value="شهرى">
+                                شهرى
+                            </option>
+                     
+                         
+                        </select>
+                     
+                    
+                </div> 
+                
+        {
+          projectData?.installmentPeriod &&
+           <div className="mb-6 flex flex-col  gap-2">
+                  <label
+                      htmlFor="countOfperiod"
+                      className="w-full text-lg font-medium text-black dark:text-white"
+                  >
+      تقسيط على كام {projectData?.installmentPeriod} *
+                  </label>
+                  <input
+                      type="number"
+                      id="countOfperiod"
+                      name="countOfperiod"
+                      value={projectData.countOfperiod}
+                        onChange={handelInputschage}
+                      className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                  />
+              
+                </div> 
+        }       
 <div className="mb-6 flex flex-col gap-2">
   <label
     htmlFor="installmentsFirstPyment"
@@ -489,13 +661,11 @@ if(!data.estatePrice){
     className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
   >
     <option value="">اختر الدفعة الأولى</option>
-    {Array.from({ length: 100 }, (_, i) => (i + 1) * 100000)
-      .filter(v => v <= 10000000)
-      .map((value) => (
-        <option key={value} value={value}>
-          {value.toLocaleString()} 
-        </option>
-      ))}
+ {
+  FirsPaymentData?.data?.data?.map((item) => {
+    return <option value={item?.name} key={item?._id}>{item?.name.toLocaleString('en-US')}</option>
+  })
+ }
   </select>
 </div>
 
@@ -518,13 +688,11 @@ if(!data.estatePrice){
     className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
   >
     <option value="">اختر الدفعة الشهرية</option>
-    {Array.from({ length: 56 }, (_, i) => (i + 1) * 1000 + 4000)
-      .filter(v => v <= 60000)
-      .map((value) => (
-        <option key={value} value={value}>
-          {value.toLocaleString()} 
-        </option>
-      ))}
+ {
+  MonthlyPaymentData?.data?.data?.map((item) => {
+    return <option value={item?.name} key={item?._id}>{item?.name.toLocaleString('en-US')}</option>
+  })
+ }
   </select>
 </div>
 
@@ -533,29 +701,97 @@ if(!data.estatePrice){
     : null
 
               }
-            <div className="mb-6 flex flex-col gap-2 mb-3">
-  <label
-    htmlFor="availableFloors"
-    className="w-full text-lg font-medium text-black dark:text-white mb-5 mt-5"
-  >
-    الطوابق المتوفرة*
+
+<div className="mb-6 flex flex-col gap-2">
+  <label className="w-full text-lg font-medium text-black dark:text-white">
+    عدد الطوابق *
   </label>
 
-  <select
-    id="availableFloors"
-    name="availableFloors"
-    value={projectData.availableFloors}
-    onChange={handelInputschage}
-    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-  >
-    <option value="">اختر عدد الطوابق</option>
-    {[...Array(10)].map((_, index) => (
-      <option key={index + 1} value={index + 1}>
-        {index + 1}
-      </option>
-    ))}
-  </select>
+  <div className="relative">
+    <button
+      type="button"
+      onClick={() => setProjectCheck(!projectCheck)}
+      className="w-full text-right p-3 border border-gray-300 rounded-md bg-white flex justify-between items-center"
+    >
+      <span className="text-gray-500">
+        {projectData.availableFloors.length > 0
+          ? `تم اختيار ${projectData.availableFloors.length} طابق`
+          : "قم بالإختيار"}
+      </span>
+
+      <svg
+        className={`w-5 h-5 text-gray-400 transition-transform ${
+          projectCheck ? "rotate-180" : ""
+        }`}
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    {projectCheck && (
+      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+        {FloorNumbertData?.data?.data?.map((floor, index) => {
+         
+          const isSelected = projectData.availableFloors.includes(floor?.name);
+
+          return (
+            <div
+              key={floor?._id}
+              onClick={() => toggleFloor(floor?.name)}
+              className={`flex items-center justify-between px-4 py-3 cursor-pointer ${
+                isSelected
+                  ? "bg-blue-50 text-blue-700"
+                  : "hover:bg-gray-50 text-gray-700"
+              }`}
+            >
+              <span className="text-sm font-medium">
+                الطابق {floor?.name}
+              </span>
+
+              {isSelected && (
+                <svg
+                  className="w-5 h-5 text-green-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </div>
+
+  {projectData.availableFloors.length > 0 && (
+    <div className="mt-3 flex flex-wrap gap-2">
+      {projectData.availableFloors.map((floor) => (
+        <span
+          key={floor}
+          className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
+        >
+          الطابق {floor}
+          <button
+            type="button"
+            onClick={() => removeFloor(floor)}
+            className="text-blue-600 hover:text-blue-800 text-lg leading-none"
+          >
+            ×
+          </button>
+        </span>
+      ))}
+    </div>
+  )}
 </div>
+
 
             <div className="mb-6 flex flex-col gap-2">
   <label
@@ -613,7 +849,34 @@ if(!data.estatePrice){
   </select>
 </div>
 
+            <div className="mb-6 flex flex-col gap-2">
+  <label
+    htmlFor="Barkaaraemater"
+    className="w-full text-lg font-medium text-black dark:text-white"
+  >
+      مساحه البركه*
+  </label>
+  <select
+    id="Barkaaraemater"
+    name="Barkaaraemater"
+    value={projectData.Barkaaraemater}
+    onChange={handelInputschage}
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+   
 
+               <option value="">
+                                أختر المساحه
+                            </option>
+                            {Area?.data?.data?.map((item) => {
+                        return (
+                          <option key={item._id} value={item.name}>
+                            {item.name + "م²"}
+                          </option>
+                        );
+                          })}
+  </select>
+</div>
 
                 <div className="mb-6 flex flex-col  gap-2">
                   <label
@@ -715,7 +978,15 @@ if(!data.estatePrice){
             name="files"
             id="files"
             onChange={handelDoc}
-            accept="application/pdf"
+             accept="
+    application/pdf,
+    application/msword,
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+    application/zip
+    application/x-rar-compressed 
+    application/octet-stream
+
+  "
           />
           <label
             htmlFor="image-video"
@@ -749,6 +1020,11 @@ if(!data.estatePrice){
               <br />
         </div>
    </div>
+}
+   {
+    CurrenTap === "properties" && <AddProperty propertyForm={propertyForm} removeProperty={removeProperty} addProperty={addProperty}  properties={properties} handelPropertyForm={handelPropertyForm}/>
+   }
+  
   
 
     <div className="add_return flex justify-between items-center mt-4 shadow-lg p-4 bg-white dark:bg-form-input">
@@ -762,6 +1038,7 @@ if(!data.estatePrice){
       </div>
     
     </div>
+
   </form>
   )
 }

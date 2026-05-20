@@ -198,6 +198,7 @@ useEffect(() => {
                         <option value="">اختر</option>
                         <option value="admin">أدمن</option>
                         <option value="employee">موظف</option>
+                           <option value="brokker">مسوق تحت التدريب</option>
                         </select>
                     
             </div>
@@ -240,7 +241,7 @@ useEffect(() => {
       </div>
     
     </div>
-       <PopupCheckdelete navigatepage='/All-users' deleteKey="users" titale="الموظف" id={id} />
+       <PopupCheckdelete value={true} navigatepage='/All-users' deleteKey="users" titale="الموظف" id={id} />
           <span>
            إجراء
           </span>

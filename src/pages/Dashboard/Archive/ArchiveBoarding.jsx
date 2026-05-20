@@ -7,7 +7,7 @@ const archives = [
   {
     title: "أرشيف العملاء",
     icon: <FaUsers className="w-10 h-10 text-indigo-600" />,
-    description: "كل العملاء المؤرشفين في النظام",
+    description: "كل العملاء المؤرشفين في النظام بما فيهم عملاء المسوقين",
     link: "/archive/customers",
   },
   {
@@ -23,10 +23,28 @@ const archives = [
     link: "/archive/prievt-tasks",
   },
   {
-    title: "أرشيف عام",
+    title: "أرشيف المهام",
     icon: <FaFolder className="w-10 h-10 text-blue-600" />,
-    description: "باقي عناصر الأرشيف",
-    link: "/archive/general",
+  
+    link: "/archive/missions",
+  },
+    {
+    title: "أرشيف الموظفين",
+    icon: <FaFolder className="w-10 h-10 text-blue-600" />,
+  
+    link: "/archive/users",
+  },
+      {
+    title: "أرشيف نوع العقار",
+    icon: <FaFolder className="w-10 h-10 text-blue-600" />,
+  
+    link: "/archive/projectType",
+  },
+        {
+    title: "أرشيف المناطق",
+    icon: <FaFolder className="w-10 h-10 text-blue-600" />,
+  
+    link: "/archive/locations",
   },
 ]
 

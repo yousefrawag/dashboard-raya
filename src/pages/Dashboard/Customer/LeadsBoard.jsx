@@ -27,6 +27,8 @@ import { useState , useMemo } from 'react';
 import FiltertionHook from '../../../hooks/FiltertionHook';import useQueryupdate from "../../../services/useQueryupdate";
 import toast from "react-hot-toast";
 import { useDashboardContext } from "../../../context/DashboardProviedr";
+import { FiFilter, FiX } from "react-icons/fi";
+
 import AisgineClienttouser from "../../../components/common/popupmdules/AisgineClienttouser";
 const StatCard = ({ title, value, icon, color }) => (
   <div
@@ -47,6 +49,8 @@ const LeadsBoard = ({ stats = {} }) => {
   const { updateiteam:SendToarchiev } = useQueryupdate("customers/customer-archive" , "customers/leads") 
 const {   AsigineclientTouser , setAsigine  } = useDashboardContext()
 const [CurrentLead , setCurrentLead] = useState("")
+const [isSectionOpen , setIssectionOpen] = useState(false)
+
   const {
     totalLeads = 0,
     totalVisits = 0,
@@ -400,27 +404,13 @@ if(isLoading || loaddingConvert) {
 
         </div>
 
-        {/* PLATFORM PERFORMANCE */}
-        {/* <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-800 mb-5">
-            الأداء حسب المنصة
-          </h2>
+                  <button 
+                         className="flex items-center gap-2 mb-3 px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-            {platformStats.map((p, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between bg-gray-50 rounded-xl p-4 border border-gray-100 hover:shadow-sm transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`text-2xl ${p.color}`}>{p.icon}</div>
-                  <span className="font-medium text-gray-800">{p.name}</span>
-                </div>
-                <span className="font-semibold text-gray-900">{p.leads} Leads</span>
-              </div>
-            ))}
-          </div>
-        </div> */}
+                 onClick={() => setIssectionOpen(!isSectionOpen)}>
+                {open ? <FiX size={20} /> : <FiFilter size={20} />}
+        {isSectionOpen ? "إخفاء الفلاتر" : "عرض الفلاتر"}
+          </button>
 
         {/* TABLE PLACEHOLDER */}
         <div className="mt-10 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -430,7 +420,11 @@ if(isLoading || loaddingConvert) {
             </h3>
            <span></span>
           </div>
-<FiltertionHook  filters={filters} columns={columnsfile} params={params} setParams={setParams} filteredData={filteredData}/>
+          {
+            isSectionOpen && <FiltertionHook  filters={filters} columns={columnsfile} params={params} setParams={setParams} filteredData={filteredData}/>
+
+          }
+    
           <div className="border-2 border-dashed rounded-xl  text-gray-400">
           <CustomeTabel   defaultSortField="firstPayment"
   defaultSortAsc={false}  data={filteredData} columns={columns}/>

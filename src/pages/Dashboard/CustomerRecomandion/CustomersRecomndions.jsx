@@ -13,6 +13,7 @@ import authFetch from '../../../utils/axiosAuthfetch';
 import TeaxtareGenralSearch from '../../../components/common/TeaxtareGenralSearch';
 import Loader from '../../../components/common/Loader';
 import { useNavigate } from "react-router-dom";
+import CustomersJourneyAnalytics from '../../../components/common/CustomersJourneyAnalytics';
 
 const CustomersRecommendations = () => {
        const [formData, setFormData] = useState({
@@ -21,7 +22,7 @@ const CustomersRecommendations = () => {
       clientwork: [],
       source: [],
       clientStatus: [],
-      region: "",
+      region: [],
       project: [],
       cashOption: "",
       firstPaymentFrom: null ,
@@ -37,7 +38,8 @@ const CustomersRecommendations = () => {
       requireRegion: "",
       require: "",
       requireType: "",
-      governote:""
+       governote:[] ,
+       relatedStauts:[]
     });
      const [allwords , setWords] = useState([])
     const [data , setData] = useState([])
@@ -510,7 +512,7 @@ const handelReset = () => {
       clientStatus: [],
       region: "",
       project: [],
-      cashOption: "",
+      cashOption: [],
       firstPaymentFrom: "" ,
       firstPaymentTo:"",
       InstallmentType: "",
@@ -520,11 +522,11 @@ const handelReset = () => {
       ordersTo: "",
       isViwed: [],
       clientendRequr: "",
-      rquireLocation: "",
-      requireRegion: "",
-      require: "",
-      requireType: "",
-      governote:""
+      rquireLocation: [],
+      requireRegion: [],
+      require: [],
+      requireType: [],
+      governote:[]
   })
   setWords([])
 }
@@ -833,6 +835,10 @@ const downloadWhatsAppData = (filename = "بيانات_الواتساب.xlsx") =
             {
               CurrenTap === "genrale" && <TeaxtareGenralSearch allwords={allwords} setWords={setWords} />
             }
+            {
+              CurrenTap === "ai" &&   <CustomersJourneyAnalytics />
+            }
+          
 
 
 </form>

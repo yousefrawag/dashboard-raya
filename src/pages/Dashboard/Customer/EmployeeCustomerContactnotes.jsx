@@ -2,8 +2,9 @@ import React from 'react'
 import SelectoptionHook from '../../../hooks/SelectoptionHook'
 import useQuerygetiteams from '../../../services/Querygetiteams'
 
-const EmployeeCustomerContactnotes = ({details , formsData , setDeatils , ContactDate  , setContactDate ,CustomerDealsatuts ,handelInputschage } ) => {
-const {data , isLoading} = useQuerygetiteams("callcenterCustomerstauts" , "callcenterCustomerstauts")
+const EmployeeCustomerContactnotes = ({details ,data ,  retlatedReportType ,retlatedCustomerDealStauts,formsData , setDeatils , ContactDate  , setContactDate ,CustomerDealsatuts ,handelInputschage } ) => {
+        const { data:ReportTypes, isLoading } = useQuerygetiteams('ReportType', 'ReportType');
+
   return (
     <div className='w-full border-[1px] border-[#eee] p-4'>
    
@@ -13,6 +14,7 @@ const {data , isLoading} = useQuerygetiteams("callcenterCustomerstauts" , "callc
               htmlFor="details"
               className="w-full text-lg font-medium text-black dark:text-white"
             >
+            
          أخر تواصل مع العميل
 
             </label>
@@ -24,8 +26,8 @@ const {data , isLoading} = useQuerygetiteams("callcenterCustomerstauts" , "callc
               className="min-h-[200px] focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             ></textarea>
           </div>
-{
-  isLoading ? "loadding ..." : <div className="mb-6 flex flex-col  gap-2 w-full">
+
+  <div className="mb-6 flex flex-col  gap-2 w-full">
             <label
               htmlFor="CustomerDealsatuts"
               className="w-full text-lg font-medium text-black dark:text-white"
@@ -50,8 +52,32 @@ const {data , isLoading} = useQuerygetiteams("callcenterCustomerstauts" , "callc
 }
 </select>
           </div>
-}
 
+  <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="CustomerDealsatutsDescrep"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+       وصف حاله العميل مع المتابعة 
+
+            </label>
+            <select 
+            value={formsData.CustomerDealsatutsDescrep}
+            onChange={handelInputschage}
+            required
+            name='CustomerDealsatutsDescrep'
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالاختيار</option>
+{
+  retlatedCustomerDealStauts?.map((item) => {
+    return <option key={item} value={item}>{item}</option>
+  })
+}
+</select>
+          </div>
   <div className="mb-6 flex flex-col  gap-2">
     <label
       htmlFor="customerDate"
@@ -91,7 +117,62 @@ const {data , isLoading} = useQuerygetiteams("callcenterCustomerstauts" , "callc
               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             />
           </div>
-          <div className="mb-6 flex flex-col  gap-2">
+
+          {
+  isLoading ? "loadding ..." : <div className="mb-6 flex flex-col  gap-2 w-full">
+        <label
+      htmlFor="ReportType"
+      className="w-full text-lg font-medium text-black dark:text-white"
+    >
+       نوع التقرير *
+
+    </label>
+            <select 
+                 name="ReportType"
+      id="ReportType"
+     value={formsData.ReportType}
+   onChange={handelInputschage}
+            required
+            
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالإختيار</option>
+{
+  ReportTypes?.data?.data?.map((item) => {
+    return <option key={item?._id} value={item?.name}>{item?.name}</option>
+  })
+}
+</select>
+          </div>
+}
+  <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="ReportTypeDescriep"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+       وصف التقرير 
+
+            </label>
+            <select 
+            value={formsData.ReportTypeDescriep}
+            onChange={handelInputschage}
+            required
+            name='ReportTypeDescriep'
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالاختيار</option>
+{
+  retlatedReportType?.map((item) => {
+    return <option key={item} value={item}>{item}</option>
+  })
+}
+</select>
+          </div>
+          {/* <div className="mb-6 flex flex-col  gap-2">
     <label
       htmlFor="ReportType"
       className="w-full text-lg font-medium text-black dark:text-white"
@@ -120,7 +201,7 @@ const {data , isLoading} = useQuerygetiteams("callcenterCustomerstauts" , "callc
 <option value="أخرى">أخرى</option>
  
     </select>
-  </div>
+  </div> */}
 
     <div className="mb-6 flex flex-col  gap-2">
     <label
@@ -142,8 +223,24 @@ const {data , isLoading} = useQuerygetiteams("callcenterCustomerstauts" , "callc
       className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
     />
   </div>
+      <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="contactNotes"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+     ملاحظات
+
+            </label>
+            <textarea
+             onChange={handelInputschage}
+      value={formsData.contactNotes}
+              name="contactNotes"
+           
+              className="min-h-[200px] focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+            ></textarea>
+          </div>
     </div>
-    
+ 
     </div>
   )
 }

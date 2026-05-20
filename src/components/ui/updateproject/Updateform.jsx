@@ -13,6 +13,8 @@ import Loader from '../../common/Loader';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import useQuerygetiteams from '../../../services/Querygetiteams';
+import AddProperty from '../Addprojectui/AddProperty';
+import StatusFilterTabs from '../../common/StatusFilterTabs';
 const Updateform = ({ id }) => {
   const { data, isLoading } = useQuerygetSpacficIteam(
     'projects',
@@ -24,11 +26,17 @@ const Updateform = ({ id }) => {
     'projects',
     'projects',
   );
-  const { data:locations } = useQuerygetiteams("location", "location");
-  const { data:Currencydata } = useQuerygetiteams("currency", "currency");
+  const { data: locations } = useQuerygetiteams('location', 'location');
+  const { data: Currencydata } = useQuerygetiteams('currency', 'currency');
   const { data: regionData } = useQuerygetiteams('region', 'region');
-    const { data:Area } = useQuerygetiteams("arae", "arae");
-  
+  const { data: Area } = useQuerygetiteams('arae', 'arae');
+  const { data: FirsPaymentData } = useQuerygetiteams(
+    'firstpayment',
+    'firstpayment',
+  );
+      const { data:MonthlyPaymentData } = useQuerygetiteams("monthPayment", "monthPayment");
+    const { data:FloorNumbertData } = useQuerygetiteams("FloorNumber", "FloorNumber");
+
   const { data: projectStatuts } = useQuerygetiteams(
     'projectStatuts',
     'projectStatuts',
@@ -40,42 +48,79 @@ const Updateform = ({ id }) => {
   const [governote, setGovernote] = useState('');
   const [EstateType, setEstateType] = useState('');
   const [projectStauts, setProjectSatuts] = useState('');
-  const [Currency , setCurrency] = useState("")
+  const [Currency, setCurrency] = useState('');
   const CurrentProject = data?.data;
   const navigate = useNavigate();
   const [images_video, setimages_video] = useState([]);
-    const [relatedTypes , setRelatedType] = useState([])
-  
- const [projectData , setprojectData] = useState({
-    projectOwner:"" ,
-    projectOwnerPhone:"" ,
-    governoate:"" ,
-    projectName:"" ,
-    estateType:"" ,
-    detailedAddress:"" ,
-    availableFloors:"",
-    projectDetails:"" ,
-    projectads:"" ,
-    projectSatatus:"" ,
-    pymentType:"" ,
-    estatePrice:"" ,
-    materPriec:"" ,
-    installmentsFirstPyment:"" ,
-    InstallmentPeriod:"" ,
-    installmentsFirstPermonth:"" ,
-    clientType:"" ,
-    areaMatter:"" ,
+  const [relatedTypes, setRelatedType] = useState([]);
+  const [projectCheck, setProjectCheck] = useState(false);
+
+  const [projectData, setprojectData] = useState({
+    projectOwner: '',
+    projectOwnerPhone: '',
+    governoate: '',
+    projectName: '',
+    estateType: '',
+    detailedAddress: '',
    
-    typeOfSpaceoutside:"" ,
-    spaceOuteside:"" ,
-    city:"" ,
-    relatedtype:""
+    projectDetails: '',
+    projectads: '',
+    projectSatatus: '',
+    pymentType: '',
+    estatePrice: '',
+    materPriec: '',
+    installmentsFirstPyment: '',
+    InstallmentPeriod: '',
+    installmentsFirstPermonth: '',
+    clientType: '',
+    areaMatter: '',
 
-  })
-  const [relatedRegions , setRelatedRegion] = useState([])
+    typeOfSpaceoutside: '',
+    spaceOuteside: '',
+    city: '',
+    relatedtype: '',
+    availableFloors:[] ,
+    Barkaaraemater:"" ,
+    countOfperiod:"" ,
+    installmentPeriod:""
+  });
+  const [relatedRegions, setRelatedRegion] = useState([]);
   const [docs, setDocs] = useState([]);
-
   const [viewmenu, setViewmenu] = useState(false);
+
+  const [properties, setProperties] = useState([]);
+  const [propertyForm, setPropertyForm] = useState({
+    unitName: "",
+    floor: "",
+    rooms: "",
+    bathrooms: "",
+    area: "",
+    price: "",
+    downPayment: "",
+    monthlyInstallment: "",
+    propertyNote:""
+  });
+  const statusConfig = {
+ 
+    info: {
+      label: "بيانات المشروع" ,
+      className: "text-yellow-600 hover:text-yellow-700",
+      icon: "clock"
+    },
+    properties: {
+      label: "إضافه شقة" ,
+      className: "text-green-600 hover:text-green-700",
+      icon: "check-circle"
+    },
+
+ 
+ 
+ 
+
+  }; 
+  const [CurrenTap , setCurrentTap] = useState("info")  
+
+const [editIndex, setEditIndex] = useState(null);
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -87,22 +132,83 @@ const Updateform = ({ id }) => {
     setDocs((prevFiles) => [...prevFiles, ...selectedFiles]);
     e.target.value = '';
   };
+const toggleFloor = (floor) => {
+  setprojectData(prev => ({
+    ...prev,
+    availableFloors: prev.availableFloors.includes(floor)
+      ? prev.availableFloors.filter(f => f !== floor)
+      : [...prev.availableFloors, floor],
+  }));
+};
+
 
   const handelSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    const data = Object.fromEntries(formData);
- 
+    
+
+ formData.append("properties", JSON.stringify(properties));
+  formData.append("availableFloors", JSON.stringify(projectData.availableFloors));
+
+    formData.set("operationType" , opeartionType)
+    formData.set("installments" , chasSelectedtype)
     docs.forEach((item) => {
       formData.append('files', item);
     });
     images_video.forEach((item) => {
       formData.append('files', item);
     });
-console.log(data);
+ 
+const data = Object.fromEntries(formData);
+if(!projectData.projectName){
+  return toast.error("يجب إدخال اسم المشروع")
+}
 
-   
+
+if(!projectData.governoate){
+  return toast.error("يجب إدخال  المنطقة")
+}
+if(!projectData.estateType){
+  return toast.error("يجب إدخال  نوع العقار")
+}
+if(!projectData.projectSatatus){
+  return toast.error("يجب إدخال حالة المشروع")
+}
+
+if(!projectData.pymentType){
+  return toast.error("يجب إدخال  العملة")
+}
+if(!projectData.estatePrice){
+  return toast.error("يجب إدخال  سعر العقار الاجمالى")
+}
+if(!projectData.installments){
+  return toast.error("يجب إدخال  حالة التقسيط")
+}
+
+if(chasSelectedtype === "نعم"){ 
+  if(!projectData.installmentPeriod){
+  return toast.error("يجب إدخال   مده التقسيط")
+  }
+    if(!projectData.countOfperiod){
+  return toast.error("يجب إدخال  مده التقسيط سواء على كام سنه او شهر")
+  }
+      if(!projectData.installmentsFirstPyment){
+  return toast.error("يجب إدخال  الدفعة الاولى")
+  }
+        if(!projectData.installmentsFirstPermonth){
+  return toast.error("يجب إدخال  الدفعة الشهرية")
+  }
+
+
+}
+         if(!projectData.availableFloors.length){
+  return toast.error("يجب إدخال   عدد الطوابق")
+  }
+           if(!projectData.areaMatter){
+  return toast.error("يجب إدخال  المساحه متر")
+  }
+
     try {
       updateiteam(
         { data: formData, id },
@@ -133,99 +239,180 @@ console.log(data);
     }
   };
 
+
+const addProperty = () => {
+  if (!propertyForm.unitName || !propertyForm.price) {
+    return toast.error("يجب إدخال بيانات الشقة");
+  }
+
+  if (editIndex !== null) {
+    // ✅ update
+    const updated = [...properties];
+    updated[editIndex] = propertyForm;
+    setProperties(updated);
+    setEditIndex(null);
+    toast.success("تم تعديل الشقة");
+  } else {
+    // ✅ add
+    setProperties((prev) => [...prev, propertyForm]);
+    toast.success("تم إضافة الشقة");
+  }
+
+  setPropertyForm({
+    unitName: "",
+    floor: "",
+    rooms: "",
+    bathrooms: "",
+    area: "",
+    price: "",
+    downPayment: "",
+    monthlyInstallment: "",
+    propertyNote: ""
+  });
+};
+  const removeProperty = (index) => {
+      const confirmed = window.confirm("هل أنت متأكد أنك تريد الحذف؟");
+      if(confirmed) {
+    setProperties((prev) => prev.filter((_, i) => i !== index));
+    toast.success("تم الحذف بنجاح")
+      } else {
+        toast.success("تم الغاء الحذف بنجاح")
+      }
+
+  };
+  const removeFloor = (floor) => {
+  setprojectData(prev => ({
+    ...prev,
+    availableFloors: prev.availableFloors.filter(f => f !== floor),
+  }));
+};
+  const handelPropertyForm = (e) => {
+    const { name, value } = e.target;
+    setPropertyForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
   const handelInputschage = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     setprojectData((prev) => ({ ...prev, [name]: value }));
-    if(name === "governoate"){
-      const CurrentRegion = locations?.data?.data?.find((item) => item.name === value)
-      if(CurrentRegion){
-setRelatedRegion(CurrentRegion?.relatedRegions)
-      } else{
-        setRelatedRegion([])
+    if (name === 'governoate') {
+      const CurrentRegion = locations?.data?.data?.find(
+        (item) => item.name === value,
+      );
+      if (CurrentRegion) {
+        setRelatedRegion(CurrentRegion?.relatedRegions);
+      } else {
+        setRelatedRegion([]);
       }
-      
     }
-           if(name === "estateType"){
-      const CurrentRegion = regionData?.data?.data?.find((item) => item.name === value)
-      if(CurrentRegion){
-setRelatedType(CurrentRegion?.relatedRegions)
-      } else{
-        setRelatedType([])
-      } }
+    if (name === 'estateType') {
+      const CurrentRegion = regionData?.data?.data?.find(
+        (item) => item.name === value,
+      );
+      if (CurrentRegion) {
+        setRelatedType(CurrentRegion?.relatedRegions);
+      } else {
+        setRelatedType([]);
+      }
+    }
   };
+  const editProperty = (index) => {
+  setPropertyForm(properties[index]);
+  setEditIndex(index);
+};
   useEffect(() => {
     if (CurrentProject) {
-    setprojectData({
-    governoate:CurrentProject?.governoate ,
-    projectName:"" ,
-    estateType:CurrentProject?.estateType ,
-    detailedAddress:"" ,
-    projectDetails:"" ,
-    projectads:"" ,
-    projectSatatus:"" ,
-    areaMatter:CurrentProject?.areaMatter,
-    spaceOuteside:CurrentProject?.spaceOuteside ,
-     installmentsFirstPyment:CurrentProject?.installmentsFirstPyment ,
-    InstallmentPeriod:CurrentProject?.InstallmentPeriod ,
-    installmentsFirstPermonth:CurrentProject?.installmentsFirstPermonth ,
+   setprojectData({
+  projectOwner: CurrentProject?.projectOwner,
+  projectOwnerPhone: CurrentProject?.projectOwnerPhone,
 
-    city:CurrentProject?.city ,
-    relatedtype:CurrentProject?.relatedtype ,
-    availableFloors:CurrentProject?.availableFloors
-    })
-    
+  governoate: CurrentProject?.governoate,
+  projectName: CurrentProject?.projectName,
+  estateType: CurrentProject?.estateType,
+  detailedAddress: CurrentProject?.detailedAddress,
+
+  projectDetails: CurrentProject?.projectDetails,
+  projectads: CurrentProject?.projectads,
+  projectSatatus: CurrentProject?.projectSatatus,
+  pymentType: CurrentProject?.pymentType,
+
+  estatePrice: CurrentProject?.estatePrice,
+  materPriec: CurrentProject?.materPriec,
+installments:CurrentProject?.installments,
+  installmentsFirstPyment: CurrentProject?.installmentsFirstPyment,
+  InstallmentPeriod: CurrentProject?.InstallmentPeriod,
+  installmentsFirstPermonth: CurrentProject?.installmentsFirstPermonth,
+
+  clientType: CurrentProject?.clientType,
+
+  areaMatter: CurrentProject?.areaMatter,
+  typeOfSpaceoutside: CurrentProject?.typeOfSpaceoutside,
+  spaceOuteside: CurrentProject?.spaceOuteside,
+
+  city: CurrentProject?.city,
+  relatedtype: CurrentProject?.relatedtype,
+
+  availableFloors: CurrentProject?.availableFloors || [],
+
+  Barkaaraemater: CurrentProject?.Barkaaraemater,
+  countOfperiod: CurrentProject?.countOfperiod,
+  installmentPeriod: CurrentProject?.installmentPeriod,
+});
+setProperties(CurrentProject?.properties || [])
       setOpeartiontype(CurrentProject?.operationType);
-      
-      setProjectSatuts(CurrentProject?.projectSatatus)
-      setCurrency(CurrentProject?.pymentType)
-      setCahselectedType(CurrentProject?.installments)
 
-
-
+      setProjectSatuts(CurrentProject?.projectSatatus);
+      setCurrency(CurrentProject?.pymentType);
+      setCahselectedType(CurrentProject?.installments);
     }
-  }, [CurrentProject ]);
+  }, [CurrentProject]);
 
   useEffect(() => {
-    if(!CurrentProject ||  !locations?.data?.data) return ;
-          const CurrentRegionsRelated = locations?.data?.data?.find((item) => item.name === CurrentProject?.governoate )
-      setRelatedRegion(CurrentRegionsRelated?.relatedRegions)
-  } , [CurrentProject , locations])
+    if (!CurrentProject || !locations?.data?.data) return;
+    const CurrentRegionsRelated = locations?.data?.data?.find(
+      (item) => item.name === CurrentProject?.governoate,
+    );
+    setRelatedRegion(CurrentRegionsRelated?.relatedRegions);
+  }, [CurrentProject, locations]);
 
-    useEffect(() => {
-    if(!CurrentProject ||  !regionData?.data?.data) return ;
-                 const CurrenttypesRelated = regionData?.data?.data?.find((item) => item.name === CurrentProject?.estateType )
-      setRelatedType(CurrenttypesRelated?.relatedRegions)
-  } , [CurrentProject , regionData])
-
+  useEffect(() => {
+    if (!CurrentProject || !regionData?.data?.data) return;
+    const CurrenttypesRelated = regionData?.data?.data?.find(
+      (item) => item.name === CurrentProject?.estateType,
+    );
+    setRelatedType(CurrenttypesRelated?.relatedRegions);
+  }, [CurrentProject, regionData]);
 
   if (isLoading || SubmitLoading) {
     return <Loader />;
   }
- 
-  console.log("current-project" , CurrentProject);
-  
+
+  console.log('current-project', CurrentProject);
+
   return (
     <form
       onSubmit={handelSubmit}
       className="w-full h-full bg-white rounded-[10px] dark:bg-form-input"
     >
-     
 
-      <div className="main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	">
+            <StatusFilterTabs  statusConfig={statusConfig} onStatusChange={(key) => setCurrentTap(key)} selectedStatus={CurrenTap}/>
+      {
+        CurrenTap === "info" &&      <div className="main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	"> 
         <div className="mb-6 flex flex-col  gap-2">
           <label
             htmlFor="projectOwner"
             className="w-full text-lg font-medium text-black dark:text-white"
           >
             مالك العقار
-         
           </label>
           <input
             type="text"
             id="projectOwner"
             name="projectOwner"
-            defaultValue={CurrentProject?.projectOwner}
+            value={projectData?.projectOwner}
+             onChange={handelInputschage}
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           />
         </div>
@@ -241,7 +428,8 @@ setRelatedType(CurrentRegion?.relatedRegions)
             type="text"
             id="projectOwnerPhone"
             name="projectOwnerPhone"
-            defaultValue={CurrentProject?.projectOwnerPhone}
+            value={projectData?.projectOwnerPhone}
+             onChange={handelInputschage}
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           />
         </div>
@@ -261,38 +449,39 @@ setRelatedType(CurrentRegion?.relatedRegions)
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           >
             <option value="">أختر الموقع</option>
-            {
-                          locations?.data?.data?.map((item) => {
-                            return    <option key={item?._id} value={item?.name}>
-                                  {
-                                    item?.name
-                                  }
-                        </option>
-                          })
-                        }
+            {locations?.data?.data?.map((item) => {
+              return (
+                <option key={item?._id} value={item?.name}>
+                  {item?.name}
+                </option>
+              );
+            })}
           </select>
         </div>
 
-          <div className="mb-6 flex flex-col gap-2">
-  <label htmlFor="city" className="w-full text-lg font-medium text-black dark:text-white">
-    الموقع*
-  </label>
-  <select
-    name="city"
-    id="city"
-    required
-    value={projectData.city}
-    onChange={handelInputschage}
-    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-  >
-    <option>قم بالإختيار</option>
-    {relatedRegions?.map((region, index) => (
-      <option key={index} value={region}>
-        {region}
-      </option>
-    ))}
-  </select>
-</div>
+        <div className="mb-6 flex flex-col gap-2">
+          <label
+            htmlFor="city"
+            className="w-full text-lg font-medium text-black dark:text-white"
+          >
+            الموقع*
+          </label>
+          <select
+            name="city"
+            id="city"
+            required
+            value={projectData.city}
+            onChange={handelInputschage}
+            className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+          >
+            <option>قم بالإختيار</option>
+            {relatedRegions?.map((region, index) => (
+              <option key={index} value={region}>
+                {region}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="mb-6 flex flex-col  gap-2">
           <label
             htmlFor="projectName"
@@ -304,11 +493,12 @@ setRelatedType(CurrentRegion?.relatedRegions)
             type="text"
             id="projectName"
             name="projectName"
-            defaultValue={CurrentProject?.projectName}
+             onChange={handelInputschage}
+            value={projectData?.projectName}
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           />
         </div>
-    <div className="mb-6 flex flex-col  gap-2">
+        <div className="mb-6 flex flex-col  gap-2">
           <label
             htmlFor="detailedAddress"
             className="w-full text-lg font-medium text-black dark:text-white"
@@ -319,7 +509,9 @@ setRelatedType(CurrentRegion?.relatedRegions)
             type="text"
             id="detailedAddress"
             name="detailedAddress"
-            defaultValue={CurrentProject?.detailedAddress}
+                  onChange={handelInputschage}
+            value={projectData?.detailedAddress}
+           
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           />
         </div>
@@ -332,7 +524,8 @@ setRelatedType(CurrentRegion?.relatedRegions)
           </label>
           <select
             name="estateType"
-          onChange={handelInputschage} value={projectData.estateType} 
+            onChange={handelInputschage}
+            value={projectData.estateType}
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           >
             <option value="">أختر النوع</option>
@@ -345,27 +538,30 @@ setRelatedType(CurrentRegion?.relatedRegions)
             })}
           </select>
         </div>
-                         <div className="mb-6 flex flex-col gap-2">
-  <label htmlFor="relatedtype" className="w-full text-lg font-medium text-black dark:text-white">
-    التابع*
-  </label>
-  <select
-    name="relatedtype"
-    id="relatedtype"
-    required
-    value={projectData.relatedtype}
-    onChange={handelInputschage}
-    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-  >
-    <option>قم بالإختيار</option>
-    {relatedTypes?.map((region, index) => (
-      <option key={index} value={region}>
-        {region}
-      </option>
-    ))}
-  </select>
-</div>
-    
+        <div className="mb-6 flex flex-col gap-2">
+          <label
+            htmlFor="relatedtype"
+            className="w-full text-lg font-medium text-black dark:text-white"
+          >
+            التابع*
+          </label>
+          <select
+            name="relatedtype"
+            id="relatedtype"
+            required
+            value={projectData.relatedtype}
+            onChange={handelInputschage}
+            className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+          >
+            <option>قم بالإختيار</option>
+            {relatedTypes?.map((region, index) => (
+              <option key={index} value={region}>
+                {region}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="mb-6 flex flex-col  gap-2">
           <label
             htmlFor="projectDetails"
@@ -374,7 +570,9 @@ setRelatedType(CurrentRegion?.relatedRegions)
             تفاصيل العقار
           </label>
           <textarea
-            defaultValue={CurrentProject?.projectDetails}
+                      onChange={handelInputschage}
+            value={projectData?.projectDetails}
+       
             name="projectDetails"
             className="focus:border-primary min-h-[150px] max-h-[200px]  active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           ></textarea>
@@ -388,12 +586,14 @@ setRelatedType(CurrentRegion?.relatedRegions)
           </label>
           <textarea
             name="projectads"
-            defaultValue={CurrentProject?.projectads}
+               onChange={handelInputschage}
+            value={projectData?.projectads}
+           
             className="focus:border-primary min-h-[150px] max-h-[200px]  active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           ></textarea>
         </div>
 
-         <span>  وضع العقار</span>
+        <span> وضع العقار</span>
         <div className="flex gap-3 ">
           {finishing_c.map((item, index) => {
             return (
@@ -421,8 +621,8 @@ setRelatedType(CurrentRegion?.relatedRegions)
             حالة المشروع
           </label>
           <select
-          value={projectStauts}
-          onChange={(e) => setProjectSatuts(e.target.value)}
+            value={projectStauts}
+            onChange={(e) => setProjectSatuts(e.target.value)}
             name="projectSatatus"
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           >
@@ -444,22 +644,19 @@ setRelatedType(CurrentRegion?.relatedRegions)
             العملة
           </label>
           <select
-          value={Currency}
-          onChange={(e) => setCurrency(e.target.value)}
+            value={Currency}
+            onChange={(e) => setCurrency(e.target.value)}
             name="pymentType"
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           >
             <option value="">أختر النوع</option>
-            {
-                    Currencydata?.data?.data?.map((item) => {
-                      return       <option key={item?._id} value={item?.name}>
-                      {
-                        item?.name
-                      }
-                  </option>
-                    })
-                   }
-  
+            {Currencydata?.data?.data?.map((item) => {
+              return (
+                <option key={item?._id} value={item?.name}>
+                  {item?.name}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div className="mb-6 flex flex-col  gap-2">
@@ -472,7 +669,9 @@ setRelatedType(CurrentRegion?.relatedRegions)
           <input
             type="text"
             id="estatePrice"
-            defaultValue={CurrentProject?.estatePrice}
+            onChange={handelInputschage}
+            value={projectData?.estatePrice}
+         
             name="estatePrice"
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           />
@@ -488,11 +687,13 @@ setRelatedType(CurrentRegion?.relatedRegions)
             type="text"
             id="materPriec"
             name="materPriec"
-            defaultValue={CurrentProject?.materPriec}
+             onChange={handelInputschage}
+            value={projectData?.materPriec}
+          
             className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           />
         </div>
-   <span  className='mb-5 text-lg'> حاله التقسيط</span>
+        <span className="mb-5 text-lg"> حاله التقسيط</span>
         <div className="flex gap-3">
           {cashTypes?.map((item) => {
             return (
@@ -514,15 +715,55 @@ setRelatedType(CurrentRegion?.relatedRegions)
         <div>
           {chasSelectedtype === 'نعم' ? (
             <div>
-
-
-
-
-
-
-
-<span  className='text-red-500'> هذه البيانات تعرض بشكلها القديم يرجى تصحييها بالاسلوب الجديد للحفاظ على بيانات</span>
+              <span className="text-red-500">
+                {' '}
+                هذه البيانات تعرض بشكلها القديم يرجى تصحييها بالاسلوب الجديد
+                للحفاظ على بيانات
+              </span>
+            <div className="mb-6 flex flex-col  gap-2">
+                        <label
+                            htmlFor="installmentPeriod"
+                            className="w-full text-lg font-medium text-black dark:text-white"
+                        >
+                        مده التقسيط
+                        </label>
+                        <select   onChange={handelInputschage} value={projectData.installmentPeriod} name="installmentPeriod"  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"                        >
+                        <option value="">
+                                أختر النوع
+                            </option>
+                              <option value="سنوى">
+                                سنوى
+                            </option>
+                                  <option value="شهرى">
+                                شهرى
+                            </option>
+                     
+                         
+                        </select>
+                     
+                    
+                </div> 
+                
+        {
+          projectData?.installmentPeriod &&
+           <div className="mb-6 flex flex-col  gap-2">
+                  <label
+                      htmlFor="countOfperiod"
+                      className="w-full text-lg font-medium text-black dark:text-white"
+                  >
+      تقسيط على كام {projectData?.installmentPeriod} *
+                  </label>
+                  <input
+                      type="number"
+                      id="countOfperiod"
+                      name="countOfperiod"
+                      value={projectData.countOfperiod}
+                        onChange={handelInputschage}
+                      className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                  />
               
+                </div> 
+        } 
               <div className="mb-6 flex flex-col  gap-2">
                 <label
                   htmlFor="installmentsFirstPyment"
@@ -533,50 +774,35 @@ setRelatedType(CurrentRegion?.relatedRegions)
                 <input
                   type="text"
                   id="installmentsFirstPyment"
-          
-                  defaultValue={CurrentProject?.installmentsFirstPyment}
+                    onChange={handelInputschage}
+            value={projectData?.installmentsFirstPyment}
+                
                   className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                 />
               </div>
-        <div className="mb-6 flex flex-col gap-2">
-  <label
-    htmlFor="InstallmentPeriod"
-    className="w-full text-lg font-medium text-black dark:text-white"
-  >
-    مدة التقسيط*
-  </label>
-  <select
-    id="InstallmentPeriod"
-    name="InstallmentPeriod"
-    value={projectData.InstallmentPeriod}
-    onChange={handelInputschage}
-    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-  >
-    <option value="">اختر مدة التقسيط</option>
-    <option value="شهري">شهري</option>
-    <option value="سنوي">سنوي</option>
-  </select>
-</div>
-              {/* <div className="mb-6 flex flex-col  gap-2">
+              <div className="mb-6 flex flex-col gap-2">
                 <label
-                  htmlFor="installmentsFirstPermonth"
+                  htmlFor="InstallmentPeriod"
                   className="w-full text-lg font-medium text-black dark:text-white"
                 >
-                  الدفعة الشهرية*
+                  مدة التقسيط*
                 </label>
-                <input
-                  type="text"
-                  id="installmentsFirstPermonth"
-                  name="installmentsFirstPermonth"
-                  defaultValue={CurrentProject?.installmentsFirstPermonth}
-                  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-                />
-              </div> */}
-         
+                <select
+                  id="InstallmentPeriod"
+                  name="InstallmentPeriod"
+                  value={projectData.InstallmentPeriod}
+                  onChange={handelInputschage}
+                  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                >
+                  <option value="">اختر مدة التقسيط</option>
+                  <option value="شهري">شهري</option>
+                  <option value="سنوي">سنوي</option>
+                </select>
+              </div>
+          
 
-
-                  {/* الدفعة الأولى */}
-<div className="mb-6 flex flex-col gap-2">
+              {/* الدفعة الأولى */}
+             <div className="mb-6 flex flex-col gap-2">
   <label
     htmlFor="installmentsFirstPyment"
     className="w-full text-lg font-medium text-black dark:text-white"
@@ -591,79 +817,194 @@ setRelatedType(CurrentRegion?.relatedRegions)
     className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
   >
     <option value="">اختر الدفعة الأولى</option>
-    {Array.from({ length: 100 }, (_, i) => (i + 1) * 100000)
-      .filter(v => v <= 10000000)
-      .map((value) => (
-        <option key={value} value={value}>
-          {value.toLocaleString()} 
-        </option>
-      ))}
+ {
+  FirsPaymentData?.data?.data?.map((item) => {
+    return <option value={item?.name} key={item?._id}>{item?.name.toLocaleString('en-US')}</option>
+  })
+ }
   </select>
 </div>
 
-
-
-{/* الدفعة الشهرية */}
-<div className="mb-6 flex flex-col gap-2">
-  <label
-    htmlFor="installmentsFirstPermonth"
-    className="w-full text-lg font-medium text-black dark:text-white"
-  >
-    الدفعة الشهرية*
-  </label>
-  <select
-    id="installmentsFirstPermonth"
-    name="installmentsFirstPermonth"
-    value={projectData.installmentsFirstPermonth}
-    onChange={handelInputschage}
-    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-  >
-    <option value="">اختر الدفعة الشهرية</option>
-    {Array.from({ length: 56 }, (_, i) => (i + 1) * 1000 + 4000)
-      .filter(v => v <= 60000)
-      .map((value) => (
-        <option key={value} value={value}>
-          {value.toLocaleString()} 
-        </option>
-      ))}
-  </select>
-</div>
+              {/* الدفعة الشهرية */}
+              <div className="mb-6 flex flex-col gap-2">
+                <label
+                  htmlFor="installmentsFirstPermonth"
+                  className="w-full text-lg font-medium text-black dark:text-white"
+                >
+                  الدفعة الشهرية*
+                </label>
+                <select
+                  id="installmentsFirstPermonth"
+                  name="installmentsFirstPermonth"
+                  value={projectData.installmentsFirstPermonth}
+                  onChange={handelInputschage}
+                  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                >
+                  <option value="">اختر الدفعة الشهرية</option>
+             {
+  MonthlyPaymentData?.data?.data?.map((item) => {
+    return <option value={item?.name} key={item?._id}>{item?.name.toLocaleString('en-US')}</option>
+  })
+ }
+                </select>
+              </div>
             </div>
           ) : null}
-                  <div className="mb-6 flex flex-col gap-2 mb-3">
-  <label
-    htmlFor="availableFloors"
-    className="w-full text-lg font-medium text-black dark:text-white mb-5 mt-5"
-  >
-    الطوابق المتوفرة*
+
+          <div className="mb-6 flex flex-col gap-2">
+  <label className="w-full text-lg font-medium text-black dark:text-white">
+    عدد الطوابق *
   </label>
 
-  <select
-    id="availableFloors"
-    name="availableFloors"
-    value={projectData.availableFloors}
-    onChange={handelInputschage}
-    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-  >
-    <option value="">اختر عدد الطوابق</option>
-    {[...Array(10)].map((_, index) => (
-      <option key={index + 1} value={index + 1}>
-        {index + 1}
-      </option>
-    ))}
-  </select>
+  <div className="relative">
+    <button
+      type="button"
+      onClick={() => setProjectCheck(!projectCheck)}
+      className="w-full text-right p-3 border border-gray-300 rounded-md bg-white flex justify-between items-center"
+    >
+      <span className="text-gray-500">
+        {projectData.availableFloors.length > 0
+          ? `تم اختيار ${projectData.availableFloors.length} طابق`
+          : "قم بالإختيار"}
+      </span>
+
+      <svg
+        className={`w-5 h-5 text-gray-400 transition-transform ${
+          projectCheck ? "rotate-180" : ""
+        }`}
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    {projectCheck && (
+      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+        {FloorNumbertData?.data?.data?.map((floor, index) => {
+        
+          const isSelected = projectData.availableFloors.includes(floor?.name);
+
+          return (
+            <div
+              key={floor?._id}
+              onClick={() => toggleFloor(floor?.name)}
+              className={`flex items-center justify-between px-4 py-3 cursor-pointer ${
+                isSelected
+                  ? "bg-blue-50 text-blue-700"
+                  : "hover:bg-gray-50 text-gray-700"
+              }`}
+            >
+              <span className="text-sm font-medium">
+                الطابق {floor?.name}
+              </span>
+
+              {isSelected && (
+                <svg
+                  className="w-5 h-5 text-green-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </div>
+
+  {projectData.availableFloors.length > 0 && (
+    <div className="mt-3 flex flex-wrap gap-2">
+      {projectData.availableFloors.map((floor) => (
+        <span
+          key={floor}
+          className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
+        >
+          الطابق {floor}
+          <button
+            type="button"
+            onClick={() => removeFloor(floor)}
+            className="text-blue-600 hover:text-blue-800 text-lg leading-none"
+          >
+            ×
+          </button>
+        </span>
+      ))}
+    </div>
+  )}
 </div>
-                   <div className="mb-6 flex flex-col gap-2">
+
+
+          
+
+          <div className="mb-6 flex flex-col gap-2">
+            <label
+              htmlFor="areaMatter"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+              المساحة / متر*
+            </label>
+            <select
+              id="areaMatter"
+              name="areaMatter"
+              value={projectData.areaMatter}
+              onChange={handelInputschage}
+              className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+            >
+              <option value="">أختر المساحه</option>
+              {Area?.data?.data?.map((item) => {
+                return (
+                  <option key={item._id} value={item.name}>
+                    {item.name + 'م²'}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
+          <div className="mb-6 flex flex-col gap-2">
+            <label
+              htmlFor="spaceOuteside"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+              المساحة الخارجية للعقار
+            </label>
+            <select
+              id="spaceOuteside"
+              name="spaceOuteside"
+              value={projectData.spaceOuteside}
+              onChange={handelInputschage}
+              className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+            >
+              <option value="">أختر المساحه</option>
+              {Area?.data?.data?.map((item) => {
+                return (
+                  <option key={item._id} value={item.name}>
+                    {item.name + 'م²'}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
+            <div className="mb-6 flex flex-col gap-2">
   <label
-    htmlFor="areaMatter"
+    htmlFor="Barkaaraemater"
     className="w-full text-lg font-medium text-black dark:text-white"
   >
-    المساحة / متر*
+      مساحه البركه*
   </label>
   <select
-    id="areaMatter"
-    name="areaMatter"
-    value={projectData.areaMatter}
+    id="Barkaaraemater"
+    name="Barkaaraemater"
+    value={projectData.Barkaaraemater}
     onChange={handelInputschage}
     className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
   >
@@ -681,35 +1022,6 @@ setRelatedType(CurrentRegion?.relatedRegions)
                           })}
   </select>
 </div>
-
-<div className="mb-6 flex flex-col gap-2">
-  <label
-    htmlFor="spaceOuteside"
-    className="w-full text-lg font-medium text-black dark:text-white"
-  >
-    المساحة الخارجية للعقار
-  </label>
-  <select
-    id="spaceOuteside"
-    name="spaceOuteside"
-    value={projectData.spaceOuteside}
-    onChange={handelInputschage}
-    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-  >
-        <option value="">
-                                أختر المساحه
-                            </option>
-                            {Area?.data?.data?.map((item) => {
-                        return (
-                          <option key={item._id} value={item.name}>
-                            {item.name + "م²"}
-                          </option>
-                        );
-                          })}
-  </select>
-</div>
-
-
           <div className="mb-6 flex flex-col  gap-2">
             <label
               htmlFor="typeOfSpaceoutside"
@@ -721,7 +1033,9 @@ setRelatedType(CurrentRegion?.relatedRegions)
               type="text"
               id="typeOfSpaceoutside"
               name="typeOfSpaceoutside"
-              defaultValue={CurrentProject?.typeOfSpaceoutside}
+               onChange={handelInputschage}
+            value={projectData?.typeOfSpaceoutside}
+            
               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             />
           </div>
@@ -736,7 +1050,9 @@ setRelatedType(CurrentRegion?.relatedRegions)
               type="text"
               id="imageLink"
               name="imageLink"
-              defaultValue={CurrentProject?.imageLink}
+                   onChange={handelInputschage}
+            value={projectData?.imageLink}
+           
               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             />
           </div>
@@ -751,7 +1067,9 @@ setRelatedType(CurrentRegion?.relatedRegions)
               type="text"
               id="videoLink"
               name="videoLink"
-              defaultValue={CurrentProject?.videoLink}
+                        onChange={handelInputschage}
+            value={projectData?.videoLink}
+             
               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
             />
           </div>
@@ -764,7 +1082,9 @@ setRelatedType(CurrentRegion?.relatedRegions)
             ملاحظات المشروع
           </label>
           <textarea
-           defaultValue={CurrentProject?.projectNotes}
+                     onChange={handelInputschage}
+            value={projectData?.projectNotes}
+          
             name="projectNotes"
             className="focus:border-primary min-h-[150px] max-h-[200px] active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           ></textarea>
@@ -840,6 +1160,13 @@ setRelatedType(CurrentRegion?.relatedRegions)
           <br />
         </div>
       </div>
+      }
+
+      {
+    CurrenTap === "properties" && <AddProperty   editProperty={editProperty}
+  editIndex={editIndex} propertyForm={propertyForm} removeProperty={removeProperty} addProperty={addProperty}  properties={properties} handelPropertyForm={handelPropertyForm}/>
+   }
+ 
 
       <div className="add_return flex justify-between items-center mt-4 shadow-lg p-4 bg-white dark:bg-form-input">
         <div className="add_btn">
@@ -847,7 +1174,7 @@ setRelatedType(CurrentRegion?.relatedRegions)
             type="submit"
             className={` py-2 px-6 rounded-md bg-main text-white hover:bg-transparent hover:border hover:border-blue-600 hover:text-blue-600`}
           >
-          حفظ
+            حفظ
           </button>
         </div>
         <div className="return_btn">

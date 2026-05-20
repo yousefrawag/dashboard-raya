@@ -20,7 +20,7 @@ authFetch.interceptors.request.use((request) => {
     return Promise.reject(error)
 })
 authFetch.interceptors.response.use((respones) => {
-    // console.log(respones);
+    console.log(respones);
     return respones
 } , (error) => {
     console.log(error);

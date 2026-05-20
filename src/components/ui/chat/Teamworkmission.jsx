@@ -18,7 +18,13 @@ const Teamworkmission = ({ missionid }) => {
                 {Team?.map((item) => (
                     <div key={item?._id} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-sm">
                         <img src={item?.imageURL} alt="user" className="w-16 h-16 rounded-full" />
-                        <span className="mt-2 text-lg font-medium">{item?.name}</span>
+                        <span className="mt-2 text-lg font-medium">{item?.fullName || item?.name}  - 
+
+                            
+                        </span>
+                        <span>
+ {item?.type ==="admin" ? "أدمن" : item?.type === "employee" ? "مسوق أساسى" :"مسوق تحت التدريب"}
+                        </span>
                     </div>
                 ))}
             </div>

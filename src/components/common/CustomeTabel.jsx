@@ -50,7 +50,7 @@ const CustomeTabel = ({ columns, data }) => {
         data={data}
         selectableRows
         fixedHeader
-        fixedHeaderScrollHeight="300px"
+        fixedHeaderScrollHeight="450px"
         pagination
         paginationDefaultPage={currentPage}
         onChangePage={handlePageChange}

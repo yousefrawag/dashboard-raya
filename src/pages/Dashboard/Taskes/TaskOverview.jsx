@@ -440,13 +440,13 @@ const TaskOverview = () => {
         Team?.map((item) =>{
             return  <div key={item?._id} className='w-full h-full flex flex-col items-center justify-center'>
             <img src={item?.imageURL} style={{borderRadius:"100%"}} alt="user-image" className='w-[150px] h-[150px] ' />
-            <span className='mt-4'>{item?.name}</span>
+            <span className='mt-4'>{item?.fullName || item?.name}</span>
         </div>
         })
     }
    
  </div>
- <PopupCheckdelete navigatepage='/Taskes' deleteKey="missions" titale="المهمة" id={id} />
+ <PopupCheckdelete value={true} navigatepage='/Taskes' deleteKey="missions/archevstauts" titale="المهمة" id={id} />
 
     <span>
         إجراء

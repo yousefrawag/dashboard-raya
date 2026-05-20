@@ -21,7 +21,7 @@ const DefaultLayout = ({ children }) => {
   <div className="relative z-1 flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
     <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
     <main>
-      <div className="p-5 md:p-6 2xl:p-10 dark:bg-boxdark dark:drop-shadow-none">
+      <div className="p-2 md:p-2 2xl:p-10 dark:bg-boxdark dark:drop-shadow-none">
         <Outlet />
       </div>
     </main>

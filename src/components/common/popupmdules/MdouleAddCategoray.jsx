@@ -22,6 +22,8 @@ const handelsubmit = (e) => {
                 setRequirefiled("")
                 setmodule(false)
                 toast.success("تم إضافه مستوى جديد")
+                  e.target.reset();
+
             }
         })
     } catch (error) {

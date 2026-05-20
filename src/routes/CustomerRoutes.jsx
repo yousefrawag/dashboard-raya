@@ -9,7 +9,9 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
     ClientWork ,
     LeadsBoard ,
     TodayReminders ,
-    Customerdata
+    Customerdata ,
+    BrokerReports ,
+    DropCustomers
   
   } from "../pages";
     import store from "../store/index"
@@ -29,5 +31,7 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
          { path: "/customers-leads", element: <LeadsBoard /> } ,
          { path: "/User-Reminder", element: <TodayReminders /> } ,
          { path: "/customers-search-results", element: <Customerdata /> } ,
+             { path: "/brokers-deaily-reports", element: <BrokerReports /> } ,
+              { path: "/drop-customers", element: <DropCustomers /> } ,
 
       ];

@@ -47,6 +47,10 @@ const UpdateCutomer = () => {
     'clientcheckStauts',
     'clientcheckStauts',
   );
+        const { data:ReportTypes, } = useQuerygetiteams('ReportType', 'ReportType');
+  
+    const {data : customerDealStautsData} = useQuerygetiteams("callcenterCustomerstauts" , "callcenterCustomerstauts")
+  
     const {data:customerRequirements } = useQuerygetiteams("requirements" , "requirements")
   const { data: locations } = useQuerygetiteams('location', 'location');
   const { setModuleDelete } = useDashboardContext();
@@ -57,6 +61,9 @@ const [relatedRegions, setRelatedRegions] = useState([]);
   const customer = data?.data;
   const [SectionFollowupdate , seSectionFlowwupdate] = useState([])
 const [relatedJop , setRelatedJop] = useState([])
+const [relatedStatuts2 , SetRelatedStauts] = useState([])
+const [retlatedReportType, setRelatedReportType] = useState([])
+
   const navigate = useNavigate();
 
   const [formsData, setFormsData] = useState({
@@ -87,12 +94,17 @@ const [relatedJop , setRelatedJop] = useState([])
     nextReminderDate:"" ,
     clientRequireLocation:"" ,
       clientworkDesc:"" ,
-      clientendRequr:""
+      clientendRequr:"" ,
+      relatedStauts:"" ,
+      CustomerDealsatutsDescrep:"" ,
+      ReportTypeDescriep:""
 
   });
 const [clientRequirements , setClientRequiremnts] = useState([
 
 ])
+const [retlatedCustomerDealStauts , setRelatedCustomerDealstauts] = useState([])
+
   const statusConfig = {
     info: {
       label: 'بيانات العميل',
@@ -120,6 +132,7 @@ const [clientRequirements , setClientRequiremnts] = useState([
   const handelInputschage = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+   
     setFormsData((prev) => ({ ...prev, [name]: value }));
         if (name === "region" ) {
     const selectedRegion = locations?.data?.data?.find((item) => item.name === value);
@@ -137,9 +150,38 @@ const [clientRequirements , setClientRequiremnts] = useState([
     } else {
       setRelatedJop([]);
     }
+
     
   }
-  };
+            if (name === "clientStatus") {
+    const selectedRegion = customerTypes?.data?.data?.find((item) => item.name === value);
+     console.log("selectedRegion" , selectedRegion)
+    if (selectedRegion) {
+      SetRelatedStauts(selectedRegion.relatedRegions || []);
+    } else {
+      SetRelatedStauts([]);
+    }
+    
+  }
+         if (name === "CustomerDealsatuts") {
+    const selectedRegion = customerDealStautsData?.data?.data?.find((item) => item.name === value);
+    if (selectedRegion) {
+      setRelatedCustomerDealstauts(selectedRegion.relatedRegions || []);
+    } else {
+      setRelatedCustomerDealstauts([]);
+    }
+    
+  }
+            if (name === "ReportType") {
+    const selectedRegion = ReportTypes?.data?.data?.find((item) => item.name === value);
+    if (selectedRegion) {
+      setRelatedReportType(selectedRegion.relatedRegions || []);
+    } else {
+      setRelatedReportType([]);
+    }
+    
+  }}
+  
 
   const handelSubmit = (e) => {
     e.preventDefault();
@@ -156,6 +198,10 @@ const [clientRequirements , setClientRequiremnts] = useState([
             CustomerDealsatuts: formsData.CustomerDealsatuts,
             ReportType:formsData.ReportType ,
             nextReminderDate:formsData.nextReminderDate ,
+            CustomerDealsatutsDescrep:formsData.CustomerDealsatutsDescrep,
+              contactNotes:formsData.contactNotes,
+              ReportTypeDescriep:formsData.ReportTypeDescriep ,
+              meeting:formData.customerDate
           },
         };
 
@@ -166,7 +212,7 @@ const [clientRequirements , setClientRequiremnts] = useState([
           return toast.error('رقم الجوال مطلوب');
         }
 
-        if (!formsData.firstPayment) {
+        if (formData.cashOption === "تقسيط" && !formsData.firstPayment) {
           return toast.error('الدفعه الإولى مطلوبة');
         }
       
@@ -175,6 +221,38 @@ const [clientRequirements , setClientRequiremnts] = useState([
           {
             onSuccess: () => {
               e.target.reset();
+              setFormsData({
+                 addBy: '',
+    fullName: '',
+    phoneNumber: '',
+    secondaryPhoneNumber: '',
+    clientStatus: '',
+    region: '',
+    project: '',
+    currency: '',
+    cashOption: '',
+    firstPayment: '',
+    installmentsPyYear: '',
+    endContactDate: '',
+    customerDate: '',
+ 
+    isViwed: '',
+    clientRequire: '',
+    CustomerDealsatuts: '',
+    source:"" ,
+    notes: '',
+    Paymentpermonth:"" ,
+    userfollow:"" ,
+    InstallmentType:"" ,
+    clientwork:"" ,
+    ReportType:"" ,
+    nextReminderDate:"" ,
+    clientRequireLocation:"" ,
+      clientworkDesc:"" ,
+      clientendRequr:""
+              })
+              setDeatils("")
+               setContactDate("")
               toast.success('تم تعديل عميل بنجاح');
              
             },
@@ -212,6 +290,38 @@ const [clientRequirements , setClientRequiremnts] = useState([
           {
             onSuccess: () => {
               e.target.reset();
+                        setFormsData({
+                 addBy: '',
+    fullName: '',
+    phoneNumber: '',
+    secondaryPhoneNumber: '',
+    clientStatus: '',
+    region: '',
+    project: '',
+    currency: '',
+    cashOption: '',
+    firstPayment: '',
+    installmentsPyYear: '',
+    endContactDate: '',
+    customerDate: '',
+ 
+    isViwed: '',
+    clientRequire: '',
+    CustomerDealsatuts: '',
+    source:"" ,
+    notes: '',
+    Paymentpermonth:"" ,
+    userfollow:"" ,
+    InstallmentType:"" ,
+    clientwork:"" ,
+    ReportType:"" ,
+    nextReminderDate:"" ,
+    clientRequireLocation:"" ,
+      clientworkDesc:"" ,
+      clientendRequr:""
+              })
+               setDeatils("")
+               setContactDate("")
               toast.success('تم تعديل عميل بنجاح');
              
             },
@@ -262,7 +372,8 @@ useEffect(() => {
     InstallmentType: customer.InstallmentType,
     clientwork: customer.clientwork,
     clientRequireLocation: customer.clientRequireLocation,
-    clientworkDesc: customer.clientworkDesc
+    clientworkDesc: customer.clientworkDesc ,
+    relatedStauts: customer?.relatedStauts ,
   }));
 
   setClientRequiremnts(customer.clientRequirements || []);
@@ -284,7 +395,16 @@ useEffect(() => {
 
 }, [customer, locations]);
 
+useEffect(() => {
+  if (!customer || !customerTypes?.data?.data) return;
 
+  const regionItem = customerTypes.data.data.find(
+    (item) => item.name === customer.clientStatus
+  );
+
+  SetRelatedStauts(regionItem?.relatedRegions || []);
+
+}, [customer, customerTypes]);
 
 /* 3) لما clientWorkdata يتحمّل → هات الـ related jobs */
 useEffect(() => {
@@ -298,7 +418,7 @@ useEffect(() => {
 
 }, [customer, clientWorkdata]);
 
-console.log("customer" , customer);
+
 
 
   if (isLoading || getLoadding) {
@@ -324,7 +444,13 @@ console.log("customer" , customer);
         />
 
         <span>إجراء</span>
-        <div className="flex gap-5 m-5">
+        <div className="flex gap-5 m-5 ">
+                <button
+              type="submit"
+            className="px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2"
+            >
+              حفظ
+            </button>
           {isAdmin || CanEdit ? (
             <Link
               to={`/Edit-Customer/${id}`}
@@ -548,6 +674,32 @@ console.log("customer" , customer);
                 })}
               </select>
             </div>
+               <div className="mb-6 flex flex-col  gap-2">
+    <label
+      htmlFor="relatedStauts"
+      className="w-full text-lg font-medium text-black dark:text-white"
+    >
+    وصف  حالة العميل  *
+
+    </label>
+    <select
+      name="relatedStauts"
+      id="relatedStauts"
+      onChange={handelInputschage}
+      value={formsData.relatedStauts}
+      
+    
+      className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+    >
+  <option value="">اختر وصف حالة العميل</option>
+{
+  relatedStatuts2?.map((item) => {
+    return <option value={item}>{item}</option>
+  })
+}
+ 
+    </select>
+  </div>
             <div className="mb-6 flex flex-col  gap-2">
               <label
                 htmlFor="region"
@@ -668,7 +820,7 @@ console.log("customer" , customer);
             </div>
 
 
-{
+{/* {
   formsData.cashOption === "تقسيط" || formsData.cashOption === "معاملة بنكية" ?
    <div className="mb-6 flex flex-col  gap-2">
               <label
@@ -687,10 +839,10 @@ console.log("customer" , customer);
                 className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
               />
             </div> : null
-}
+} */}
            
 
-        // تحديث
+    
 
   {
       formsData.cashOption === "تقسيط" || formsData.cashOption === "معاملة بنكية" ? 
@@ -835,7 +987,7 @@ console.log("customer" , customer);
                 })}
               </select>
             </div>
-            <div className="mb-6 flex flex-col  gap-2 mt-5">
+            {/* <div className="mb-6 flex flex-col  gap-2 mt-5">
               <label
                 htmlFor="clientendRequr"
                 className="w-full text-lg font-medium text-black dark:text-white"
@@ -848,8 +1000,8 @@ console.log("customer" , customer);
                 defaultValue={formsData?.clientendRequr}
                 className="min-h-[200px] focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
               ></textarea>
-            </div>
-            <div className="mb-6 flex flex-col  gap-2 mt-5">
+            </div> */}
+            {/* <div className="mb-6 flex flex-col  gap-2 mt-5">
               <label
                 htmlFor="clientRequire"
                 className="w-full text-lg font-medium text-black dark:text-white"
@@ -864,174 +1016,9 @@ console.log("customer" , customer);
                 defaultValue={customer?.clientRequire}
                 className="min-h-[200px] focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
               ></textarea>
-            </div>
+            </div> */}
 
 
-{/* <div className="mb-6 grid  gap-2">
-  <label
-    htmlFor="clientRequire"
-    className="w-full text-lg font-medium text-black dark:text-white"
-  >
-    متطلبات العميل*
-  </label>
-
-  <div className="grid gap-2">
-    {customerRequirements?.data?.data.map((item) => (
-      <label key={item?._id} className="flex items-center gap-2 text-main">
-        <input
-          type="checkbox"
-          name="clientRequire"
-          value={item?.name}
-          checked={formsData.clientRequire?.includes(item?.name)}
-          onChange={(e) => {
-            const value = e.target.value;
-            const checked = e.target.checked;
-            let updated = [...(formsData.clientRequire || [])];
-
-            if (checked) {
-              updated.push(value);
-            } else {
-              updated = updated.filter((v) => v !== value);
-            }
-
-            handelInputschage({
-              target: {
-                name: 'clientRequire',
-                value: updated,
-              },
-            });
-          }}
-          className="accent-primary"
-        />
-        {item?.name}
-      </label>
-    ))}
-  </div>
-</div> */}
-
-{/* {
-  formsData.clientRequire.length &&   <div className="mb-6 flex flex-col  gap-2">
-    <label
-      htmlFor="clientRequireLocation"
-      className="w-full text-lg font-medium text-black dark:text-white"
-    >
-أختر موقع الطلب*
-</label>
-    <select
-     required name="clientRequireLocation"
-     onChange={handelInputschage}
-     value={formsData.clientRequireLocation}
-      id="clientRequireLocation"
-      className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-    >
-      <option value="">أختر</option>
-<option value="القدس">
-  القدس
-</option>
-<option value="اريحا">
-  اريحا
-</option>
-<option value="رام الله">
-  رام الله
-
-</option>
-<option value="بيت حنينا">
-   بيت حنينا
-
-
-</option>
-<option value="صور باهر">
-    صور باهر
-
-
-
-</option>
-<option value="شعفاط السهل">
-     شعفاط السهل
-
-
-
-
-</option>
-<option value="تل الفول">
-      تل الفول
-
-
-
-
-
-</option>
-<option value="شعفاط">
-      شعفاط
-
-
-
-
-</option>
-<option value="بيت صفافا - الشرفات">
-      بيت صفافا - الشرفات
-
-</option>
-<option value="ام طوبا">
-   ام طوبا
-
-</option>
-
-<option value="بيت صفافا">
- بيت صفافا
-</option>
-
-
-<option value="حي الهجره">
-حي الهجره
-
-</option>
-
-<option value="كفر عقب">
-كفر عقب
-
-</option>
-<option value="وادي الحمص">
-وادي الحمص
-
-</option>
-<option value="البوابه">
-البوابه
-
-</option>
-<option value="سطح مرحبا">
-سطح مرحبا
-
-
-</option>
-<option value="المصيون">
- المصيون
-
-
-
-</option>
-<option value="المصايف">
- المصايف
-
-
-
-</option>
-<option value="البيرة">
- البيرة
-
-
-
-</option>
-<option value="طلعه مشتل قلقيلية">
- طلعه مشتل قلقيلية
-
-
-
-
-</option>
-    </select>
-  </div>
-} */}
 
             <div className="mb-6 flex flex-col  gap-2 mt-5">
               <label
@@ -1051,8 +1038,11 @@ console.log("customer" , customer);
         )}
 
         {CurrenTap === 'contacts' && (
-          <div>
+          <div className='max-h-[400px] min-h-[100px] p-4 overflow-auto	'>
             <EmployeeCustomerContactnotes
+            retlatedReportType={retlatedReportType}
+            data={customerDealStautsData}
+              retlatedCustomerDealStauts={retlatedCustomerDealStauts}
               details={details}
               formsData={formsData}
               setDeatils={setDeatils}
@@ -1064,13 +1054,19 @@ console.log("customer" , customer);
           </div>
         )}
         {CurrenTap === 'oldcontact' && (
-          <CallCenterfloow SectionFollow={SectionFollowupdate} id={id}  seSectionFlowwupdate={seSectionFlowwupdate} />
+        <div className='max-h-[300px] min-h-[100px] p-4 overflow-auto'>
+           <CallCenterfloow SectionFollow={SectionFollowupdate} id={id}  seSectionFlowwupdate={seSectionFlowwupdate} />
+        </div> 
         )}
    {
-    CurrenTap === "require" && <ClientRequireSection formsData={formsData} clientRequirements={clientRequirements} setClientRequiremnts={setClientRequiremnts} />
+    CurrenTap === "require" && 
+      <div className='max-h-[300px] min-h-[100px] p-4 overflow-auto'>
+    <ClientRequireSection formsData={formsData} clientRequirements={clientRequirements} setClientRequiremnts={setClientRequiremnts} />
+
+      </div>
 
    }
-        <div className="add_return flex justify-between items-center mt-4 shadow-lg p-4 bg-white dark:bg-form-input">
+        {/* <div className="add_return flex justify-between items-center mt-4 shadow-lg p-4 bg-white dark:bg-form-input">
           <div className="add_btn">
             <button
               type="submit"
@@ -1087,7 +1083,7 @@ console.log("customer" , customer);
               عوده
             </NavLink>
           </div>
-        </div>
+        </div> */}
       </form>
       <PopupCheckdelete
         navigatepage="/cutomers"

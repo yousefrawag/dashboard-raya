@@ -77,7 +77,7 @@ const FiltertionHook = ({ params, setParams, filters ,paramsapi ,  setParamsapi,
   }
 
   return (
-    <div className="mt-[-40px] mb-15 bg-white shadow-lg p-6 rounded-lg ">
+    <div className=" mb-4 bg-white shadow-lg p-6 rounded-lg ">
       {/* Search Input */}
       {
         params?.field === "ContactDate"  || params.field === "createdAt"? 
@@ -86,7 +86,6 @@ const FiltertionHook = ({ params, setParams, filters ,paramsapi ,  setParamsapi,
         <span> من</span>
         <input
           type="date"
-       
           value={paramsapi.startDate}
           onChange={handeselectDate}
           className="w-full bg-transparent outline-none pl-2 text-black"

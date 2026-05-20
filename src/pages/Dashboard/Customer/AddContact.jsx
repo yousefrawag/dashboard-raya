@@ -11,6 +11,7 @@ const AddContact = () => {
     const {id} = useParams()
       const { data, isLoading:loadingGet } = useQuerygetSpacficIteam('customers', 'customers', id);
 const {data:callStatus , isLoading:loadingCallstauts} = useQuerygetiteams("callcenterCustomerstauts" , "callcenterCustomerstauts")
+      const { data:ReportTypes, } = useQuerygetiteams('ReportType', 'ReportType');
 
    const { isError, isLoading, updateiteam } = useQueryupdate(
     'customers',
@@ -25,11 +26,18 @@ const [formdata , setFormdata] = useState({
   CustomerDealsatuts:"" ,
   customerDate:"",
   ReportType:"" ,
-  nextReminderDate:null
+  nextReminderDate:null ,
+  CustomerDealsatutsDescrep:"",
+  contactNotes:"",
+  ReportTypeDescriep:""
+
 
 
 
 })
+const [retlatedCustomerDealStauts , setRelatedCustomerDealstauts] = useState([])
+const [retlatedReportType, setRelatedReportType] = useState([])
+
 const handelInputschage = (e) => {
   const name = e.target.name
   const value = e.target.value
@@ -37,6 +45,23 @@ const handelInputschage = (e) => {
     ...prev,
     [name]:value
   }))
+       if (name === "CustomerDealsatuts") {
+    const selectedRegion = callStatus?.data?.data?.find((item) => item.name === value);
+    if (selectedRegion) {
+      setRelatedCustomerDealstauts(selectedRegion.relatedRegions || []);
+    } else {
+      setRelatedCustomerDealstauts([]);
+    }
+           if (name === "ReportType") {
+    const selectedRegion = ReportTypes?.data?.data?.find((item) => item.name === value);
+    if (selectedRegion) {
+      setRelatedReportType(selectedRegion.relatedRegions || []);
+    } else {
+      setRelatedReportType([]);
+    }
+    
+  }}
+  
 }
 
   const handleSubmit = (e) => {
@@ -57,7 +82,11 @@ const handelInputschage = (e) => {
           prefers :formdata.prefers ,
           CustomerDealsatuts:formdata.CustomerDealsatuts ,
           ReportType:formdata.ReportType ,
-          nextReminderDate:formdata.nextReminderDate
+          nextReminderDate:formdata.nextReminderDate ,
+          CustomerDealsatutsDescrep:formdata.CustomerDealsatutsDescrep,
+          contactNotes:formdata.contactNotes ,
+          ReportTypeDescriep:formdata.ReportTypeDescriep,
+            meeting:formdata.customerDate
         }
       } ;
 
@@ -70,7 +99,8 @@ const handelInputschage = (e) => {
   prefers:"" ,
   CustomerDealsatuts:"" ,
   customerDate:"" ,
-  nextReminderDate:null
+  nextReminderDate:null ,
+  CustomerDealsatutsDescrep:""
           })
          navigate('/cutomers');
    
@@ -140,6 +170,31 @@ return (
           </div>
 }
 
+  <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="CustomerDealsatutsDescrep"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+       وصف حاله العميل مع المتابعة 
+
+            </label>
+            <select 
+            value={formdata.CustomerDealsatutsDescrep}
+            onChange={handelInputschage}
+            required
+            name='CustomerDealsatutsDescrep'
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالاختيار</option>
+{
+  retlatedCustomerDealStauts?.map((item) => {
+    return <option key={item} value={item}>{item}</option>
+  })
+}
+</select>
+          </div>
   <div className="mb-6 flex flex-col  gap-2">
     <label
       htmlFor="customerDate"
@@ -180,7 +235,62 @@ return (
             />
           </div>
          
-          <div className="mb-6 flex flex-col  gap-2">
+{
+  isLoading ? "loadding ..." : <div className="mb-6 flex flex-col  gap-2 w-full">
+        <label
+      htmlFor="ReportType"
+      className="w-full text-lg font-medium text-black dark:text-white"
+    >
+       نوع التقرير *
+
+    </label>
+            <select 
+                 name="ReportType"
+      id="ReportType"
+   value={formdata.ReportType}
+   onChange={handelInputschage}
+            required
+            
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالإختيار</option>
+{
+  ReportTypes?.data?.data?.map((item) => {
+    return <option key={item?._id} value={item?.name}>{item?.name}</option>
+  })
+}
+</select>
+          </div>
+}
+  <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="ReportTypeDescriep"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+       وصف التقرير 
+
+            </label>
+            <select 
+            value={formdata.ReportTypeDescriep}
+            onChange={handelInputschage}
+            required
+            name='ReportTypeDescriep'
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالاختيار</option>
+{
+  retlatedReportType?.map((item) => {
+    return <option key={item} value={item}>{item}</option>
+  })
+}
+</select>
+          </div>
+
+          {/* <div className="mb-6 flex flex-col  gap-2">
     <label
       htmlFor="ReportType"
       className="w-full text-lg font-medium text-black dark:text-white"
@@ -209,7 +319,7 @@ return (
 <option value="أخرى">أخرى</option>
  
     </select>
-  </div>
+  </div> */}
       <div className="mb-6 flex flex-col  gap-2">
     <label
       htmlFor="nextReminderDate"
@@ -230,6 +340,22 @@ return (
       className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
     />
   </div>
+       <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="contactNotes"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+     ملاحظات
+
+            </label>
+            <textarea
+             onChange={handelInputschage}
+      value={formdata.contactNotes}
+              name="contactNotes"
+           
+              className="min-h-[200px] focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+            ></textarea>
+          </div>
     </div>
     
     </div>

@@ -40,7 +40,12 @@ const AddPrivetproject = () => {
         })
 
     try {
-    
+    if(!data.projectName){
+      return toast.error("يجب ادخال اسم المهمة")
+    }
+    //    if(!data.projectName){
+    //   return toast.error("يجب ادخال اسم المهمة")
+    // }
         
         addIteam(formData, {
             onSuccess:() =>{
@@ -70,12 +75,12 @@ const AddPrivetproject = () => {
  }  
   return (
     <form onSubmit={handelSubmit} className='w-full h-full bg-white rounded-[10px] dark:bg-form-input' >
-    <div className="dark:bg-form-input flex items-center shadow-lg gap-4 mb-4 w-full h-full p-4 bg-white rounded-[10px]">
+    {/* <div className="dark:bg-form-input flex items-center shadow-lg gap-4 mb-4 w-full h-full p-4 bg-white rounded-[10px]">
       <div className="icon p-2 bg-main rounded-full">
         <FaRegPenToSquare />
       </div>
       <p className="font-semibold text-lg">ادخل بيانات الخدمة</p>
-    </div>
+    </div> */}
    
    <div className='main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	'>
             <div className="mb-6 flex flex-col  gap-2">

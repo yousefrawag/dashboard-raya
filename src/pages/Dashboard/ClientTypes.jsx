@@ -12,6 +12,8 @@ import { MdOutlineEditNote } from 'react-icons/md';
 import { format } from 'date-fns'
 import useQueryDelete from '../../services/useQueryDelete'
 import EditmainCategory from "../../components/common/popupmdules/EditmainCategory"
+import AddLocationRegions from '../../components/common/popupmdules/AddLocationRegions'
+import EditLocationsRegion from '../../components/common/popupmdules/EditLocationsRegion'
 import Loader from '../../components/common/Loader'
 const ClientTypes = () => {
     const {data , isLoading , isError} = useQuerygetiteams("clientStauts", "clientStauts")
@@ -86,8 +88,8 @@ const handelEdit = (item) => {
 <div className='shadow-md p-3 mt-10'>
 <CustomeTabel  data={data?.data?.data} columns={columns}/>
 </div>
- <MdouleAddCategoray  fetshkey="clientStauts" titale="حالة العميل "/>
- <EditmainCategory  fetshkey="clientStauts" titale="حالة العميل "/>
+ <AddLocationRegions  fetshkey="clientStauts" titale="حالة العميل "/>
+ <EditLocationsRegion  fetshkey="clientStauts" titale="حالة العميل "/>
     </div>
   )
 }

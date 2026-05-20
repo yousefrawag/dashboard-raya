@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { formatDistanceToNow, format } from 'date-fns';
 import useQueryupdate from '../../../services/useQueryupdate';
 import toast from 'react-hot-toast';
@@ -10,16 +10,20 @@ const arabicTimeAgo = (date) => {
 };
 
 const CallCenterfloow = ({ SectionFollow, id, iseditpage, seSectionFlowwupdate }) => {
-    const { updateiteam } = useQueryupdate("customers/sectionfloow", "customers/sectionfloow");
+    const { updateiteam } = useQueryupdate("customers/sectionfloow", "customers");
     const {data , isLoading} = useQuerygetiteams("callcenterCustomerstauts" , "callcenterCustomerstauts")
 
     const [modulePop, setModulePop] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
+    const [relatedCallStatus , SetReltedCallStatus] = useState([])
     const [formData, setFormData] = useState({
         details: '',
         detailsDate: '',
-        CustomerDealsatuts: ''
+        CustomerDealsatuts: '',
+        CustomerDealsatutsDescrep:"",
+        contactNotes:"",
+        nextReminderDate:null
     });
     const navigate = useNavigate();
 
@@ -60,8 +64,11 @@ const CallCenterfloow = ({ SectionFollow, id, iseditpage, seSectionFlowwupdate }
         setFormData({
             details: item.details,
             detailsDate: format(new Date(item.detailsDate), 'yyyy-MM-dd'),
-            CustomerDealsatuts: item.CustomerDealsatuts
+            CustomerDealsatuts: item.CustomerDealsatuts ,
+            CustomerDealsatutsDescrep:item.CustomerDealsatutsDescrep
         });
+        const CurrentItems1 = data?.data?.data?.find((item) => item.name === currentItem?.CustomerDealsatuts)
+        SetReltedCallStatus(CurrentItems1?.relatedRegions || [])
         setEditModalOpen(true);
     };
 
@@ -72,6 +79,12 @@ const CallCenterfloow = ({ SectionFollow, id, iseditpage, seSectionFlowwupdate }
             ...prev,
             [name]: value
         }));
+        if(name === "CustomerDealsatuts"){
+            const CurrentItems = data?.data?.data?.find((item) => item.name === value)
+            if(CurrentItems) {
+                return SetReltedCallStatus(CurrentItems?.relatedRegions || [])
+            }
+        }
     };
 
     // Submit updated data
@@ -105,7 +118,12 @@ const CallCenterfloow = ({ SectionFollow, id, iseditpage, seSectionFlowwupdate }
         setCurrentItem(SectionFollow.find(item => item._id === itemId));
         setModulePop(true);
     };
-
+useEffect(() => {
+    if(currentItem){
+             const CurrentItems1 = data?.data?.data?.find((item) => item.name === currentItem?.CustomerDealsatuts)
+        SetReltedCallStatus(CurrentItems1?.relatedRegions || [])
+    }
+} , [currentItem])
     return (
         <>
             <div className="p-4 h-[400px] overflow-y-auto space-y-4 border-[1px] mt-10">
@@ -157,6 +175,22 @@ const CallCenterfloow = ({ SectionFollow, id, iseditpage, seSectionFlowwupdate }
                                 {item?.CustomerDealsatuts}
                             </span>
                         </span>
+                        {
+                            item?.CustomerDealsatutsDescrep &&   <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-5">
+                            <span> وصف حالة العميل</span> 
+                            <span className='p-2 bg-main text-white rounded-md'>
+                                {item?.CustomerDealsatutsDescrep}
+                            </span>
+                        </span>
+                        }
+                                  {
+                            item?.contactNotes &&   <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-5">
+                            <span> ملاحظات  </span> 
+                            <span className='p-2 bg-main text-white rounded-md'>
+                                {item?.contactNotes}
+                            </span>
+                        </span>
+                        }
                     </div>
                 ))}
             </div>
@@ -228,7 +262,8 @@ const CallCenterfloow = ({ SectionFollow, id, iseditpage, seSectionFlowwupdate }
                             </div>
                             
      {
-  isLoading ? "loadding ..." : <div className="mb-6 flex flex-col  gap-2 w-full">
+  isLoading ? "loadding ..." : 
+  <div className="mb-6 flex flex-col  gap-2 w-full">
             <label
               htmlFor="CustomerDealsatuts"
               className="w-full text-lg font-medium text-black dark:text-white"
@@ -254,6 +289,31 @@ const CallCenterfloow = ({ SectionFollow, id, iseditpage, seSectionFlowwupdate }
 </select>
           </div>
 }
+  <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="CustomerDealsatutsDescrep"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+       وصف حاله العميل مع المتابعة
+
+            </label>
+            <select 
+            value={formData.CustomerDealsatutsDescrep}
+            onChange={handleInputChange}
+            required
+            name='CustomerDealsatutsDescrep'
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالاختيار</option>
+{
+ relatedCallStatus?.map((item) => {
+    return <option key={item} value={item}>{item}</option>
+  })
+}
+</select>
+          </div>
                         </div>
                         
                         <div className="flex justify-end gap-4 mt-6">

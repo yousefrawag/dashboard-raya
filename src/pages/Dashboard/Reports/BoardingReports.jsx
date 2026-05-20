@@ -19,6 +19,29 @@ const BoardingReports = () => {
                <CardDataStats to="/all-dealyReport" title="التقرير اليومى" >
           <FaUsers className="text-green-500" />
         </CardDataStats>
+                       <CardDataStats to="/compare-prevormance" title="مقارنه الإداء العام" >
+          <FaUsers className="text-green-500" />
+        </CardDataStats>
+
+
+                               <CardDataStats to="/borkers-customers" title="عملاء مسوقين تحت التدريب" >
+          <FaUsers className="text-green-500" />
+        </CardDataStats>
+        
+                               <CardDataStats to="/brokers-deaily-reports" title=" التقرير اليومى للمسوقين تحت التدريب" >
+          <FaUsers className="text-green-500" />
+        </CardDataStats>
+
+                
+                               <CardDataStats to="/raya-jops" title="طلبات التوظيف" >
+          <FaUsers className="text-green-500" />
+        </CardDataStats>
+                                     <CardDataStats to="/raya-Survey" title="إستبيان الموظفين" >
+          <FaUsers className="text-green-500" />
+        </CardDataStats>
+                                       <CardDataStats to="/raya-improve" title="إستبيان تطوير الافكار" >
+          <FaUsers className="text-green-500" />
+        </CardDataStats>
 
      
 

@@ -94,7 +94,7 @@ const AddLocationRegions = ({ fetshkey, titale }) => {
         </div>
 
         {/* Region Input and Add Button */}
-        <div className="flex gap-3 mb-6">
+        <div className="flex flex-col lg:flex-row  gap-3 mb-6">
           <input
             type="text"
             value={Region}

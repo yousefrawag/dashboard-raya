@@ -361,10 +361,47 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
    isAdmin || HasPermission("canViewappCurency") ? 
    <li>
                 <NavLink
+                  to="/FistPayment"
+                  className={`${liststyle} ${pathname.includes('FistPayment') && itemstyle}`}
+                >
+                  <MdOutlineSecurity className="text-lg" />  الدفعة الأولى  
+                </NavLink>
+              </li> : null
+
+}
+{
+   isAdmin || HasPermission("canViewappCurency") ? 
+   <li>
+                <NavLink
+                  to="/PaymentMonthly"
+                  className={`${liststyle} ${pathname.includes('PaymentMonthly') && itemstyle}`}
+                >
+                  <MdOutlineSecurity className="text-lg" />  الدفعة الشهرية  
+                </NavLink>
+              </li> : null
+
+}
+
+{
+   isAdmin || HasPermission("canViewappCurency") ? 
+   <li>
+                <NavLink
                   to="/Currency"
                   className={`${liststyle} ${pathname.includes('Currency') && itemstyle}`}
                 >
                   <MdOutlineSecurity className="text-lg" />  أنواع العملات 
+                </NavLink>
+              </li> : null
+
+}
+{
+   isAdmin || HasPermission("canViewappCurency") ? 
+   <li>
+                <NavLink
+                  to="/FloorNumbers"
+                  className={`${liststyle} ${pathname.includes('FloorNumbers') && itemstyle}`}
+                >
+                  <MdOutlineSecurity className="text-lg" />  الطوابق  
                 </NavLink>
               </li> : null
 
@@ -381,6 +418,18 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
                   className={`${liststyle} ${pathname.includes('cutomers-types') && itemstyle}`}
                 >
                   <MdOutlineSecurity className="text-lg" />    وصف العميل 
+                </NavLink>
+              </li> : null
+
+}
+{
+   isAdmin || HasPermission("canViewCustomerTypes") ? 
+   <li>
+                <NavLink
+                  to="/ReportType"
+                  className={`${liststyle} ${pathname.includes('ReportType') && itemstyle}`}
+                >
+                  <MdOutlineSecurity className="text-lg" />    نوع التقرير 
                 </NavLink>
               </li> : null
 

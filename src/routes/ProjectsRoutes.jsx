@@ -1,7 +1,7 @@
 import { Getprojects  , AddProject , Updateproject,GetprojectSatuts , GetprojectTypes,GetProjectLocation ,SectionClients , ProjectByid , GetprivetProject ,
   UpdatePrivetproject,
   ProjectArchiev ,
-  GetPrivetprojectByid,AddPrivetproject , PrievtProjectArchiev , ProjectArea} from "../pages";
+  GetPrivetprojectByid,AddPrivetproject , PrievtProjectArchiev ,  DropProjects,ProjectArea} from "../pages";
   import store from "../store/index"
   import Checkuserautherzationview from "../middleware/Checkuserautherzationview"; 
   export const ProjectsRoutes = [
@@ -17,6 +17,7 @@ import { Getprojects  , AddProject , Updateproject,GetprojectSatuts , Getproject
       { path: "/projects-Types", element: <GetprojectTypes /> },
       { path: "/projects-location", element: <GetProjectLocation /> },
       { path: "/projects-stauts", element: <GetprojectSatuts /> },
+       { path: "/drop-projects", element: <DropProjects /> },
          { path: "/archive/projects", element: <ProjectArchiev /> },
 
                   { path: "/archive/prievt-tasks", element: <PrievtProjectArchiev /> },

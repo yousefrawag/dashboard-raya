@@ -33,7 +33,8 @@ const DropdownNotification = () => {
       case "delete":
       case "message":
         return (
-          <div
+          <Link
+          to={notify.levels === "clients" ? `/cutomers/${notify?.allowed?._id}` :notify.levels === "missions"  ?  `/team-chat/${notify?.allowed?._id}/${notify?.allowed?.chatID}`: `/projects-main/${notify?.allowed?._id}` }
             key={notify._id}
             className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
           >
@@ -53,7 +54,7 @@ const DropdownNotification = () => {
               </span>
             </div>
             {notify?.createdAt ? formatDistanceToNow(new Date(notify?.createdAt), { addSuffix: true }) : "N/A"}
-          </div>
+          </Link>
         );
       default:
         return null;

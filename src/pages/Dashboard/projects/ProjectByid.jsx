@@ -6,7 +6,7 @@ import { FaFilePdf } from "react-icons/fa6";
 import { Link } from 'react-router-dom';
 import { HiMiniViewfinderCircle } from "react-icons/hi2";
 import HeadPagestyle from '../../../components/common/HeadPagestyle';
-
+import {useState} from "react"
 import Loader from '../../../components/common/Loader';
 import useQuerygetSpacficIteam from '../../../services/QuerygetSpacficIteam';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -15,16 +15,57 @@ import useQueryDelete from '../../../services/useQueryDelete';
 import useGetUserAuthentications from '../../../middleware/GetuserAuthencations';
 import PopupCheckdelete from '../../../components/common/popupmdules/PopupCheckdelete';
 import { useDashboardContext } from '../../../context/DashboardProviedr';
+import StatusFilterTabs from "../../../components/common/StatusFilterTabs"
+import ProjectProperties from "./ProjectProperties"
+import toast from 'react-hot-toast';
+import authFetch from '../../../utils/axiosAuthfetch';
 const ProjectByid = () => {
   const {id} =  useParams()
-  const {data , isLoading} = useQuerygetSpacficIteam("projects" , "projects" , id)
+  const {data , isLoading  ,  refetch} = useQuerygetSpacficIteam("projects" , "projects" , id)
+  const {deleteIteam} = useQueryDelete("projects" , "projects")
   const { CanAdd, CanDelte, CanEdit, CanView, isAdmin } = useGetUserAuthentications("Projects");
   const {  setModuleDelete } =  useDashboardContext()
   const navigate = useNavigate()
   const Currentitem = data?.data
+  const statusConfig = {
+ 
+    info: {
+      label: "بيانات المشروع" ,
+      className: "text-yellow-600 hover:text-yellow-700",
+      icon: "clock"
+    },
+    properties: {
+      label: "الشقق" ,
+      className: "text-green-600 hover:text-green-700",
+      icon: "check-circle"
+    },
+
+ 
+ 
+ 
+
+  }; 
+  const [CurrenTap , setCurrentTap] = useState("info")
 
 
+  const removeProperty = async(proertyId) => {
+   try {
+     const confirmed = window.confirm("هل أنت متأكد أنك تريد الحذف؟");
+     if(confirmed) {
+    const res =  await authFetch.delete(`/projects/${id}/${proertyId}`)
+    if(res.status === 200){
+      refetch()
+      toast.success("تم الحذف بنجاح")
+      
+    } else {
+      toast.success("تم الغاء الحذف")
+    }
+     }
 
+    } catch (error) {
+      toast.error("هناك خطاء اثناء الحذف")
+    }
+  };
   if(isLoading){
     return <Loader />
   }
@@ -52,13 +93,18 @@ const ProjectByid = () => {
         }
         
            </div>
+
+          <StatusFilterTabs  statusConfig={statusConfig} onStatusChange={(key) => setCurrentTap(key)} selectedStatus={CurrenTap}/>
+
+{
+  CurrenTap === "info" && <>
    <div className='w-full h-full grid grid-cols-1 gap-2 xl:grid-cols-2	 shadow-md p-5	'>
                <div className="mb-6 flex flex-col  gap-2">
                  <span
                    htmlFor="name"
                    className="w-full text-lg font-medium text-gray-700 dark:text-white"
                  >
-                        إسم  المشروع
+                      إسم  المشروع
                  </span>
                  <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                 
@@ -284,6 +330,72 @@ const ProjectByid = () => {
                 </p>
               
                </div>
+                      <div className="mb-6 flex flex-col  gap-2">
+                        
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+       سعر الطابق الارضي"
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.upEstatePrice}
+                </p>
+              
+               </div>
+
+
+     <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+        سعر  الروف
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.RoofPrice}
+                </p>
+              
+
+               </div>
+
+
+
+               <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+        سعر  الارض
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.PriceLand}
+                </p>
+              
+               </div>
+
+                   <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+        سعر  الفيلا
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.VailePrice}
+                </p>
+              
+               </div>
+
+
                <div className="mb-6 flex flex-col  gap-2">
                  <span
                    htmlFor="name"
@@ -298,6 +410,8 @@ const ProjectByid = () => {
                 </p>
               
                </div>
+
+
                <div className="mb-6 flex flex-col  gap-2">
                  <span
                    htmlFor="name"
@@ -326,6 +440,147 @@ const ProjectByid = () => {
                 </p>
               
                </div>
+                              <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+      الدفعة الاولى للشقه
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.partmentFirstInstallment}
+                </p>
+              
+               </div>
+
+
+                            <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+      الدفعة الاولى للطابق الارضى
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.VaileFirstInstallment}
+                </p>
+              
+               </div>
+
+
+                            <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+      الدفعة الاولى للطابق للرووف
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.RoofFirstInstallment}
+                </p>
+              
+               </div>
+
+
+                            <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+     عمر البناء
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.buildingAge}
+                </p>
+              
+               </div>
+                            <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+مساحه الشقه الارضى
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.partmentDownMater}
+                </p>
+              
+               </div>
+                            <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+مساحه  الارضى
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.LandMater}
+                </p>
+              
+               </div>
+
+                            <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+مساحه  الفيلا
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.VaileMater}
+                </p>
+              
+               </div>
+                                           <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+مساحه  الروف
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.RoofMater}
+                </p>
+              
+               </div>
+                                        <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+  تسليم المشروع
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.ProjectDelivery}
+                </p>
+              
+               </div>
+
+
+
+
+
+
+
+
                <div className="mb-6 flex flex-col  gap-2">
                  <span
                    htmlFor="name"
@@ -361,10 +616,14 @@ const ProjectByid = () => {
                  >
     الطوابق المتوفره
                  </span>
-                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                 <p className=" dark:border-form-strokedark dark:bg-form-input flex gap-3 text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                 
                 >
-                 {Currentitem?.clientType}
+                 {Currentitem?.availableFloors ?  Currentitem?.availableFloors?.map((item) => {
+                  return <span key={item}>{item}</span>
+                 })
+                : "غير متوفر"
+                } 
                 </p>
               
                </div>
@@ -413,6 +672,24 @@ const ProjectByid = () => {
                 
                 >
                  {Currentitem?.typeOfSpaceoutside}
+                </p>
+              
+               </div>
+                     <div className="mb-6 flex flex-col  gap-2">
+                 <span
+                   htmlFor="name"
+                   className="w-full text-lg font-medium text-gray-700 dark:text-white"
+                 >
+   مساحه البركه
+
+
+
+
+                 </span>
+                 <p className=" dark:border-form-strokedark dark:bg-form-input  text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+                
+                >
+                 {Currentitem?.Barkaaraemater}
                 </p>
               
                </div>
@@ -490,6 +767,13 @@ const ProjectByid = () => {
              
       
      </div>
+</>
+}
+
+{
+  CurrenTap === "properties" && <ProjectProperties  properties={Currentitem?.properties || []} removeProperty={removeProperty}/>
+}
+
      <PopupCheckdelete value={"archiev"} navigatepage="/projects-main" deleteKey="projects" titale="المشروع" id={id} />
 
               <span>

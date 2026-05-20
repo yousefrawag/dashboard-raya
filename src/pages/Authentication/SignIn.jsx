@@ -34,11 +34,16 @@ const SignIn = () => {
     console.log(user);
     
       if(res.status === 200) {
+        if(user?.type === "brokker") {
+          return toast.error("مازلت تحت التريب لايمكنك دخول , تواصل مع الاداره لتفعيل الحساب")
+        }else {
         localStorage.setItem("token" , JSON.stringify(res.data.token))
         dispatch(login(user))
        
         toast.success("تم تسجيل الدخول بنجاح")
         return  navigate('/')
+        }
+
       }
   
       } catch (error) {
@@ -61,7 +66,7 @@ const SignIn = () => {
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5  rounded-tl-[30px] rounded-bl-[30px]">
              
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                تسجيل الدخول
+                تسجيل الدخول 
               </h2>
 
               <form onSubmit={handelLogin}>

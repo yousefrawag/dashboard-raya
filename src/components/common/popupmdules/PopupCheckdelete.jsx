@@ -27,7 +27,8 @@ const handelsubmit = (item) => {
     try {
         if( item === "delete"){
                 const data ={
-                  status:value
+                  status:value ,
+                 ArchievStatuts:value
                 };
 
       updateiteam(

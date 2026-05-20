@@ -191,7 +191,7 @@ const handelDeleteequire = (req) => {
                                     onChange={() => handleUserSelect(user?._id)}
                                     className="accent-main"
                                 />
-                                <span className="text-black dark:text-white">{user?.fullName}</span>
+                                <span className="text-black dark:text-white">{user?.fullName} -  {user?.type ==="admin" ? "أدمن" : user?.type === "employee" ? "مسوق أساسى" :"مسوق تحت التدريب"} </span>
                                 </label>
                             ))}
                             </div>

@@ -2,7 +2,7 @@ import authFetch from "../utils/axiosAuthfetch"
 import {useQuery } from "@tanstack/react-query"
 // import { toast } from 'react-hot-toast';
 const useQuerygetSpacficIteam = (endpoint  , key  , id , params) => {
-    const {isError , data, isLoading } = useQuery({
+    const {isError , data, isLoading  , refetch} = useQuery({
             queryKey:[key , id , params],
         queryFn: async () => {
             
@@ -11,7 +11,7 @@ const useQuerygetSpacficIteam = (endpoint  , key  , id , params) => {
         },
     })
   return{ 
- isError , isLoading , data
+ isError , isLoading , data , refetch
 }
 }
 

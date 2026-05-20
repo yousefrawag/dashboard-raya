@@ -12,18 +12,14 @@ import useQuerygetiteams from "../../../services/Querygetiteams";
 import Loader from '../../../components/common/Loader';
 import useGetUserAuthentications from '../../../middleware/GetuserAuthencations';
 import FiltertionHook from '../../../hooks/FiltertionHook';
-import GetclientsTypes from "../../../components/common/GetclientsTypes"
+import { FiFilter, FiX } from "react-icons/fi";
 
-import GetclientsWithviedtyes from "../../../components/common/GetclientsWithviedtyes"
-import GetclientMostReqions from "../../../components/common/GetclientMostReqions"
-import GetClientsCashoption from "../../../components/common/GetClientsCashoption"
-
-import GetclientsFirstpayments from "../../../components/common/GetclientsFirstpayments"
 const EmployeeRepoarts = () => {
   const { isError, isLoading, data } = useQuerygetiteams("DeailyRoutes", "DeailyRoutes");
   const { deleteIteam } = useQueryDelete("customers", "customers");
   const { CanAdd, CanDelte, CanEdit, CanView, isAdmin } = useGetUserAuthentications("Clients");
   const filtersDays = ["الكل" , "يومى", "أسبوعى", "شهرى" ];
+const [isSectionOpen , setIssectionOpen] = useState(false)
 
   const [params, setParams] = useState({
     field: "",
@@ -188,10 +184,17 @@ const EmployeeRepoarts = () => {
         ))}
       </div>
  
-      <Link  to="/dashboard">
-      جميع الإحصائيات
-      </Link>
-      <FiltertionHook filteredData={filteredData} columns={columns} filters={filters} params={params} setParams={setParams}/>
+                 <button 
+                         className="flex items-center gap-2 mb-3 px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
+
+                 onClick={() => setIssectionOpen(!isSectionOpen)}>
+                {open ? <FiX size={20} /> : <FiFilter size={20} />}
+        {isSectionOpen ? "إخفاء الفلاتر" : "عرض الفلاتر"}
+          </button>
+          {
+            isSectionOpen &&       <FiltertionHook filteredData={filteredData} columns={columns} filters={filters} params={params} setParams={setParams}/>
+
+          }
       <CustomeTabel data={filteredData} columns={columns}/>
     </div>
   );

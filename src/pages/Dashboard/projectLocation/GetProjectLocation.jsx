@@ -15,9 +15,11 @@ import EditmainCategory from "../../../components/common/popupmdules/EditmainCat
 import Loader from '../../../components/common/Loader'
 import AddLocationRegions from '../../../components/common/popupmdules/AddLocationRegions'
 import EditLocationsRegion from '../../../components/common/popupmdules/EditLocationsRegion'
+import useQueryupdate from '../../../services/useQueryupdate'
 const GetProjectLocation = () => {
     const {data , isLoading , isError} = useQuerygetiteams("location", "location")
     const {deleteIteam} = useQueryDelete("location" , "location")
+    const {updateiteam} = useQueryupdate("location" , "location")
     const {module, setmodule , setmainCategory , setEditmaincategory} = useDashboardContext()
     console.log("regione" , isLoading);
     
@@ -27,6 +29,22 @@ const handelEdit = (item) => {
     setmainCategory(item)
     setEditmaincategory(true)
 }
+ const SendeProjectToarchev = (id , status) => {
+try {
+  const data = {
+   ArchievStatuts: status
+  }
+     updateiteam( { id , data }, {
+        onSuccess: () => {
+    
+          toast.success("تم  إرسال المنطقة إلى الأرشيف بنجاح");
+        },
+      });
+} catch (error) {
+  
+}
+ } 
+
   const columns = [
       {
         name: "المنطقة",
@@ -60,12 +78,18 @@ const handelEdit = (item) => {
                     <MdOutlineEditNote size={20} />
                   </button> : null
                 }
-                {
-                  isAdmin || CanDelte ?
-                    <button className="hover:text-red-500" onClick={() => deleteIteam(row._id)}>
-                      <AiTwotoneDelete size={20} />
-                    </button> : null
-                }
+                          {
+            isAdmin || CanDelte ?
+             <button
+  className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-red-50 text-gray-700 hover:text-red-500 rounded-lg transition-all duration-200"
+  onClick={() => SendeProjectToarchev(row._id, true)}
+>
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+  </svg>
+  أرشيف
+</button> : null
+          }
               </div>
             ),
           },

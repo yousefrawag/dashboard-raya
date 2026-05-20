@@ -5,7 +5,7 @@ const MostEmployeeaddecutomers = ({ data  , setparams}) => {
   // Process data to get status counts
   const projectStatus = data?.reduce((acc, item) => {
     const status = item?.addBy    ;
-    console.log("current stauts" , status);
+ 
     
     if (!acc[status]) {
       acc[status] = { status: status, count: 0 };
@@ -13,7 +13,7 @@ const MostEmployeeaddecutomers = ({ data  , setparams}) => {
     acc[status].count += 1;
     return acc;
   }, {});
-console.log("stauts" , projectStatus);
+
 
   // Extract labels and values
   const labels = Object.keys(projectStatus);

@@ -12,6 +12,8 @@ import Loader from '../../../../components/common/Loader';
 import useQueryDelete from '../../../../services/useQueryDelete';
 import useGetUserAuthentications from '../../../../middleware/GetuserAuthencations';
 import FiltertionHook from '../../../../hooks/FiltertionHook';
+import { FiFilter, FiX } from "react-icons/fi";
+
 import { useState } from 'react';
 import { useMemo } from 'react';
 const GetprivetProject = () => {
@@ -24,6 +26,7 @@ const GetprivetProject = () => {
         startDate: "",
         endDate: "",
       });
+    const [isSectionOpen , setIssectionOpen] = useState(false)
     
       const filters = [
         {value:"projectName", name:"إسم المهمة"}
@@ -50,6 +53,7 @@ const GetprivetProject = () => {
         }, [data, params]);
 
 const columns = [
+  
   {
     name: "اسم المهمة",
     selector: (row) => row?.projectName,
@@ -90,14 +94,23 @@ const columns = [
 
 
 ];       
-        
+         
  if(isLoading){
   return <Loader />
  }    
   return (
     <div>
         <HeadPagestyle isAdmin={isAdmin} CanAdd={CanAdd}  pageName="مهام مخصصة" to="/Add-privte-projects" title="إضافة مهمة خاصة"/>
-       <FiltertionHook filteredData={filteredData} columns={columns} filters={filters} params={params} setParams={setParams}/>
+             <button 
+                         className="flex items-center gap-2 mb-3 px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
+
+                 onClick={() => setIssectionOpen(!isSectionOpen)}>
+                {open ? <FiX size={20} /> : <FiFilter size={20} />}
+        {isSectionOpen ? "إخفاء الفلاتر" : "عرض الفلاتر"}
+          </button>
+    {
+      isSectionOpen && <FiltertionHook filteredData={filteredData} columns={columns} filters={filters} params={params} setParams={setParams}/>
+    }   
         <CustomeTabel  data={filteredData} columns={columns}/>
     </div>
   )

@@ -18,6 +18,8 @@ import useQueryDelete from '../../../services/useQueryDelete';
 import Breadcrumb from '../../../components/common/Breadcrumbs/Breadcrumb';
 import useGetUserAuthentications from '../../../middleware/GetuserAuthencations';
 import { useState , useMemo } from 'react';
+import { FiFilter, FiX } from "react-icons/fi";
+
 import FiltertionHook from '../../../hooks/FiltertionHook';
 const GetReports = () => {
   const {data , isLoading} = useQuerygetiteams("missions" , "missions")
@@ -32,6 +34,7 @@ const GetReports = () => {
   const completedPercentage = totalTasks > 0 ? ((completedTasks / totalTasks) * 100).toFixed(1) : "0";
   const inProcessPercentage = totalTasks > 0 ? ((inProcessTasks / totalTasks) * 100).toFixed(1) : "0";
   const canceledPercentage = totalTasks > 0 ? ((canceledTasks / totalTasks) * 100).toFixed(1) : "0";
+const [isSectionOpen , setIssectionOpen] = useState(false)
 
 // handel filter 
     const [params, setParams] = useState({
@@ -187,10 +190,12 @@ const GetReports = () => {
           },
         {
           name: "مضافه من قبل",
+          width:"150px",
           selector: (row) => <span className='text-wrap'>{row?.assignedBy?.name}</span> ,
         },
         {
             name: "تاريخ التسليم",
+            width:"150px",
             selector: (row) => row.deadline,
             cell: (row) => {
               const deadline = new Date(row.deadline);
@@ -220,6 +225,7 @@ const GetReports = () => {
       
         {
           name:"تاريخ الإنشاء",
+          width:"150px",
           selector: (row) => row.createdAt,
           cell: (row) => <span style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace:"wrap"}}>{format(new Date(row.createdAt), "dd MMMM, yyyy")}</span>
         },
@@ -257,6 +263,13 @@ const GetReports = () => {
   return (
     <div>
        <Breadcrumb  pageName="تقارير"/>
+                           <button 
+                         className="flex items-center gap-2 mb-3 px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
+
+                 onClick={() => setIssectionOpen(!isSectionOpen)}>
+                {open ? <FiX size={20} /> : <FiFilter size={20} />}
+        {isSectionOpen ? "إخفاء الفلاتر" : "عرض الفلاتر"}
+          </button>
        <div className='w-full h-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-4 mb-5'>
 
         <CardDataStats title="إجمالى المهام" total={totalTasks} >
@@ -278,8 +291,10 @@ const GetReports = () => {
     
 
       </div>
+{
+  isSectionOpen &&       <FiltertionHook filteredData={filteredData} columns={columns} key="المشاريع العامه.xlsx" filters={filters} params={params} setParams={setParams}/>
 
-      <FiltertionHook filteredData={filteredData} columns={columns} key="المشاريع العامه.xlsx" filters={filters} params={params} setParams={setParams}/>
+}
 
         <CustomeTabel  data={filteredData} columns={columns}/>
     </div>

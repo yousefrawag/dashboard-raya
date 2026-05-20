@@ -18,11 +18,15 @@ import GetProjectStatusChart from '../../../components/common/GetProjectStatusCh
 import GetprojectTypesChart from '../../../components/common/GetprojectTypesChart';
 import GetprojectsOpeartionType from '../../../components/common/GetprojectsOpeartionType';
 import useQueryupdate from '../../../services/useQueryupdate';
+import { FiFilter, FiX } from "react-icons/fi";
+
 const Getprojects = () => {
   const { data, isLoading } = useQuerygetiteams("projects", "projects");
   const { deleteIteam } = useQueryDelete("projects", "projects");
   const {updateiteam} = useQueryupdate("projects" , "projects")
   const { CanAdd, CanDelte, CanEdit, CanView, isAdmin } = useGetUserAuthentications("Projects");
+  const [isSectionOpen , setIssectionOpen] = useState(false)
+  
   const [params, setParams] = useState({
     field: "",
     searchTerm: "",
@@ -84,7 +88,7 @@ try {
 }
  } 
   const columns = [
- 
+
     {
       name: "الموظف",
       selector: (row) => row?.addedBy?.fullName,
@@ -94,13 +98,44 @@ try {
     {
       name: "اسم المشروع",
       selector: (row) => row?.projectName ,
-       width:"150px" ,
-      cell: (row) => <Link to={`/projects-main/${row._id}`}>{row?.projectName} </Link>,
+       width:"170px" ,
+      cell: (row) => <Link to={`/projects-main/${row._id}`}>{row?.projectName  || row?._id} </Link>,
     },
     {
       name: "نوع العقار",
-       width:"150px" ,
+       width:"170px" ,
       selector: (row) => row?.estateType,
+    },
+           {
+      name: " حاله المشروع",
+        
+       width:"170px" ,
+      selector: (row) => row?.projectSatatus,
+      cell: (row) => <div   
+      style={{
+       
+       whiteSpace: "wrap",
+    
+
+     }}
+     title={row?.projectSatatus}>{row?.projectSatatus}</div>,
+    },
+        {
+      name: "سعر العقار الإجمالى",
+      selector: (row) => row?.estatePrice,
+      width:"180px" ,
+        sortFunction: (rowA, rowB) => {
+    return Number(rowA.estatePrice) - Number(rowB.estatePrice);
+  },
+      cell: (row) => <div   
+      style={{
+       
+       whiteSpace: "wrap",
+    
+
+     }}
+     title={row?.estatePrice}>{ Number(row?.estatePrice).toLocaleString("en-US")}</div>,
+      
     },
    {
       name: "العملة",
@@ -118,39 +153,12 @@ try {
     },
   
  
-    {
-      name: "سعر العقار الإجمالى",
-      selector: (row) => row?.estatePrice,
-      width:"150px" ,
-        sortFunction: (rowA, rowB) => {
-    return Number(rowA.estatePrice) - Number(rowB.estatePrice);
-  },
-      cell: (row) => <div   
-      style={{
-       
-       whiteSpace: "wrap",
-    
 
-     }}
-     title={row?.estatePrice}>{ Number(row?.estatePrice).toLocaleString("en-US")}</div>,
-      
-    },
     {
       name: "  نوع العمليه",
       selector: (row) => row?.operationType,
     },
-       {
-      name: " حاله المشروع",
-      selector: (row) => row?.projectSatatus,
-      cell: (row) => <div   
-      style={{
-       
-       whiteSpace: "wrap",
-    
 
-     }}
-     title={row?.projectSatatus}>{row?.projectSatatus}</div>,
-    },
     {
       name: "تاريخ الإنشاء",
       selector: (row) => row.createdAt,
@@ -272,7 +280,16 @@ try {
     },
         {
       name: "الطوابق المتوفره",
-      selector: (row) => row?.clientType,
+      selector: (row) => row?.availableFloors,
+      cell :() => {
+        <div>
+          {
+            row?.availableFloors?.map((floor) => {
+              return <span>{floor}</span>
+            })
+          }
+        </div>
+      }
     },
    {
       name: " المساحه / متر",
@@ -313,16 +330,23 @@ try {
   return (
     <div>
       <HeadPagestyle pageName="مشاريع عامة" isAdmin={isAdmin} CanAdd={CanAdd} to="/Add-project" title="إضافة مشروع" />
-      <div className='grid grid-cols-1 lg:grid-cols-3 gap-5'>
-        {/* <GetProjectStatusChart data={data} setParams={setParams} />
-        <GetprojectTypesChart  data={data} setParams={setParams} />
-        <GetprojectsOpeartionType  data={data} setParams={setParams} /> */}
+        
+                 <Link 
+                       className="w-[180px] block flex items-center gap-2 mb-3 px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
+                        to="/drop-projects">
+                        إضافة مشاريع بالاكسيل
+                        </Link>
+          <button 
+                         className="flex items-center gap-2 mb-3 px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
+
+                 onClick={() => setIssectionOpen(!isSectionOpen)}>
+                {open ? <FiX size={20} /> : <FiFilter size={20} />}
+        {isSectionOpen ? "إخفاء الفلاتر" : "عرض الفلاتر"}
+          </button>
     
-      </div>
-      <Link  to="/dashboard">
-      جميع الإحصائيات
-      </Link>
-      <FiltertionHook filteredData={filteredData} columns={columnsfile} filters={fillters} params={params} setParams={setParams} />
+   {
+    isSectionOpen && <FiltertionHook filteredData={filteredData} columns={columnsfile} filters={fillters} params={params} setParams={setParams} />
+   }   
       <CustomeTabel data={filteredData} columns={columns} />
     </div>
   );

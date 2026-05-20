@@ -17,6 +17,8 @@ import FiltertionHook from '../hooks/FiltertionHook';
 import Breadcrumb from '../components/common/Breadcrumbs/Breadcrumb';
 import { useDashboardContext } from '../context/DashboardProviedr';
 import EditExpensess from '../components/common/popupmdules/EditExpensess';
+import { FiFilter, FiX } from "react-icons/fi";
+
 const Expensess = () => {
   const { data, isLoading } = useQuerygetiteams('expenss', 'expenss');
   const { deleteIteam } = useQueryDelete('expenss', 'expenss');
@@ -25,6 +27,8 @@ const Expensess = () => {
 
   const { CanAdd, CanDelte, CanEdit, CanView, isAdmin } =
     useGetUserAuthentications('expensee');
+    const [isSectionOpen , setIssectionOpen] = useState(false)
+    
 
   // handel filter
   const [params, setParams] = useState({
@@ -277,17 +281,28 @@ const Expensess = () => {
             className="block text-white bg-main hover:bg-main2 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:focus:ring-blue-800"
           >
             {' '}
-            إضافة حالة جديد
+            إضافة مصروف جديد
           </button>
         ) : null}
       </div>{' '}
-      <FiltertionHook
+
+                        <button 
+                         className="flex items-center gap-2 mb-3 px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
+
+                 onClick={() => setIssectionOpen(!isSectionOpen)}>
+                {open ? <FiX size={20} /> : <FiFilter size={20} />}
+        {isSectionOpen ? "إخفاء الفلاتر" : "عرض الفلاتر"}
+          </button>
+     {
+      isSectionOpen &&      <FiltertionHook
         filteredData={filteredData}
         columns={columnsfile}
         filters={filters}
         params={params}
         setParams={setParams}
       />
+     }
+ 
       <CustomeTabel data={filteredData} columns={columns} />
       <AddExpenssModule />
       <EditExpensess />
