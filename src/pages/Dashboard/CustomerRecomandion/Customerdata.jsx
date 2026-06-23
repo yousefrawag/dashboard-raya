@@ -61,211 +61,128 @@ const ValuesSearch = Object.fromEntries(searchParams)
     } 
     return text
   }
-     const columnsfile = [
-           {
-          name: "إسم المشترى",
-          selector: (row) => row.fullName,
-        },
-            {
-          name: "جوال 1",
-          selector: (row) => row.phoneNumber,
-        },
-        {
-          name: "جوال 2",
-          selector: (row) => row.secondaryPhoneNumber,
-        },
-{
-  name: "تاريخ أخر اتصال",
-  selector: (row) => {
-    const lastFollow = row.SectionFollow?.length
-      ? [...row.SectionFollow].sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        )[0]
-      : null;
-
-    return lastFollow
-      ? new Date(lastFollow.createdAt).toLocaleDateString("ar-EG")
-      : "لا يوجد";
-  },
-  cell: (row) => {
-    const lastFollow = row.SectionFollow?.length
-      ? [...row.SectionFollow].sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        )[0]
-      : null;
-
-    if (!lastFollow) return <span>لا يوجد</span>;
-
-    return <span>{new Date(lastFollow.createdAt).toLocaleDateString("ar-EG")}</span>;
-  }
-}
- ,
-{
-  name: "أخر حالة اتصال",
-  selector: (row) => {
-    const lastFollow = row.SectionFollow?.length
-      ? [...row.SectionFollow].sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        )[0]
-      : null;
-
-    return lastFollow?.CustomerDealsatuts || "لا يوجد";
-  },
-  cell: (row) => {
-    const lastFollow = row.SectionFollow?.length
-      ? [...row.SectionFollow].sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        )[0]
-      : null;
-
-    return <span>{lastFollow?.CustomerDealsatuts || "لا يوجد"}</span>;
-  }
-}
-
-,
-{
-  name: "أخر اتصال",
-  selector: (row) => {
-    if (!row.SectionFollow?.length) return "لا يوجد";
-
-    const lastFollow = [...row.SectionFollow].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    )[0];
-
-    return [
-      lastFollow.CustomerDealsatuts,
-      lastFollow.details,
-      lastFollow.user?.fullName,
-      new Date(lastFollow.createdAt).toLocaleDateString("ar-EG")
-    ]
-      .filter(Boolean)
-      .join(" - ");
-  }
-}
-
-
-
-,
-
-
-
-      {
-  name: "متطلبات العميل جديد",
-  selector: (row) => {
-    if (!row.clientRequirements?.length) return "لا يوجد";
-
-    return row.clientRequirements
-      .map(req =>
-        [
-          req.rquireLocation,
-          req.requireRegion,
-          req.require,
-          req.requireType
-        ]
-          .filter(Boolean)
-          .join(" - ")
-      )
-      .join(" | ");
-  },
-  cell: (row) => (
-    <div className="flex flex-col gap-1">
-      {row.clientRequirements?.map(item => (
-        <div key={item._id} className="text-xs">
-          {item.rquireLocation} - {item.requireRegion} - {item.require} - {item.requireType}
-        </div>
-      ))}
-    </div>
-  )
-}
-,
-
-
-            {
-          name: "عدد متطلبات العميل ",
-          selector: (row) => row?.clientRequirements?.length ?  row?.clientRequirements?.length : 0
-          
-        },
-      
-            {
-        name: "عدد المتابعات",
-          sortable: true ,
-        selector: (row) => row?.SectionFollow?.length ? row?.SectionFollow?.length  : 0,
-          width:"140px" ,
-    
-      },
-
-         {
-          name: "المشروع المهتم به",
-          selector: (row) => row?.project,
-        },
-
-   {
-          name: "ملاحظات",
-          selector: (row) => row.notes ,
-        },
-
-
-
-
-        {
-          name: "إسم المسوق",
-          selector: (row) => row.addBy,
-        },
-           {
-        name: "إسم المتابع /ة",
-        selector: (row) => row?.userfollow,
-
-      },
-          {
-          name: " الدفعة الأولى",
-          selector: (row) => row.firstPayment,
-        },
-
-      {
-          name: "نوع العملة",
-          selector: (row) => row?.currency,
-        },
-
    
-        {
-          name: "هل تمت المعاينة",
-          selector: (row) => row.isViwed
-       
-        },
-
-       {
-          name: "مصدر العميل",
-          selector: (row) => row.source,
-        }, 
-    {
-          name: "اخر ماتم التواصل مع  العميل",
-          selector: (row) => row.clientendRequr ,
-        },
-
-
-                       {
-        name: "وظيفة العميل",
-        selector: (row) => row?.clientwork,
-
+      const columnsfile = [
+                {
+               name: "إسم المشترى",
+               selector: (row) => row.fullName,
+             },
+                 {
+               name: "جوال 1",
+               selector: (row) => row.phoneNumber,
+             },
+             {
+               name: "جوال 2",
+               selector: (row) => row.secondaryPhoneNumber,
+             },
+                     {
+        name: "المنطقه",
+        selector: (row) => row?.region,
+         width:"110px" ,
+        cell: (row) => (
+          <span
+            style={{
+          
+              whiteSpace: "wrap",
+           
+    
+            }}
+          >
+            {" "}
+           { row?.region || "غير متوفر" }
+          </span>
+        )
       },
+              {
+        name: "الموقع",
+        selector: (row) => row?.governote,
+         width:"110px" ,
+        cell: (row) => (
+          <span
+            style={{
+          
+              whiteSpace: "wrap",
+           
+    
+            }}
+          >
+            {" "}
+           { row?.region || "غير متوفر" }
+          </span>
+        )
+      },
+     {
+       name: "تاريخ أخر اتصال",
+       selector: (row) => {
+         const lastFollow = row.SectionFollow?.length
+           ? [...row.SectionFollow].sort(
+               (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+             )[0]
+           : null;
      
-        {
-          name: "حالة العميل",
-          selector: (row) => row.clientStatus,
-          cell: (row) => (
-            <span
-              style={{
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-              }}
-            >
-              {" "}
-              {row.clientStatus }
-            </span>
-          ),
-        },
-        {
+         return lastFollow
+           ? new Date(lastFollow.createdAt).toLocaleDateString("ar-EG")
+           : "لا يوجد";
+       },
+       cell: (row) => {
+         const lastFollow = row.SectionFollow?.length
+           ? [...row.SectionFollow].sort(
+               (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+             )[0]
+           : null;
+     
+         if (!lastFollow) return <span>لا يوجد</span>;
+     
+         return <span>{new Date(lastFollow.createdAt).toLocaleDateString("ar-EG")}</span>;
+       }
+     }
+      ,
+     {
+       name: "أخر حالة اتصال",
+       selector: (row) => {
+         const lastFollow = row.SectionFollow?.length
+           ? [...row.SectionFollow].sort(
+               (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+             )[0]
+           : null;
+     
+         return lastFollow?.CustomerDealsatuts || "لا يوجد";
+       },
+       cell: (row) => {
+         const lastFollow = row.SectionFollow?.length
+           ? [...row.SectionFollow].sort(
+               (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+             )[0]
+           : null;
+     
+         return <span>{lastFollow?.CustomerDealsatuts || "لا يوجد"}</span>;
+       }
+     }
+     
+     ,
+     {
+       name: "أخر اتصال",
+       selector: (row) => {
+         if (!row.SectionFollow?.length) return "لا يوجد";
+     
+         const lastFollow = [...row.SectionFollow].sort(
+           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+         )[0];
+     
+         return [
+           lastFollow.CustomerDealsatuts,
+           lastFollow.details,
+           lastFollow.user?.fullName,
+           new Date(lastFollow.createdAt).toLocaleDateString("ar-EG")
+         ]
+           .filter(Boolean)
+           .join(" - ");
+       }
+     }
+     
+     ,
+     
+   {
   name: "كل المتابعات",
   selector: (row) => {
     if (!row.SectionFollow?.length) return "لا يوجد";
@@ -285,68 +202,186 @@ const ValuesSearch = Object.fromEntries(searchParams)
       .join(" | ");
   },
 },
-
- {
-          name:"تاريخ الإنشاء",
-          selector: (row) => format(new Date(row.createdAt), "dd MMMM, yyyy"),
-           sortable: true ,
-           width:"150px",
-          cell: (row) => <span style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace:"wrap"}}>{format(new Date(row.createdAt), "dd MMMM, yyyy")}</span>
-        },
-
-
-        //  {
-        //   name: "وصف حالة العميل",
-        //   selector: (row) => row.relatedStauts,
-        //   cell: (row) => (
-        //     <span
-        //       style={{
-        //         textOverflow: "ellipsis",
-        //         whiteSpace: "nowrap",
-        //         overflow: "hidden",
-        //       }}
-        //     >
-        //       {" "}
-        //       {row.relatedStauts }
-        //     </span>
-        //   ),
-        // },
-        // {
-        //   name: "منطقة المشروع",
-        //   selector: (row) => row.region,
-        // },
-        //     {
-        //   name: "موقع المشروع",
-        //   selector: (row) => row.governote,
-        // },
-        // {
-        //   name: "المشروع المهتم به",
-        //   selector: (row) => row?.project,
-        // },
-    
-      
-    
-    
-        // {
-        //   name: "الدفع كاش",
-        //   selector: (row) => row.cashOption,
-        // },
-  
-        // {
-        //   name: "تقسيط على كام سنة",
-        //   selector: (row) => row.installmentsPyYear ,
-        // },
      
      
-    
-
-      
+           {
+       name: "متطلبات العميل جديد",
+       selector: (row) => {
+         if (!row.clientRequirements?.length) return "لا يوجد";
      
-
+         return row.clientRequirements
+           .map(req =>
+             [
+               req.rquireLocation,
+               req.requireRegion,
+               req.require,
+               req.requireType
+             ]
+               .filter(Boolean)
+               .join(" - ")
+           )
+           .join(" | ");
+       },
+       cell: (row) => (
+         <div className="flex flex-col gap-1">
+           {row.clientRequirements?.map(item => (
+             <div key={item._id} className="text-xs">
+               {item.rquireLocation} - {item.requireRegion} - {item.require} - {item.requireType}
+             </div>
+           ))}
+         </div>
+       )
+     }
+     ,
+     
+     
+                 {
+               name: "عدد متطلبات العميل",
+               selector: (row) => row?.clientRequirements?.length ?  row?.clientRequirements?.length : 0
+               
+             },
+           
+                 {
+             name: "عدد المتابعات",
+               sortable: true ,
+             selector: (row) => row?.SectionFollow?.length ? row?.SectionFollow?.length  : 0,
+               width:"140px" ,
+         
+           },
+     
+              {
+               name: "المشروع المهتم به",
+               selector: (row) => row?.project,
+             },
+     
+        {
+               name: "ملاحظات",
+               selector: (row) => row.notes ,
+             },
+     
+     
+     
+     
+             {
+               name: "إسم المسوق",
+               selector: (row) => row.addBy,
+             },
+                {
+             name: "إسم المتابع /ة",
+             selector: (row) => row?.userfollow,
+     
+           },
+               {
+               name: " الدفعة الأولى",
+               selector: (row) => row.firstPayment,
+             },
+     
+           {
+               name: "نوع العملة",
+               selector: (row) => row?.currency,
+             },
+     
         
-   
-    
-      ];
+             {
+               name: "هل تمت المعاينة",
+               selector: (row) => row.isViwed
+            
+             },
+     
+            {
+               name: "مصدر العميل",
+               selector: (row) => row.source,
+             }, 
+         {
+               name: "اخر ماتم التواصل مع  العميل",
+               selector: (row) => row.clientendRequr ,
+             },
+     
+     
+                            {
+             name: "وظيفة العميل",
+             selector: (row) => row?.clientwork,
+     
+           },
+          
+             {
+               name: "حالة العميل",
+               selector: (row) => row.clientStatus,
+               cell: (row) => (
+                 <span
+                   style={{
+                     textOverflow: "ellipsis",
+                     whiteSpace: "nowrap",
+                     overflow: "hidden",
+                   }}
+                 >
+                   {" "}
+                   {row.clientStatus }
+                 </span>
+               ),
+             },
+     
+      {
+               name:"تاريخ الإنشاء",
+               selector: (row) => format(new Date(row.createdAt), "dd MMMM, yyyy"),
+                sortable: true ,
+                width:"150px",
+               cell: (row) => <span style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace:"wrap"}}>{format(new Date(row.createdAt), "dd MMMM, yyyy")}</span>
+             },
+     
+     
+             //  {
+             //   name: "وصف حالة العميل",
+             //   selector: (row) => row.relatedStauts,
+             //   cell: (row) => (
+             //     <span
+             //       style={{
+             //         textOverflow: "ellipsis",
+             //         whiteSpace: "nowrap",
+             //         overflow: "hidden",
+             //       }}
+             //     >
+             //       {" "}
+             //       {row.relatedStauts }
+             //     </span>
+             //   ),
+             // },
+             // {
+             //   name: "منطقة المشروع",
+             //   selector: (row) => row.region,
+             // },
+             //     {
+             //   name: "موقع المشروع",
+             //   selector: (row) => row.governote,
+             // },
+             // {
+             //   name: "المشروع المهتم به",
+             //   selector: (row) => row?.project,
+             // },
+         
+           
+         
+         
+             // {
+             //   name: "الدفع كاش",
+             //   selector: (row) => row.cashOption,
+             // },
+       
+             // {
+             //   name: "تقسيط على كام سنة",
+             //   selector: (row) => row.installmentsPyYear ,
+             // },
+          
+          
+         
+     
+           
+          
+     
+             
+        
+         
+           ];
          const columnsforcompaign  = [
      
         {

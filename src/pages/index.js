@@ -82,6 +82,11 @@ import GetFullServyAplications from './Dashboard/aplications/GetFullServyAplicat
 import GetSurveyAplicationId from './Dashboard/aplications/GetSurveyAplicationId';
 import GetAllimprovmentAplications from './Dashboard/aplications/GetAllimprovmentAplications';
 import GetImproveFullData from './Dashboard/aplications/GetImproveFullData';
+import GetProperties from './Dashboard/Properties/GetProperties';
+import GetPropertyInfo from './Dashboard/Properties/GetPropertyInfo';
+import AddDirectProperty from './Dashboard/Properties/AddDirectProperty';
+import PropertyStauts from './Dashboard/PropertyStauts';
+import EditProperty from './Dashboard/Properties/EditProperty';
 export {
   UserTaskes,
   Getprojects,
@@ -163,5 +168,10 @@ export {
   GetFullServyAplications,
   GetSurveyAplicationId ,
   GetImproveFullData ,
-  GetAllimprovmentAplications
+  GetAllimprovmentAplications ,
+  GetProperties ,
+  GetPropertyInfo ,
+  AddDirectProperty ,
+  PropertyStauts ,
+  EditProperty
 };

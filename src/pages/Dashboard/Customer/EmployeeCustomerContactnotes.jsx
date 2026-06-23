@@ -118,6 +118,11 @@ const EmployeeCustomerContactnotes = ({details ,data ,  retlatedReportType ,retl
             />
           </div>
 
+
+
+
+
+
           {
   isLoading ? "loadding ..." : <div className="mb-6 flex flex-col  gap-2 w-full">
         <label

@@ -15,6 +15,8 @@ import { useNavigate } from 'react-router-dom';
 import useQuerygetiteams from '../../../services/Querygetiteams';
 import AddProperty from '../Addprojectui/AddProperty';
 import StatusFilterTabs from '../../common/StatusFilterTabs';
+ import { useRef } from 'react';
+
 const Updateform = ({ id }) => {
   const { data, isLoading } = useQuerygetSpacficIteam(
     'projects',
@@ -87,19 +89,33 @@ const Updateform = ({ id }) => {
   const [relatedRegions, setRelatedRegion] = useState([]);
   const [docs, setDocs] = useState([]);
   const [viewmenu, setViewmenu] = useState(false);
-
+  const formContainerRef = useRef(null);
   const [properties, setProperties] = useState([]);
-  const [propertyForm, setPropertyForm] = useState({
-    unitName: "",
-    floor: "",
-    rooms: "",
-    bathrooms: "",
-    area: "",
-    price: "",
-    downPayment: "",
-    monthlyInstallment: "",
-    propertyNote:""
-  });
+const [propertyRelated , setPropertyRelated] = useState([])
+   const [images_videoProperty , setimages_videoProperty] = useState([])
+  const [docsProperty , setDocsProperty] = useState([])
+const [propertyForm, setPropertyForm] = useState({
+  floorType:"",
+  floorTypeFlow:"",
+  floorNumber:"",
+  areaOutside:"",
+  areaTarth:"",
+  areaBark:"",
+propertyStatus: "", 
+  unitName: "",
+  floor: "",
+  rooms: "",
+  bathrooms: "",
+  area: "",
+  price: "",
+  downPayment: "",
+  monthlyInstallment: "",
+  propertyNote:"",
+  FloorDetails:"",
+  imagesURLs:[],
+  docsURLs:[]
+
+});
   const statusConfig = {
  
     info: {
@@ -108,7 +124,7 @@ const Updateform = ({ id }) => {
       icon: "clock"
     },
     properties: {
-      label: "إضافه شقة" ,
+      label: "تفاصيل الشقق" ,
       className: "text-green-600 hover:text-green-700",
       icon: "check-circle"
     },
@@ -148,66 +164,86 @@ const toggleFloor = (floor) => {
 
     
 
- formData.append("properties", JSON.stringify(properties));
+const cleanedProperties = properties.map((property) => ({
+
+  ...property,
+
+  imagesURLs:
+    property.imagesURLs?.filter(
+      (item) => item?.fileURL
+    ) || [],
+
+  docsURLs:
+    property.docsURLs?.filter(
+      (item) => item?.fileURL
+    ) || [],
+
+  videosURLs:
+    property.videosURLs?.filter(
+      (item) => item?.fileURL
+    ) || [],
+
+}));
+formData.append(
+  "properties",
+  JSON.stringify(cleanedProperties)
+);
   formData.append("availableFloors", JSON.stringify(projectData.availableFloors));
 
     formData.set("operationType" , opeartionType)
     formData.set("installments" , chasSelectedtype)
     docs.forEach((item) => {
-      formData.append('files', item);
+      formData.append('projectFiles', item);
     });
     images_video.forEach((item) => {
-      formData.append('files', item);
+      formData.append('projectFiles', item);
     });
- 
+
+properties.forEach((property, index) => {
+
+  // IMAGES + VIDEOS
+  property.imagesURLs?.forEach((item) => {
+
+    // لو صورة جديدة مرفوعة
+    if (item?.file instanceof File) {
+
+      formData.append(
+        `propertyImages_${index}`,
+        item.file
+      );
+
+    }
+
+  });
+
+  // DOCS
+  property.docsURLs?.forEach((item) => {
+
+    if (item?.file instanceof File) {
+
+      formData.append(
+        `propertyDocs_${index}`,
+        item.file
+      );
+
+    }
+
+  });
+
+});
+
+
 const data = Object.fromEntries(formData);
 if(!projectData.projectName){
   return toast.error("يجب إدخال اسم المشروع")
 }
 
 
-if(!projectData.governoate){
-  return toast.error("يجب إدخال  المنطقة")
-}
-if(!projectData.estateType){
-  return toast.error("يجب إدخال  نوع العقار")
-}
-if(!projectData.projectSatatus){
-  return toast.error("يجب إدخال حالة المشروع")
-}
-
-if(!projectData.pymentType){
-  return toast.error("يجب إدخال  العملة")
-}
-if(!projectData.estatePrice){
-  return toast.error("يجب إدخال  سعر العقار الاجمالى")
-}
-if(!projectData.installments){
-  return toast.error("يجب إدخال  حالة التقسيط")
-}
-
-if(chasSelectedtype === "نعم"){ 
-  if(!projectData.installmentPeriod){
-  return toast.error("يجب إدخال   مده التقسيط")
-  }
-    if(!projectData.countOfperiod){
-  return toast.error("يجب إدخال  مده التقسيط سواء على كام سنه او شهر")
-  }
-      if(!projectData.installmentsFirstPyment){
-  return toast.error("يجب إدخال  الدفعة الاولى")
-  }
-        if(!projectData.installmentsFirstPermonth){
-  return toast.error("يجب إدخال  الدفعة الشهرية")
-  }
 
 
-}
-         if(!projectData.availableFloors.length){
-  return toast.error("يجب إدخال   عدد الطوابق")
-  }
-           if(!projectData.areaMatter){
-  return toast.error("يجب إدخال  المساحه متر")
-  }
+
+
+
 
     try {
       updateiteam(
@@ -241,9 +277,7 @@ if(chasSelectedtype === "نعم"){
 
 
 const addProperty = () => {
-  if (!propertyForm.unitName || !propertyForm.price) {
-    return toast.error("يجب إدخال بيانات الشقة");
-  }
+
 
   if (editIndex !== null) {
     // ✅ update
@@ -254,21 +288,44 @@ const addProperty = () => {
     toast.success("تم تعديل الشقة");
   } else {
     // ✅ add
-    setProperties((prev) => [...prev, propertyForm]);
+  setProperties((prev) => [
+  ...prev,
+  {
+    ...propertyForm,
+    imagesURLs: propertyForm.imagesURLs?.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    })) || [],
+        docsUrl: propertyForm.docsUrl?.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    })) || [],
+  },
+]);
     toast.success("تم إضافة الشقة");
   }
 
   setPropertyForm({
-    unitName: "",
-    floor: "",
-    rooms: "",
-    bathrooms: "",
-    area: "",
-    price: "",
-    downPayment: "",
-    monthlyInstallment: "",
-    propertyNote: ""
+  floorType:"",
+  floorTypeFlow:"",
+  propertyStatus: "", 
+  floorNumber:"",
+  areaOutside:"",
+  areaTarth:"",
+  areaBark:"",
+  floor: "",
+  rooms: "",
+  bathrooms: "",
+  area: "",
+  price: "",
+  downPayment: "",
+  monthlyInstallment: "",
+  propertyNote:"",
+  FloorDetails:"",
+  imagesURLs:"",
   });
+  setimages_videoProperty([])
+  setDocsProperty([])
 };
   const removeProperty = (index) => {
       const confirmed = window.confirm("هل أنت متأكد أنك تريد الحذف؟");
@@ -286,13 +343,29 @@ const addProperty = () => {
     availableFloors: prev.availableFloors.filter(f => f !== floor),
   }));
 };
-  const handelPropertyForm = (e) => {
-    const { name, value } = e.target;
-    setPropertyForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+const handelPropertyForm = (e) => {
+  const { name, value } = e.target;
+console.log("name - value" , name , value)
+  setPropertyForm((prev) => ({
+    ...prev,
+    [name]: value,
+  })
+)
+
+    if(name === "floorType"){
+      const CurrentRegion = regionData?.data?.data?.find((item) => item.name === value)
+      console.log(regionData?.data?.data)
+console.log(value)
+      if(CurrentRegion){
+setPropertyRelated(CurrentRegion?.relatedRegions)
+
+      } else{
+        setPropertyRelated([])
+      }
+      
+      
+    }
+};
   const handelInputschage = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -321,6 +394,13 @@ const addProperty = () => {
   const editProperty = (index) => {
   setPropertyForm(properties[index]);
   setEditIndex(index);
+  console.log("edit");
+  
+
+  formContainerRef.current?.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
 };
   useEffect(() => {
     if (CurrentProject) {
@@ -384,12 +464,12 @@ setProperties(CurrentProject?.properties || [])
     );
     setRelatedType(CurrenttypesRelated?.relatedRegions);
   }, [CurrentProject, regionData]);
-
+console.log("project" , data);
   if (isLoading || SubmitLoading) {
     return <Loader />;
   }
 
-  console.log('current-project', CurrentProject);
+
 
   return (
     <form
@@ -399,7 +479,7 @@ setProperties(CurrentProject?.properties || [])
 
             <StatusFilterTabs  statusConfig={statusConfig} onStatusChange={(key) => setCurrentTap(key)} selectedStatus={CurrenTap}/>
       {
-        CurrenTap === "info" &&      <div className="main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto	"> 
+        CurrenTap === "info" &&      <div className="main-section w-full max-h-[400px] min-h-[100px] p-4 overflow-auto" > 
         <div className="mb-6 flex flex-col  gap-2">
           <label
             htmlFor="projectOwner"
@@ -764,22 +844,7 @@ setProperties(CurrentProject?.properties || [])
               
                 </div> 
         } 
-              <div className="mb-6 flex flex-col  gap-2">
-                <label
-                  htmlFor="installmentsFirstPyment"
-                  className="w-full text-lg font-medium text-black dark:text-white"
-                >
-                  الدفعة الأولى*
-                </label>
-                <input
-                  type="text"
-                  id="installmentsFirstPyment"
-                    onChange={handelInputschage}
-            value={projectData?.installmentsFirstPyment}
-                
-                  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-                />
-              </div>
+       
               <div className="mb-6 flex flex-col gap-2">
                 <label
                   htmlFor="InstallmentPeriod"
@@ -1163,7 +1228,7 @@ setProperties(CurrentProject?.properties || [])
       }
 
       {
-    CurrenTap === "properties" && <AddProperty   editProperty={editProperty}
+    CurrenTap === "properties" && <AddProperty formContainerRef={formContainerRef} setDocsProperty={setDocsProperty} images_videoProperty={images_videoProperty} propertyRelated={propertyRelated}  setimages_videoProperty={setimages_videoProperty} docsProperty={docsProperty}   editProperty={editProperty}
   editIndex={editIndex} propertyForm={propertyForm} removeProperty={removeProperty} addProperty={addProperty}  properties={properties} handelPropertyForm={handelPropertyForm}/>
    }
  

@@ -120,6 +120,20 @@ try {
      }}
      title={row?.projectSatatus}>{row?.projectSatatus}</div>,
     },
+      {
+      name: "عدد الشقق",
+      selector: (row) => row?.properties,
+     
+      cell: (row) => <div   
+      style={{
+       
+       whiteSpace: "wrap",
+    
+
+     }}
+    >{row?.properties?.length || 0 }</div>,
+      
+    },
         {
       name: "سعر العقار الإجمالى",
       selector: (row) => row?.estatePrice,
@@ -218,6 +232,10 @@ try {
       name: "المنطقة",
       selector: (row) => row?.governoate,
     },
+          {
+      name: "الموقع",
+      selector: (row) => row?.city,
+    },
     {
       name: "اسم المشروع",
       selector: (row) => row?.projectName,
@@ -225,6 +243,10 @@ try {
     {
       name: "نوع العقار",
       selector: (row) => row?.estateType,
+    },
+       {
+      name: "التابع",
+      selector: (row) => row?.relatedtype,
     },
         {
       name: "العنوان بالتفصيل",
@@ -303,7 +325,13 @@ try {
       name: " نوع المساحه / الخارجيه للعقار",
       selector: (row) => row?.typeOfSpaceoutside,
     },
-
+{
+  name: "الشقق",
+  selector: (row) =>
+    row?.properties?.map((property, index) =>
+      `شقة ${index + 1}: ${property.unitName || "-"} | ${property.floorType || "-"} | ${property.floorNumber || "-"} | ${property.rooms || 0} غرف | ${property.area || 0}م² | ${property.price || 0}`
+    ).join(" || ")
+},
     {
       name: " ملاحظات المشروع",
       selector: (row) => row?.projectNotes,

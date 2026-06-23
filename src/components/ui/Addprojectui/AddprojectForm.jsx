@@ -31,7 +31,7 @@ const AddprojectForm = () => {
       icon: "clock"
     },
     properties: {
-      label: "إضافه شقة" ,
+      label: "تفاصيل شقق" ,
       className: "text-green-600 hover:text-green-700",
       icon: "check-circle"
     },
@@ -44,7 +44,7 @@ const AddprojectForm = () => {
   const [CurrenTap , setCurrentTap] = useState("info")
   const { data:Area } = useQuerygetiteams("arae", "arae");
   const [relatedTypes , setRelatedType] = useState([])
-  const [images_video , setimages_video] = useState([])
+ 
   const [projectCheck, setProjectCheck] = useState(false);
   const [projectData , setprojectData] = useState({
     projectOwner:"" ,
@@ -75,14 +75,23 @@ const AddprojectForm = () => {
 
   })
   const [relatedRegions , setRelatedRegion] = useState([])
-  
+   const [images_videoProperty , setimages_videoProperty] = useState([])
+  const [docsProperty , setDocsProperty] = useState([])
+     const [images_video , setimages_video] = useState([])
   const [docs , setDocs] = useState([])
   const [viewmenu , setViewmenu] = useState(false)
   const cashTypes = ["نعم" , "لا"]
  const [chasSelectedtype , setCahselectedType] = useState("")
 const [properties, setProperties] = useState([]);
+const [propertyRelated , setPropertyRelated] = useState([])
 const [propertyForm, setPropertyForm] = useState({
-  unitName: "",
+  floorType:"",
+  floorTypeFlow:"",
+  floorNumber:"",
+  areaOutside:"",
+  areaTarth:"",
+  areaBark:"",
+  propertyStatus: "",
   floor: "",
   rooms: "",
   bathrooms: "",
@@ -90,7 +99,11 @@ const [propertyForm, setPropertyForm] = useState({
   price: "",
   downPayment: "",
   monthlyInstallment: "",
-  propertyNote:""
+  propertyNote:"",
+  FloorDetails:"",
+  imagesURLs:[],
+  docsURLs:[]
+
 });
 
 
@@ -147,22 +160,47 @@ const removeFloor = (floor) => {
 };
 
 const addProperty = () => {
-  if (!propertyForm.unitName || !propertyForm.price) {
-    return toast.error("يجب إدخال بيانات الشقة");
+  if (!propertyForm.price) {
+    return toast.error("يجب إدخال سعر الشقة الكلى ");
   }
 
-  setProperties((prev) => [...prev, propertyForm]);
+ setProperties((prev) => [
+  ...prev,
+  {
+    ...propertyForm,
+    imagesURLs: propertyForm.imagesURLs?.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    })) || [],
+        docsUrl: propertyForm.docsUrl?.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    })) || [],
+  },
+]);
 
   setPropertyForm({
-    unitName: "",
-    floor: "",
-    rooms: "",
-    bathrooms: "",
-    area: "",
-    price: "",
-    downPayment: "",
-    monthlyInstallment: "",
+ floorType:"",
+  floorTypeFlow:"",
+  floorNumber:"",
+  areaOutside:"",
+  areaTarth:"",
+  areaBark:"",
+  propertyStatus: "", 
+  floor: "",
+  rooms: "",
+  bathrooms: "",
+  area: "",
+  price: "",
+  downPayment: "",
+  monthlyInstallment: "",
+  propertyNote:"",
+  FloorDetails:"",
+  imagesURLs:[],
+  docsURLs:[]
   });
+  setimages_videoProperty([])
+  setDocsProperty([])
 
   toast.success("تم إضافة الشقة");
 };
@@ -171,10 +209,26 @@ const removeProperty = (index) => {
 };
 const handelPropertyForm = (e) => {
   const { name, value } = e.target;
+console.log("name - value" , name , value)
   setPropertyForm((prev) => ({
     ...prev,
     [name]: value,
-  }));
+  })
+)
+
+    if(name === "floorType"){
+      const CurrentRegion = regionData?.data?.data?.find((item) => item.name === value)
+      console.log(regionData?.data?.data)
+console.log(value)
+      if(CurrentRegion){
+setPropertyRelated(CurrentRegion?.relatedRegions)
+
+      } else{
+        setPropertyRelated([])
+      }
+      
+      
+    }
 };
   const handelSubmit = (e) => {
     e.preventDefault();
@@ -194,64 +248,122 @@ const handelPropertyForm = (e) => {
  projectData.availableFloors.forEach((floor) => {
   formData.append("availableFloors[]", floor);
 });
- formData.append("properties", JSON.stringify(properties));
+const cleanedProperties = properties.map((property) => ({
+
+  ...property,
+
+  imagesURLs:
+    property.imagesURLs?.filter(
+      (item) => item?.fileURL
+    ) || [],
+
+  docsURLs:
+    property.docsURLs?.filter(
+      (item) => item?.fileURL
+    ) || [],
+
+  videosURLs:
+    property.videosURLs?.filter(
+      (item) => item?.fileURL
+    ) || [],
+
+}));
+
+formData.append(
+  "properties",
+  JSON.stringify(cleanedProperties)
+);
 
 
     const data = Object.fromEntries(formData);
         docs.forEach((item) => {
-          formData.append("files" , item)
+          formData.append("projectFiles" , item)
         })
         images_video.forEach((item) => {
-          formData.append("files" , item)
+          formData.append("projectFiles" , item)
         })
+           
+properties.forEach((property, index) => {
+
+  // IMAGES + VIDEOS
+  property.imagesURLs?.forEach((item) => {
+
+    // لو صورة جديدة مرفوعة
+    if (item?.file instanceof File) {
+
+      formData.append(
+        `propertyImages_${index}`,
+        item.file
+      );
+
+    }
+
+  });
+
+  // DOCS
+  property.docsURLs?.forEach((item) => {
+
+    if (item?.file instanceof File) {
+
+      formData.append(
+        `propertyDocs_${index}`,
+        item.file
+      );
+
+    }
+
+  });
+
+});
+
 
 if(!projectData.projectName){
   return toast.error("يجب إدخال اسم المشروع")
 }
 
 
-if(!projectData.governoate){
-  return toast.error("يجب إدخال  المنطقة")
-}
-if(!projectData.estateType){
-  return toast.error("يجب إدخال  نوع العقار")
-}
-if(!projectData.projectSatatus){
-  return toast.error("يجب إدخال حالة المشروع")
-}
+// if(!projectData.governoate){
+//   return toast.error("يجب إدخال  المنطقة")
+// }
+// if(!projectData.estateType){
+//   return toast.error("يجب إدخال  نوع العقار")
+// }
+// if(!projectData.projectSatatus){
+//   return toast.error("يجب إدخال حالة المشروع")
+// }
 
-if(!projectData.pymentType){
-  return toast.error("يجب إدخال  العملة")
-}
-if(!projectData.estatePrice){
-  return toast.error("يجب إدخال  سعر العقار الاجمالى")
-}
-if(!projectData.installments){
-  return toast.error("يجب إدخال  حالة التقسيط")
-}
+// if(!projectData.pymentType){
+//   return toast.error("يجب إدخال  العملة")
+// }
+// if(!projectData.estatePrice){
+//   return toast.error("يجب إدخال  سعر العقار الاجمالى")
+// }
+// if(!projectData.installments){
+//   return toast.error("يجب إدخال  حالة التقسيط")
+// }
 
-if(chasSelectedtype === "نعم"){ 
-  if(!projectData.installmentPeriod){
-  return toast.error("يجب إدخال   مده التقسيط")
-  }
-    if(!projectData.countOfperiod){
-  return toast.error("يجب إدخال  مده التقسيط سواء على كام سنه او شهر")
-  }
-      if(!projectData.installmentsFirstPyment){
-  return toast.error("يجب إدخال  الدفعة الاولى")
-  }
-        if(!projectData.installmentsFirstPermonth){
-  return toast.error("يجب إدخال  الدفعة الشهرية")
-  }
+// if(chasSelectedtype === "نعم"){ 
+//   if(!projectData.installmentPeriod){
+//   return toast.error("يجب إدخال   مده التقسيط")
+//   }
+//     if(!projectData.countOfperiod){
+//   return toast.error("يجب إدخال  مده التقسيط سواء على كام سنه او شهر")
+//   }
+//       if(!projectData.installmentsFirstPyment){
+//   return toast.error("يجب إدخال  الدفعة الاولى")
+//   }
+//         if(!projectData.installmentsFirstPermonth){
+//   return toast.error("يجب إدخال  الدفعة الشهرية")
+//   }
 
 
-}
-         if(!projectData.availableFloors.length){
-  return toast.error("يجب إدخال   عدد الطوابق")
-  }
-           if(!projectData.areaMatter){
-  return toast.error("يجب إدخال  المساحه متر")
-  }
+// }
+//          if(!projectData.availableFloors.length){
+//   return toast.error("يجب إدخال   عدد الطوابق")
+//   }
+//            if(!projectData.areaMatter){
+//   return toast.error("يجب إدخال  المساحه متر")
+//   }
 
 
     try {
@@ -1022,7 +1134,7 @@ if(chasSelectedtype === "نعم"){
    </div>
 }
    {
-    CurrenTap === "properties" && <AddProperty propertyForm={propertyForm} removeProperty={removeProperty} addProperty={addProperty}  properties={properties} handelPropertyForm={handelPropertyForm}/>
+    CurrenTap === "properties" && <AddProperty setDocsProperty={setDocsProperty} images_videoProperty={images_videoProperty}  setimages_videoProperty={setimages_videoProperty} docsProperty={docsProperty} propertyForm={propertyForm} propertyRelated={propertyRelated} removeProperty={removeProperty} addProperty={addProperty}  properties={properties} handelPropertyForm={handelPropertyForm}/>
    }
   
   

@@ -312,6 +312,21 @@ const filteredData = useMemo(() => {
           </span>
         )
       },
+               {
+        name: "الشقة المهتم به",
+      width:"180px" ,
+        cell: (row) => (
+          <span
+            style={{
+              textOverflow: "ellipsis",
+             
+            }}
+          >
+            {" "}
+           { row?.property ? row?.property :" غير متوفر"}
+          </span>
+        )
+      },
 {
   name: "الدفعة الإولى",
   sortable: true,
@@ -598,6 +613,42 @@ const filteredData = useMemo(() => {
                name: "جوال 2",
                selector: (row) => row.secondaryPhoneNumber,
              },
+                     {
+        name: "المنطقه",
+        selector: (row) => row?.region,
+         width:"110px" ,
+        cell: (row) => (
+          <span
+            style={{
+          
+              whiteSpace: "wrap",
+           
+    
+            }}
+          >
+            {" "}
+           { row?.region || "غير متوفر" }
+          </span>
+        )
+      },
+              {
+        name: "الموقع",
+        selector: (row) => row?.governote,
+         width:"110px" ,
+        cell: (row) => (
+          <span
+            style={{
+          
+              whiteSpace: "wrap",
+           
+    
+            }}
+          >
+            {" "}
+           { row?.region || "غير متوفر" }
+          </span>
+        )
+      },
      {
        name: "تاريخ أخر اتصال",
        selector: (row) => {

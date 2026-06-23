@@ -769,7 +769,7 @@ try {
      
         {
           name: "تاريخ اخر تواصل",
-          selector: (row) => format(new Date(row.endContactDate ), "dd MMMM, yyyy"),
+          selector: (row) => row.endContactDate ? format(new Date(row.endContactDate ), "dd MMMM, yyyy") : "غير متوفر",
        
         },
         {
@@ -778,7 +778,7 @@ try {
         },
         {
           name: "تحديد موعد ",
-          selector: (row) => format(new Date(row.customerDate ), "dd MMMM, yyyy"),
+          selector: (row) => row.customerDate ? format(new Date(row.customerDate ), "dd MMMM, yyyy") : "غير متوفر",
        
         },
         {
@@ -798,7 +798,7 @@ try {
           name: "قسم المتابعة",
           selector: (row) => row?.SectionFollow?.map((item) => {
             const userName = item?.user?.fullName || '';
-            const createdAt = item?.createdAt ? arabicTimeAgo(item?.createdAt) : '';
+            const createdAt = item?.createdAt ? item?.createdAt : '';
             const details = item?.details || '';
             const detailsDate = item?.detailsDate ? format(new Date(item.detailsDate), "dd MMMM, yyyy") : 'غير محدد';
             const status = item?.CustomerDealsatuts || '';

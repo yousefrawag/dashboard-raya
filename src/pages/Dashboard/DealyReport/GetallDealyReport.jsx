@@ -224,36 +224,7 @@ try {
     </div>
   ),
 } ,
-//  {
-//       name: "أخر ماتم مع العميل ",
-//       selector: (row) => row?.endcontact ,
-//        width:"150px" ,
-//       cell: (row) => <span>{row?.endcontact?.slice(0 , 50) + "..."} </span>,
-//     },
-// ,
-    //  {
-    //       name: "مصدر العميل",
-    //       selector: (row) => row?.Customers[0]?.source,
-    //     },
 
-    //     {
-    //     name: "وظيفة العميل",
-    //     selector: (row) => row?.Customers[0]?.clientwork,
-    //      width:"160px" ,
-    //     cell: (row) => (
-    //       <span
-    //         style={{
-          
-    //           whiteSpace: "wrap",
-           
-    
-    //         }}
-    //       >
-    //         {" "}
-    //        { row?.Customers[0]?.clientwork || "غير متوفر" }
-    //       </span>
-    //     )
-    //   },
       {
         name: "إسم المسوق /ة",
         selector: (row) => row?.Customers[0]?.addBy,
@@ -321,188 +292,7 @@ try {
         )
       },
   
-      // {
-      //   name: "مصدر العميل",
-      // width:"120px" ,
-      //   cell: (row) => (
-      //     <span
-      //       style={{
-      //         textOverflow: "ellipsis",
-             
-      //       }}
-      //     >
-      //       {" "}
-      //      { row?.Customers[0]?.source}
-      //     </span>
-      //   )
-      // },
-
-
-      //    {
-      //   name: "المشروع المهتم به",
-      // width:"120px" ,
-      //   cell: (row) => (
-      //     <span
-      //       style={{
-      //         textOverflow: "ellipsis",
-             
-      //       }}
-      //     >
-      //       {" "}
-      //      { row?.Customers[0]?.project}
-      //     </span>
-      //   )
-      // },
-
-
-// {
-//   name: "الدفعة الإولى",
-//   sortable: true,
-//   width:"200px",
-//   sortFunction: (rowA, rowB) => {
-//     return Number(rowA.firstPayment) - Number(rowB.firstPayment);
-//   },
-//   cell: (row) => (
-//     <span>
-//       {Number(row?.Customers[0]?.firstPayment).toLocaleString("en-US")}
-//     </span>
-//   ),
-// } ,
-
-    //      {
-    //     name: "العملة",
-    //  width:"120px" ,
-    //     cell: (row) => (
-    //       <span
-         
-    //       >
-    //         {" "}
-    //        { row?.Customers[0]?.currency}
-    //       </span>
-    //     )
-        
-    //   },
-     
-      // {
-      //   name: " اخر ماتم التواصل",
-      //     width:"140px" ,
-      //   selector: (row) => row?.Customers[0]?.clientendRequr,
-      //   cell: (row) => (
-      //     <span
-      
-      //       title={row?.Customers[0]?.clientendRequr}
-      //     >
-      //       {" "}
-      //      {handelStringLength (row?.Customers[0]?.clientendRequr)}
-      //     </span>
-      //   )
-      // },
-
-
-      // {
-      //   name: "هل تمت المعاينة",
-      //   selector: (row) => row?.Customers[0]?.isViwed,
-      //   width:"150px",
-      //   cell: (row) => (
-      //     <span
-      //       style={{
-      //         textOverflow: "ellipsis",
-      //         whiteSpace: "nowrap",
-      //         overflow: "hidden",
-              
-      //       }}
-      //       className='text-center flex jusitfy-center items-center'
-      //     >
-      //       {" "}
-      //      { row?.Customers[0]?.isViwed}
-      //     </span>
-      //   ),
-      // },
-
-      // {
-      //   name: "متطلبات العميل",
-      //   selector: (row) => row?.Customers[0]?.clientRequire,
-      //     width:"120px" ,
-      //   cell: (row) => (
-      //     <span
-  
-      //       title={row?.Customers[0]?.clientRequire}
-      //     >
-      //       {" "}
-      //      { row?.Customers[0]?.clientRequire}
-      //     </span>
-      //   )
-      // },
-
-//        {
-//         name: "عدد المتابعات",
-//           sortable: true ,
-//         selector: (row) => row?.Customers[0]?.SectionFollow?.length,
-//           width:"140px" ,
-//         cell: (row) => (
-//           <span
-//   className='flex items-center justify-center w-6 h-6 bg-red-500 text-white rounded-full'
-          
-//           >
-//             {" "}
-//            {row?.Customers[0]?.SectionFollow?.length}
-//           </span>
-//         )
-//       },
-
-
-// {
-//   name: "تاريخ أخر اتصال",
-//   width:"140px" ,
-//   selector: (row) => row?.Customers[0]?.clientendRequr,
-//   cell: (row) => {
-//     const lastFollow = row?.Customers[0]?.SectionFollow?.length
-//       ? [...row?.Customers[0]?.SectionFollow].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]
-//       : null;
-
-//     if (!lastFollow) {
-//       return (
-//         <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-200 text-gray-600">
-//           لا يوجد تواصل
-//         </span>
-//       );
-//     }
-
-//     const lastDate = new Date(lastFollow.createdAt);
-//     const now = new Date();
-
-//     const diffInMinutes = Math.floor((now - lastDate) / (1000 * 60));
-//     const diffInHours = Math.floor(diffInMinutes / 60);
-//     const diffInDays = Math.floor(diffInHours / 24);
-
-//     let timeAgo = "";
-//     if (diffInDays > 0) {
-//       timeAgo = `منذ ${diffInDays} ${diffInDays === 1 ? "يوم" : "أيام"}`;
-//     } else if (diffInHours > 0) {
-//       timeAgo = `منذ ${diffInHours} ساعة`;
-//     } else if (diffInMinutes > 0) {
-//       timeAgo = `منذ ${diffInMinutes} دقيقة`;
-//     } else {
-//       timeAgo = "الآن";
-//     }
-
-//     // 👇 اللون يتغير حسب عدد الأيام
-//     const badgeColor =
-//       diffInDays >= 7
-//         ? "bg-red-100 text-red-700"
-//         : diffInDays >= 3
-//         ? "bg-yellow-100 text-yellow-700"
-//         : "bg-green-100 text-green-700";
-
-//     return (
-//       <span
-//         className={`px-2 py-0.5 text-xs font-medium rounded-full ${badgeColor}`}
-//       >
-//         {timeAgo}
-//       </span>
-//     );
-//   },
-// }
+ 
  ,
   {
   name: " أخر اتصال",
@@ -548,7 +338,7 @@ try {
   selector: (row) => row.clientendRequr,
   width:"120px" ,
   cell: (row) => {
-    const lastFollow = row.Customers[0].SectionFollow?.length
+    const lastFollow = row.Customers[0]?.SectionFollow?.length
       ? [...row.Customers[0].SectionFollow].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]
       : null;
 
@@ -583,7 +373,7 @@ try {
   selector: (row) => row.clientendRequr,
   width:"120px" ,
   cell: (row) => {
-    const lastFollow = row.Customers[0].SectionFollow?.length
+    const lastFollow = row.Customers[0]?.SectionFollow?.length
       ? [...row.Customers[0].SectionFollow].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]
       : null;
 

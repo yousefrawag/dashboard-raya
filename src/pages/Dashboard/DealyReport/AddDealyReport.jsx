@@ -10,7 +10,10 @@ import UploadDealyFiles from '../../../hooks/UploadDealyFiles';
 const AddDealyReport = () => {
     const {data} = useQuerygetiteams("customers" , "customers")
    const { data:ReportTypes, isLoading:loaddingGetReporttYPE } = useQuerygetiteams('ReportType', 'ReportType');
-
+  const { data: customerDealStautsData } = useQuerygetiteams(
+    'callcenterCustomerstauts',
+    'callcenterCustomerstauts',
+  );
     const [selectedUsers, setSelectedUsers] = useState([]); // Array for selected users
 const [docs , setDocs] = useState([])
     const [search, setSearch] = useState(""); // Search input state
@@ -18,12 +21,20 @@ const [docs , setDocs] = useState([])
     const { addIteam, isLoading } = useQueryadditeam("Dealiy-reports", "Dealiy-reports");
     const navigate = useNavigate();
  const [retlatedReportType, setRelatedReportType] = useState([])
+   const [retlatedCustomerDealStauts, setRelatedCustomerDealstauts] = useState(
+     []
+   );
 const [formdata , setFormdata] = useState({
 
   ReportType:"" ,
   ReportTypeDescriep:"",
   Customer:"",
   endcontact:"",
+  CustomerDealsatuts:"",
+  CustomerDealsatutsDescrep:"",
+  customerDate:"",
+  ContactDate:'',
+  nextReminderDate:"",
   notes:""
 
 
@@ -46,7 +57,23 @@ const handelInputschage = (e) => {
       setRelatedReportType([]);
     }
     
-  }}
+  }
+
+   if (name === 'CustomerDealsatuts') {
+      const selectedRegion = customerDealStautsData?.data?.data?.find(
+        (item) => item.name === value,
+      );
+      if (selectedRegion) {
+        setRelatedCustomerDealstauts(selectedRegion.relatedRegions || []);
+      } else {
+        setRelatedCustomerDealstauts([]);
+      }
+    }
+}
+
+
+
+
     const filteredUsers = users?.filter((user) =>
         user?.fullName?.toLowerCase().includes(search.toLowerCase())
       );
@@ -61,10 +88,11 @@ const handelInputschage = (e) => {
  
 useEffect(() => {
     if(data?.data?.data) {
+        console.log("customer-report" , data)
         setUsers(data?.data?.data)
     }
 } , [data])
-
+   console.log("customer-report" , data , users)
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -209,6 +237,116 @@ useEffect(() => {
                         className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
                     ></textarea>
                 </div> 
+                  <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="CustomerDealsatuts"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+        حاله العميل مع المتابعة
+
+            </label>
+            <select 
+            value={formdata.CustomerDealsatuts}
+            onChange={handelInputschage}
+            required
+            name='CustomerDealsatuts'
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالاختيار</option>
+{
+  customerDealStautsData?.data?.data?.map((item) => {
+    return <option key={item?._id} value={item?.name}>{item?.name}</option>
+  })
+}
+</select>
+          </div>
+
+  <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="CustomerDealsatutsDescrep"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+       وصف حاله العميل مع المتابعة 
+
+            </label>
+            <select 
+            value={formdata.CustomerDealsatutsDescrep}
+            onChange={handelInputschage}
+            required
+            name='CustomerDealsatutsDescrep'
+               className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+
+
+>
+<option value="">قم بالاختيار</option>
+{
+  retlatedCustomerDealStauts?.map((item) => {
+    return <option key={item} value={item}>{item}</option>
+  })
+}
+</select>
+          </div>
+  <div className="mb-6 flex flex-col  gap-2">
+    <label
+      htmlFor="customerDate"
+      className="w-full text-lg font-medium text-black dark:text-white"
+    >
+تحديد موعد(اختياري)
+
+    </label>
+    <input
+      type="date"
+      id="customerDate"
+      onChange={handelInputschage}
+      value={formdata.customerDate}
+     name="customerDate"
+     
+  
+   
+      className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+    />
+  </div>
+          <div className="mb-6 flex flex-col  gap-2 w-full">
+            <label
+              htmlFor="ContactDate"
+              className="w-full text-lg font-medium text-black dark:text-white"
+            >
+         تاريخ التواصل
+
+            </label>
+            <input
+              type="date"
+              id="ContactDate"
+              name="ContactDate"
+              value={formdata.ContactDate}
+              required
+              onChange={handelInputschage}
+           
+              className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+            />
+          </div>
+              <div className="mb-6 flex flex-col  gap-2">
+    <label
+      htmlFor="nextReminderDate"
+      className="w-full text-lg font-medium text-black dark:text-white"
+    >
+ موعد التنبية  (اختياري)
+
+    </label>
+    <input
+      type="date"
+      id="nextReminderDate"
+      onChange={handelInputschage}
+      value={formdata.nextReminderDate}
+     name="nextReminderDate"
+     
+  
+   
+      className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+    />
+  </div>
         
                 <div className="mb-6 flex flex-col gap-2">
                     <label htmlFor="notes" className="w-full text-lg font-medium text-black dark:text-white">

@@ -46,6 +46,7 @@ const AddCustomer = () => {
         const { data:ReportTypes, } = useQuerygetiteams('ReportType', 'ReportType');
 
   const { data: locations } = useQuerygetiteams('location', 'location');
+   const { data:FirsPaymentData } = useQuerygetiteams("firstpayment", "firstpayment");
   const statusConfig = {
     info: {
       label: 'بيانات العميل',
@@ -68,6 +69,7 @@ const AddCustomer = () => {
   const [formsData, setFormsData] = useState({
     addBy:  user?.fullName,
     fullName: '',
+    property:"",
     phoneNumber: '',
     secondaryPhoneNumber: '',
     clientStatus: '',
@@ -104,8 +106,9 @@ const AddCustomer = () => {
   const [details, setDeatils] = useState('');
   const [relatedStatuts, SetRelatedStauts] = useState([]);
   const [retlatedCustomerDealStauts, setRelatedCustomerDealstauts] = useState(
-    [],
+    []
   );
+  const [properties , setProperties] = useState([])
   const [retlatedReportType, setRelatedReportType] = useState([])
   const navigate = useNavigate();
   const handelInputschage = (e) => {
@@ -122,6 +125,16 @@ const AddCustomer = () => {
         setRelatedRegions([]);
       }
     }
+if (name === 'project') {
+  const selectedProject = data?.data?.allproject?.find(
+    (item) => item.projectName === value
+  );
+
+  console.log("SELECTED PROJECT", selectedProject);
+  console.log("PROPERTIES", selectedProject?.properties);
+
+  setProperties(selectedProject?.properties || []);
+}
 
     if (name === 'clientwork') {
       const selectedRegion = clientWorkdata?.data?.data?.find(
@@ -533,10 +546,53 @@ const AddCustomer = () => {
                 <option>قم بالإختيار</option>
                 {data?.data?.allproject?.map((item) => {
                   return (
-                    <option key={item._id} value={item.projectName}>
-                      {item.projectName}{' '}
-                    </option>
+        
+
+<option
+  key={item._id}
+  value={item.projectName}
+>
+  {item.projectName} —{" "}
+
+  <span
+    className={
+      item.properties?.length > 0
+        ? "text-green-600 font-bold"
+        : "text-red-500 font-bold"
+    }
+  >
+    {item.properties?.length > 0
+      ? `متوفر شقق (${item.properties.length})`
+      : "غير متوفر"}
+  </span>
+</option>
+
+
+
+
                   );
+                })}
+              </select>
+            </div>
+
+            
+            <div className="mb-6 flex flex-col  gap-2">
+              <label
+                htmlFor="property"
+                className="w-full text-lg font-medium text-black dark:text-white"
+              >
+               اختر الشقة المهتم بها العميل
+              </label>
+              <select
+                name="property"
+                id="property"
+                onChange={handelInputschage}
+                value={formsData.property}
+                className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+              >
+                <option value="">اختر وصف الشقة المهتم بها العميل</option>
+                {properties?.map((item) => {
+                  return <option value={item?.unitName}>{item?.unitName}</option>;
                 })}
               </select>
             </div>
@@ -591,51 +647,73 @@ const AddCustomer = () => {
             {formsData.cashOption === 'تقسيط' ||
             formsData.cashOption === 'معاملة بنكية' ? (
               <div className="mb-6 flex flex-col gap-2">
-                <label
-                  htmlFor="firstPayment"
-                  className="w-full text-lg font-medium text-black dark:text-white"
-                >
-                  الدفعه الأولى *
-                </label>
-                <select
-                  name="firstPayment"
-                  id="firstPayment"
-                  onChange={handelInputschage}
+  <label
+    htmlFor="installmentsFirstPyment"
+    className="w-full text-lg font-medium text-black dark:text-white"
+  >
+    الدفعة الأولى*
+  </label>
+  <select
+    id="firstPayment"
+    name="firstPayment"
+     onChange={handelInputschage}
                   value={formsData.firstPayment}
-                  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-                >
-                  <option value="">اختر الدفعة</option>
-                  <option value="100000">100,000</option>
-                  <option value="150000">150,000</option>
-                  <option value="200000">200,000</option>
-                  <option value="250000">250,000</option>
-                  <option value="300000">300,000</option>
-                  <option value="350000">350,000</option>
-                  <option value="400000">400,000</option>
-                  <option value="450000">450,000</option>
-                  <option value="500000">500,000</option>
-                  <option value="550000">550,000</option>
-                  <option value="600000">600,000</option>
-                  <option value="650000">650,000</option>
-                  <option value="700000">700,000</option>
-                  <option value="750000">750,000</option>
-                  <option value="800000">800,000</option>
-                  <option value="850000">850,000</option>
-                  <option value="900000">900,000</option>
-                  <option value="950000">950,000</option>
-                  <option value="1000000">1,000,000</option>
-                  <option value="1050000">1,050,000</option>
-                  <option value="1100000">1,100,000</option>
-                  <option value="1150000">1,150,000</option>
-                  <option value="1200000">1,200,000</option>
-                  <option value="1250000">1,250,000</option>
-                  <option value="1300000">1,300,000</option>
-                  <option value="1350000">1,350,000</option>
-                  <option value="1400000">1,400,000</option>
-                  <option value="1450000">1,450,000</option>
-                  <option value="1500000">1,500,000</option>
-                </select>
-              </div>
+    className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+  >
+    <option value="">اختر الدفعة الأولى</option>
+ {
+  FirsPaymentData?.data?.data?.map((item) => {
+    return <option value={item?.name} key={item?._id}>{item?.name.toLocaleString('en-US')}</option>
+  })
+ }
+  </select>
+</div>
+              // <div className="mb-6 flex flex-col gap-2">
+              //   <label
+              //     htmlFor="firstPayment"
+              //     className="w-full text-lg font-medium text-black dark:text-white"
+              //   >
+              //     الدفعه الأولى *
+              //   </label>
+              //   <select
+              //     name="firstPayment"
+              //     id="firstPayment"
+              //     onChange={handelInputschage}
+              //     value={formsData.firstPayment}
+              //     className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+              //   >
+              //     <option value="">اختر الدفعة</option>
+              //     <option value="100000">100,000</option>
+              //     <option value="150000">150,000</option>
+              //     <option value="200000">200,000</option>
+              //     <option value="250000">250,000</option>
+              //     <option value="300000">300,000</option>
+              //     <option value="350000">350,000</option>
+              //     <option value="400000">400,000</option>
+              //     <option value="450000">450,000</option>
+              //     <option value="500000">500,000</option>
+              //     <option value="550000">550,000</option>
+              //     <option value="600000">600,000</option>
+              //     <option value="650000">650,000</option>
+              //     <option value="700000">700,000</option>
+              //     <option value="750000">750,000</option>
+              //     <option value="800000">800,000</option>
+              //     <option value="850000">850,000</option>
+              //     <option value="900000">900,000</option>
+              //     <option value="950000">950,000</option>
+              //     <option value="1000000">1,000,000</option>
+              //     <option value="1050000">1,050,000</option>
+              //     <option value="1100000">1,100,000</option>
+              //     <option value="1150000">1,150,000</option>
+              //     <option value="1200000">1,200,000</option>
+              //     <option value="1250000">1,250,000</option>
+              //     <option value="1300000">1,300,000</option>
+              //     <option value="1350000">1,350,000</option>
+              //     <option value="1400000">1,400,000</option>
+              //     <option value="1450000">1,450,000</option>
+              //     <option value="1500000">1,500,000</option>
+              //   </select>
+              // </div>
             ) : null}
 
             {formsData.cashOption === 'تقسيط' ? (

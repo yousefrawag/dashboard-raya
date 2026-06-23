@@ -27,6 +27,8 @@ const ProjectByid = () => {
   const {  setModuleDelete } =  useDashboardContext()
   const navigate = useNavigate()
   const Currentitem = data?.data
+  console.log("project" , Currentitem);
+  
   const statusConfig = {
  
     info: {

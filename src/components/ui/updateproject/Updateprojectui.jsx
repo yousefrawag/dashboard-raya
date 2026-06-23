@@ -9,7 +9,6 @@ import { Link  , useNavigate} from 'react-router-dom';
 const Updateprojectui = ({id}) => {
   const { deleteIteam } = useQueryDelete("projects", "projects");
     const {  setModuleDelete } =  useDashboardContext()
-  
   const { CanAdd, CanDelte, CanEdit, CanView, isAdmin } = useGetUserAuthentications("Projects");
   const navigate = useNavigate()
   const handelDeleate = () => {

@@ -1,7 +1,8 @@
 import { Getprojects  , AddProject , Updateproject,GetprojectSatuts , GetprojectTypes,GetProjectLocation ,SectionClients , ProjectByid , GetprivetProject ,
   UpdatePrivetproject,
   ProjectArchiev ,
-  GetPrivetprojectByid,AddPrivetproject , PrievtProjectArchiev ,  DropProjects,ProjectArea} from "../pages";
+  GetPrivetprojectByid,AddPrivetproject , AddDirectProperty, GetProperties ,
+  GetPropertyInfo, PrievtProjectArchiev ,  DropProjects,ProjectArea , PropertyStauts ,EditProperty} from "../pages";
   import store from "../store/index"
   import Checkuserautherzationview from "../middleware/Checkuserautherzationview"; 
   export const ProjectsRoutes = [
@@ -20,7 +21,12 @@ import { Getprojects  , AddProject , Updateproject,GetprojectSatuts , Getproject
        { path: "/drop-projects", element: <DropProjects /> },
          { path: "/archive/projects", element: <ProjectArchiev /> },
 
-                  { path: "/archive/prievt-tasks", element: <PrievtProjectArchiev /> },
-                    { path: "/projects-area", element: <ProjectArea /> },
+        { path: "/archive/prievt-tasks", element: <PrievtProjectArchiev /> },
+          { path: "/projects-area", element: <ProjectArea /> },
+          { path: "/projects/properties", element: <GetProperties /> },
+            { path: "/project/property/:id/:propertyId", element: <GetPropertyInfo /> },
+             { path: "/Add-property", element: <AddDirectProperty /> },  
+               { path: "/propertyStauts", element: <PropertyStauts /> },
+                 { path: "/project/property/edit/:id/:propertyId", element: <EditProperty /> }
 
     ];

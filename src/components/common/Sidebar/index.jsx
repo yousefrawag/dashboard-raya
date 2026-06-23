@@ -158,6 +158,16 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
 </NavLink>
 </li> :null
 }
+              {
+isAdmin || HasPermission("canViewProjects") ?     <li>
+<NavLink
+  to="/projects/properties"
+  className={`${liststyle} ${pathname.includes('projects/properties') && itemstyle}`}
+>
+  <FaProjectDiagram className="text-lg" /> الشقق
+</NavLink>
+</li> :null
+}
 
           
 {
@@ -402,6 +412,18 @@ isAdmin || HasPermission("canViewProjects") ?     <li>
                   className={`${liststyle} ${pathname.includes('FloorNumbers') && itemstyle}`}
                 >
                   <MdOutlineSecurity className="text-lg" />  الطوابق  
+                </NavLink>
+              </li> : null
+
+}
+{
+   isAdmin || HasPermission("canViewpropertyStauts") ? 
+   <li>
+                <NavLink
+                  to="/propertyStauts"
+                  className={`${liststyle} ${pathname.includes('propertyStauts') && itemstyle}`}
+                >
+                  <MdOutlineSecurity className="text-lg" />  حالات الشقق  
                 </NavLink>
               </li> : null
 
