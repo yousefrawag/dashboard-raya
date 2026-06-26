@@ -7,24 +7,46 @@ import {
   FiDollarSign,
   FiMapPin,
 } from 'react-icons/fi';
-
+import { useState } from 'react';
+import StatusFilterTabs from "../../../components/common/StatusFilterTabs"
+import MatchedClients from './MatchedClients';
 import useQuerygetSpacficIteam from '../../../services/QuerygetSpacficIteam';
 
 const GetPropertyInfo = () => {
   const { id, propertyId } = useParams();
-
   const navigate = useNavigate();
-
   const { data, isLoading } = useQuerygetSpacficIteam(
     `projects/property/${id}`,
     `projects/property/${id}`,
     propertyId,
   );
+  const { data:MatchedClientsdata , isLoading:matchLoading} = useQuerygetSpacficIteam(
+    `customers/customertpropertymatch/${id}`,
+    `customers/customertpropertymatch/${id}`,
+    propertyId,
+  );
+
+
+    const statusConfig = {
+ 
+    info: {
+      label: "بيانات الشقة" ,
+      className: "text-yellow-600 hover:text-yellow-700",
+      icon: "clock"
+    },
+    clients: {
+      label: "عملاء مقترحة" ,
+      className: "text-green-600 hover:text-green-700",
+      icon: "check-circle"
+    },
+  };
+   const [CurrenTap , setCurrentTap] = useState("info")
+  
 
   if (isLoading) {
     return <div className="p-10 text-center">جاري التحميل...</div>;
   }
-console.log("property-data", data);
+console.log("MatchedClientsdata-data", MatchedClientsdata);
 
   const project = data?.project;
   const property = data?.property;
@@ -34,10 +56,12 @@ console.log("property-data", data);
   }
 
   return (
-    <div className="space-y-8 pb-20">
+    <div className="pt-20">
       {/* HEADER */}
-
-      <div
+          <StatusFilterTabs  statusConfig={statusConfig} onStatusChange={(key) => setCurrentTap(key)} selectedStatus={CurrenTap}/>
+     {
+      CurrenTap === "info" &&  <div className="space-y-8 pb-20">
+                  <div
         className="
 bg-white
 rounded-3xl
@@ -284,7 +308,14 @@ p-6
             value={new Date(property.updatedAt).toLocaleDateString('ar-EG')}
           />
         </div>
+      </div> 
       </div>
+     }
+
+     {
+      CurrenTap === "clients" && <MatchedClients matchLoading={matchLoading}  MatchedClientsdata={MatchedClientsdata}/>
+     }
+
     </div>
   );
 };

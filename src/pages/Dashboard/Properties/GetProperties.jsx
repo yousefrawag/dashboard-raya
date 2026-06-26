@@ -123,7 +123,7 @@ console.log("properties" , data);
 
       cell: (row) => (
         <Link 
-          to={`/project/property/edit/${row?.projectId}/${row._id}`}
+          to={`/project/property/${row?.projectId}/${row._id}`}
         >
               <img
           src={getImage(row)}
