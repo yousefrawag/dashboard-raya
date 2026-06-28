@@ -11,8 +11,8 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
     TodayReminders ,
     Customerdata ,
     BrokerReports ,
-    DropCustomers
-  
+    DropCustomers,
+  ReportMatchClient
   } from "../pages";
     import store from "../store/index"
  import Checkuserautherzationview from "../middleware/Checkuserautherzationview";   
@@ -31,7 +31,8 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
          { path: "/customers-leads", element: <LeadsBoard /> } ,
          { path: "/User-Reminder", element: <TodayReminders /> } ,
          { path: "/customers-search-results", element: <Customerdata /> } ,
-             { path: "/brokers-deaily-reports", element: <BrokerReports /> } ,
-              { path: "/drop-customers", element: <DropCustomers /> } ,
+          { path: "/brokers-deaily-reports", element: <BrokerReports /> } ,
+          { path: "/drop-customers", element: <DropCustomers /> } ,
+           { path: "/reportMatch", element: <ReportMatchClient /> } ,
 
       ];

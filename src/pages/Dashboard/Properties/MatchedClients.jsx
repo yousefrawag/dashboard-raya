@@ -48,7 +48,7 @@ const MatchedClients = ({ MatchedClientsdata, matchLoading }) => {
   // توجيه إلى صفحة العميل (تصحيح المسار)
   const handleClientClick = (customerId) => {
     if (customerId) {
-      window.open(`/customers/${customerId}`, '_blank'); // تم تصحيح الإملاء
+      window.open(`/cutomers/${customerId}`, '_blank'); // تم تصحيح الإملاء
     }
   };
 

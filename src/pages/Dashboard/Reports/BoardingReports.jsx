@@ -39,7 +39,11 @@ const BoardingReports = () => {
                                      <CardDataStats to="/raya-Survey" title="إستبيان الموظفين" >
           <FaUsers className="text-green-500" />
         </CardDataStats>
+        
                                        <CardDataStats to="/raya-improve" title="إستبيان تطوير الافكار" >
+          <FaUsers className="text-green-500" />
+        </CardDataStats>
+            <CardDataStats to="/reportMatch" title="تقارير اسبوعيه وشهريه" >
           <FaUsers className="text-green-500" />
         </CardDataStats>
 

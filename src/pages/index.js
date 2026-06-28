@@ -87,6 +87,7 @@ import GetPropertyInfo from './Dashboard/Properties/GetPropertyInfo';
 import AddDirectProperty from './Dashboard/Properties/AddDirectProperty';
 import PropertyStauts from './Dashboard/PropertyStauts';
 import EditProperty from './Dashboard/Properties/EditProperty';
+import ReportMatchClient from './Dashboard/Reports/ReportMatchClient';
 export {
   UserTaskes,
   Getprojects,
@@ -173,5 +174,6 @@ export {
   GetPropertyInfo ,
   AddDirectProperty ,
   PropertyStauts ,
-  EditProperty
+  EditProperty,
+  ReportMatchClient
 };
