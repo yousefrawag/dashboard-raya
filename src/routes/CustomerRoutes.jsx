@@ -12,7 +12,8 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
     Customerdata ,
     BrokerReports ,
     DropCustomers,
-  ReportMatchClient
+  ReportMatchClient ,
+  GetReportMatchByid
   } from "../pages";
     import store from "../store/index"
  import Checkuserautherzationview from "../middleware/Checkuserautherzationview";   
@@ -34,5 +35,6 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
           { path: "/brokers-deaily-reports", element: <BrokerReports /> } ,
           { path: "/drop-customers", element: <DropCustomers /> } ,
            { path: "/reportMatch", element: <ReportMatchClient /> } ,
+           { path: "/reportMatch/:id", element: <GetReportMatchByid /> } ,
 
       ];

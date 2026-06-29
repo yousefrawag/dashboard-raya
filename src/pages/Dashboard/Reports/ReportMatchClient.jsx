@@ -29,6 +29,7 @@ const ReportMatchClient = () => {
     isError,
     refetch,
   } = useQuerygetiteams("reportsMatch", "reportsMatch");
+console.log("reportMatch" ,reportsData );
 
   // حذف تقرير
   const { deleteIteam, isLoading: deleteLoading } = useQueryDelete(
@@ -60,7 +61,7 @@ const ReportMatchClient = () => {
     );
   }
 
-   const reports = Array.isArray(reportsData?.data) ? reportsData.data : [];
+   const reports = Array.isArray(reportsData?.data?.data) ? reportsData.data?.data : [];
 
   // فلترة التقارير حسب النوع
   const filteredReports = filterType === "all" 
@@ -69,20 +70,20 @@ const ReportMatchClient = () => {
 
   // دالة حذف التقرير
   const handleDelete = async (reportId, reportName) => {
-    if (window.confirm(`هل أنت متأكد من حذف التقرير "${reportName}"؟`)) {
+
       try {
         await deleteIteam(reportId);
         toast.success("تم حذف التقرير بنجاح");
         refetch(); // تحديث القائمة
       } catch (error) {
         toast.error("فشل حذف التقرير");
-      }
+     
     }
   };
 
   // دالة عرض التقرير
   const handleViewReport = (reportId) => {
-    navigate(`/reports/${reportId}`);
+    navigate(`/reportMatch/${reportId}`);
   };
 
   // تنسيق التاريخ
@@ -101,7 +102,7 @@ const ReportMatchClient = () => {
     const types = {
       weekly: { label: "أسبوعي", color: "bg-blue-100 text-blue-700", icon: "📅" },
       monthly: { label: "شهري", color: "bg-purple-100 text-purple-700", icon: "📊" },
-      yearly: { label: "سنوي", color: "bg-green-100 text-green-700", icon: "📈" },
+
     };
     return types[type] || types.weekly;
   };
@@ -166,16 +167,7 @@ const ReportMatchClient = () => {
             >
               شهري
             </button>
-            <button
-              onClick={() => setFilterType("yearly")}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                filterType === "yearly"
-                  ? "bg-white shadow text-green-600"
-                  : "text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              سنوي
-            </button>
+      
           </div>
 
           <button
