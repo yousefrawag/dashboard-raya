@@ -31,8 +31,8 @@ const UpdateCutomer = () => {
     'customers',
   );
   const { data: projects } = useQuerygetiteams(
-    'projects/selectproject',
-    'projects/selectproject',
+    'projects',
+    'projects',
   );
    const {data:clientWorkdata } = useQuerygetiteams("client-work" , "client-work")
   const { deleteIteam } = useQueryDelete('customers', 'customers');
@@ -780,7 +780,7 @@ useEffect(() => {
                 className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
               >
                 <option>قم بالإختيار</option>
-                {projects?.data?.allproject?.map((item) => {
+                {projects?.data?.data?.map((item) => {
                   return (
                   <option
   key={item._id}
@@ -805,7 +805,7 @@ useEffect(() => {
               </select>
             </div>
 
- <div className="mb-6 flex flex-col  gap-2">
+ {/* <div className="mb-6 flex flex-col  gap-2">
               <label
                 htmlFor="property"
                 className="w-full text-lg font-medium text-black dark:text-white"
@@ -824,7 +824,7 @@ useEffect(() => {
                   return <option value={item?.unitName}>{item?.unitName}</option>;
                 })}
               </select>
-            </div>
+            </div> */}
 
             <div className="mb-6 flex flex-col  gap-2">
               <label

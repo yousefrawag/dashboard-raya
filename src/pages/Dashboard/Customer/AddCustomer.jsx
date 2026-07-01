@@ -19,8 +19,8 @@ const AddCustomer = () => {
     'customers',
   );
   const { data } = useQuerygetiteams(
-    'projects/selectproject',
-    'projects/selectproject',
+    'projects',
+    'projects',
   );
   const { data: currencyData } = useQuerygetiteams('currency', 'currency');
   const { data: clientWorkdata } = useQuerygetiteams(
@@ -544,7 +544,7 @@ if (name === 'project') {
                 className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
               >
                 <option>قم بالإختيار</option>
-                {data?.data?.allproject?.map((item) => {
+                {data?.data?.data?.map((item) => {
                   return (
         
 
@@ -576,7 +576,7 @@ if (name === 'project') {
             </div>
 
             
-            <div className="mb-6 flex flex-col  gap-2">
+            {/* <div className="mb-6 flex flex-col  gap-2">
               <label
                 htmlFor="property"
                 className="w-full text-lg font-medium text-black dark:text-white"
@@ -595,7 +595,7 @@ if (name === 'project') {
                   return <option value={item?.unitName}>{item?.unitName}</option>;
                 })}
               </select>
-            </div>
+            </div> */}
 
             <div className="mb-6 flex flex-col  gap-2">
               <label
