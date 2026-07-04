@@ -33,7 +33,7 @@ import Chart from 'react-apexcharts';
 // ============================================================
 const formatNumber = (num) => {
   if (!num) return '0';
-  return Number(num).toLocaleString('ar-EG');
+  return Number(num).toLocaleString("en-US");
 };
 
 const getScoreColor = (score) => {
