@@ -312,21 +312,7 @@ const filteredData = useMemo(() => {
           </span>
         )
       },
-               {
-        name: "الشقة المهتم به",
-      width:"180px" ,
-        cell: (row) => (
-          <span
-            style={{
-              textOverflow: "ellipsis",
-             
-            }}
-          >
-            {" "}
-           { row?.property ? row?.property :" غير متوفر"}
-          </span>
-        )
-      },
+ 
 {
   name: "الدفعة الإولى",
   sortable: true,
