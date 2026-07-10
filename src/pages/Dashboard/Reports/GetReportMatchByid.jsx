@@ -273,6 +273,19 @@ const ClientsModal = ({ isOpen, onClose, title, customers, onViewProfile }) => {
       'اسم العميل': client.customerName || 'غير محدد',
       'الدفعة الأولى': formatNumber(client.firstPayment || client.matchedProperty?.downPayment || client.closestMatch?.property?.downPayment || 0),
       'القسط الشهري': formatNumber(client.monthlyInstallment || client.matchedProperty?.monthlyInstallment || client.closestMatch?.property?.monthlyInstallment || 0),
+       'رقم العميل': client.phoneNumber || 'غير محدد',
+       "متطلبات العميل": client.clientRequirements?.length
+  ? client.clientRequirements
+      .map(req =>
+        [
+          `الموقع: ${req.rquireLocation || "غير محدد"}`,
+          `المنطقة: ${req.requireRegion || "غير محدد"}`,
+          `المطلوب: ${req.require || "غير محدد"}`,
+          `النوع: ${req.requireType || "غير محدد"}`
+        ].join(" | ")
+      )
+      .join("\n\n")
+  : "غير محدد",
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(rows);
@@ -362,6 +375,8 @@ const GetReportMatchByid = () => {
 
   // استخراج البيانات مع قيم افتراضية
   const report = data?.data || {};
+  console.log("singale-report" , report);
+  
   const summary = report.summary || {};
   const matchedCustomers = report.matchedCustomers || [];
   const shortlistUnmatched = report.shortlistUnmatched || [];
@@ -688,6 +703,20 @@ const GetReportMatchByid = () => {
       'اسم العميل': client.customerName || 'غير محدد',
       'الدفعة الأولى': formatNumber(client.firstPayment || 0),
       'القسط الشهري': formatNumber(client.monthlyInstallment || 0),
+             'رقم العميل': client.phoneNumber || 'غير محدد',
+       "متطلبات العميل": client.clientRequirements?.length
+  ? client.clientRequirements
+      .map(req =>
+        [
+          `الموقع: ${req.rquireLocation || "غير محدد"}`,
+          `المنطقة: ${req.requireRegion || "غير محدد"}`,
+          `المطلوب: ${req.require || "غير محدد"}`,
+          `النوع: ${req.requireType || "غير محدد"}`
+        ].join(" | ")
+      )
+      .join("\n\n")
+  : "غير محدد",
+      
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(rows);

@@ -719,7 +719,7 @@ if (name === 'project') {
             {formsData.cashOption === 'تقسيط' ? (
               <div className="mb-6 flex flex-col  gap-2">
                 <label
-                  htmlFor="firstPayment"
+                  htmlFor="Paymentpermonth"
                   className="w-full text-lg font-medium text-black dark:text-white"
                 >
                   الدفعه الشهرية
