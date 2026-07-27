@@ -74,6 +74,26 @@ const EditmainCategory = ({fetshkey , titale}) => {
             className="mt-3 text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
           />
         </div>
+          {
+          fetshkey === "link" &&     <div className="mb-5 mt-3 p-3">
+          <label
+            htmlFor="url"
+            className="w-full  text-lg font-medium text-gray-700"
+          >
+         الرابط
+          </label>
+          <input
+            type="url"
+            id="url"
+            name="url"
+            //  value={mainCategory?.url || ''}
+           defaultValue={mainCategory?.url || ""}
+            placeholder={`قم بكتابة الرابط`}
+            className="mt-3 text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
+          />
+         
+        </div>
+        }
         <button
           type="submit"
           className="block text-white bg-main hover:bg-main2 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:focus:ring-blue-800"

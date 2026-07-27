@@ -15,7 +15,8 @@ import { MdOutlineAddIcCall } from "react-icons/md";
 import { FiFilter, FiX } from "react-icons/fi";
 import { useState , useMemo } from 'react';
 import FiltertionHook from '../../../hooks/FiltertionHook';
-
+import useQueryupdate from '../../../services/useQueryupdate';
+import toast from 'react-hot-toast';
 const GetCustomers = () => {
      const [paramsapi, setParamsapi] = useState({
         field: "",
@@ -34,6 +35,7 @@ const GetCustomers = () => {
       });
   const { isError , isLoading , data} = useQuerygetiteams("customers" , "customers" , paramsapi)
   const {deleteIteam} = useQueryDelete("customers" , "customers")
+  const {updateiteam} = useQueryupdate("customers" , "customers")
   const {CanAdd , CanDelte , CanEdit , CanView , isAdmin} = useGetUserAuthentications("Clients")
 const [isSectionOpen , setIssectionOpen] = useState(false)
    
@@ -112,6 +114,21 @@ const filteredData = useMemo(() => {
     } 
     return text
   }
+   const handleModuleTypeChange = (id , status) => {
+try {
+  const data = {
+   accses: status
+  }
+     updateiteam( { id , data }, {
+        onSuccess: () => {
+    
+          toast.success("تم تحديث صلاحيه مشاهده بيانات العميل");
+        },
+      });
+} catch (error) {
+  
+}
+ }
 
     const columns = [
           {
@@ -267,6 +284,52 @@ const filteredData = useMemo(() => {
           </span>
         )
       },
+          {
+    name: "صلاحيه البيانات",
+    width: "170px",
+    cell: (row) => (
+      <div className="relative">
+        <select
+         
+          onChange={(e) => handleModuleTypeChange(row._id, e.target.value)}
+        //   disabled={updatingId === row._id}
+          className={`
+            w-full px-2 py-1.5 text-sm rounded-md border-2 cursor-pointer
+            ${row.accses === "full" 
+              ? 'bg-yellow-50 border-yellow-300 text-yellow-700' 
+              : 'bg-green-50 border-green-300 text-green-700'
+            }
+            focus:outline-none focus:ring-2 focus:ring-opacity-50
+            ${row.accses === "limted" ? 'focus:ring-yellow-400' : 'focus:ring-green-400'}
+            disabled:opacity-50 disabled:cursor-wait
+            transition-all duration-200
+          `}
+          style={{
+            direction: 'rtl',
+          }}
+        >
+              <option value="" className="bg-yellow-50 text-yellow-700">
+         أختر
+          </option>
+          <option value="full" className="bg-yellow-50 text-yellow-700">
+          جميع بيانات
+          </option>
+          <option value="limted" className="bg-green-50 text-green-700">
+         بيانات محدده
+          </option>
+        </select>
+        
+        {/* مؤشر التحميل */}
+        {/* {updatingId === row._id && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 rounded-md">
+            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )} */}
+      </div>
+    ),
+    sortable: true,
+    selector: (row) => row.accses,
+  },
        {
         name: "حالة العميل",
       width:"99px" ,

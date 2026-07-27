@@ -28,7 +28,7 @@ const AppRoutes = () => {
     {
       path: "/",
       element: <DashboardProvider><DefaultLayout /></DashboardProvider>,
-      loader:Checkuserautherzationview(store , "canViewProjects") ,
+      // loader:Checkuserautherzationview(store , "canViewProjects") ,
       children:  [
        ...AdminRoutes,
        ...TaskesRoutes,

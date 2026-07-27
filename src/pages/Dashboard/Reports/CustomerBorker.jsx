@@ -265,7 +265,24 @@ try {
     selector: (row) => row.moduleType,
   },
 
-
+    {
+        name: "مركزى - مؤسسه",
+        selector: (row) => row?.sourceType,
+         width:"150px" ,
+        cell: (row) => (
+          <span
+            style={{
+          
+              whiteSpace: "wrap",
+           
+    
+            }}
+          >
+            {" "}
+           { row?.sourceType === "Institutions" ? " مؤسسه" : "مركزى" }
+          </span>
+        )
+      },
         {
         name: "وظيفة العميل",
         selector: (row) => row?.clientwork,

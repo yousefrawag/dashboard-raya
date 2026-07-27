@@ -7,7 +7,7 @@ import {
   import Calnder from "../pages/Dashboard/Calnder";
   import { GoogaleCalnder  , JopAplication ,
   GetFullAplication , PreFormance, CustomerBorker ,   GetImproveFullData ,
-  GetAllimprovmentAplications , GetSurveyAplicationId, GetFullServyAplications,ReportType, ProjectTypesArchiev, RegionArchiev ,MissionArchev, FloorNumber,FirstPayments ,UsersArchiev  , PaymentMonthly, CompaiginPage , GetcompainByid , CurrencyAPP , WhatsAppExcelCampaign, WhatsAppFilterCampaign ,  Expensess , ArchiveBoarding , CustomersArchiev , WhatsappBoarding} from "../pages";
+  GetAllimprovmentAplications , GetSurveyAplicationId, InstuitionByid , InstitutionsCompany ,CountrbuetsTypes,GetFullServyAplications,ReportType, ProjectTypesArchiev, RegionArchiev ,MissionArchev, FloorNumber,FirstPayments ,UsersArchiev  , PaymentMonthly, CompaiginPage , GetcompainByid , CurrencyAPP , WhatsAppExcelCampaign, WhatsAppFilterCampaign ,  Expensess , ArchiveBoarding , CustomersArchiev , WhatsappBoarding , Links} from "../pages";
 export const AdminRoutes = [
     { path: "/dashboard", element: <ECommerce /> },
     { path: "/Googale-calnder", element: <GoogaleCalnder /> },
@@ -23,6 +23,7 @@ export const AdminRoutes = [
     { path: "/whatsap-allcompaigins/:id", element: <GetcompainByid /> },
     { path: "/FistPayment", element: <FirstPayments /> },
      { path: "/ReportType", element: <ReportType /> },
+    { path: "/Links", element: <Links /> },
     { path: "/PaymentMonthly", element: <PaymentMonthly /> },
      { path: "/FloorNumbers", element: <FloorNumber /> },
       { path: "/archive/missions", element: <MissionArchev /> },
@@ -37,6 +38,9 @@ export const AdminRoutes = [
       { path: "/raya-Survey/:id", element: <GetSurveyAplicationId /> },
       { path: "/raya-improve", element: <GetAllimprovmentAplications /> },
       { path: "/raya-improve/:id", element: <GetImproveFullData /> },
+      { path: "/contrubutesTypes", element: <CountrbuetsTypes /> },
+       { path: "/InstitutionsCompany", element: <InstitutionsCompany /> },
+        { path: "/InstitutionsCompany/:id", element: <InstuitionByid /> },
 
 
 

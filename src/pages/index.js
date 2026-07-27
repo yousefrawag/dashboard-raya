@@ -89,6 +89,10 @@ import PropertyStauts from './Dashboard/PropertyStauts';
 import EditProperty from './Dashboard/Properties/EditProperty';
 import ReportMatchClient from './Dashboard/Reports/ReportMatchClient';
 import GetReportMatchByid from './Dashboard/Reports/GetReportMatchByid';
+import Links from './Dashboard/Links';
+import CountrbuetsTypes from './Dashboard/CountrbuetsTypes';
+import InstitutionsCompany from './Dashboard/InstitutionsCompany';
+import InstuitionByid from './Dashboard/InstuitionByid';
 export {
   UserTaskes,
   Getprojects,
@@ -177,5 +181,9 @@ export {
   PropertyStauts ,
   EditProperty,
   ReportMatchClient ,
-  GetReportMatchByid
+  GetReportMatchByid ,
+  Links ,
+  CountrbuetsTypes ,
+  InstitutionsCompany ,
+  InstuitionByid
 };
