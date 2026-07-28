@@ -29,6 +29,7 @@ const CustomerBorker = () => {
   const { isError, isLoading, data } = useQuerygetiteams("customers/borkers-customers", "customers/borkers-customers" , paramsapi);
   const { deleteIteam } = useQueryDelete("customers", "customers");
   const {updateiteam} = useQueryupdate("customers", "borkers-customers")
+  const {updateiteam:updateCustomerAcess} = useQueryupdate("customers", "borkers-customers")
   const { CanAdd, CanDelte, CanEdit, CanView, isAdmin } = useGetUserAuthentications("Clients");
   const filtersDays = ["الكل" , "يومى", "أسبوعى", "شهرى" , "سنوى" ];
 const [isSectionOpen , setIssectionOpen] = useState(false)
@@ -151,6 +152,21 @@ try {
   
 }
  } 
+    const handleAcsessDataChange = (id , status) => {
+ try {
+   const data = {
+    accses: status
+   }
+      updateCustomerAcess( { id , data }, {
+         onSuccess: () => {
+     
+           toast.success("تم تحديث صلاحيه مشاهده بيانات العميل");
+         },
+       });
+ } catch (error) {
+   
+ }
+  }
  const columns = [
           {
     name: " إتصال",
@@ -219,7 +235,52 @@ try {
           </span>
         ),
       },
-
+          {
+    name: "صلاحيه البيانات",
+    width: "170px",
+    cell: (row) => (
+      <div className="relative">
+        <select
+         
+          onChange={(e) => handleAcsessDataChange(row._id, e.target.value)}
+        //   disabled={updatingId === row._id}
+          className={`
+            w-full px-2 py-1.5 text-sm rounded-md border-2 cursor-pointer
+            ${row.accses === "full" 
+              ? 'bg-yellow-50 border-yellow-300 text-yellow-700' 
+              : 'bg-green-50 border-green-300 text-green-700'
+            }
+            focus:outline-none focus:ring-2 focus:ring-opacity-50
+            ${row.accses === "limted" ? 'focus:ring-yellow-400' : 'focus:ring-green-400'}
+            disabled:opacity-50 disabled:cursor-wait
+            transition-all duration-200
+          `}
+          style={{
+            direction: 'rtl',
+          }}
+        >
+              <option value="" className="bg-yellow-50 text-yellow-700">
+         أختر
+          </option>
+          <option value="full" className="bg-yellow-50 text-yellow-700">
+          جميع بيانات
+          </option>
+          <option value="limted" className="bg-green-50 text-green-700">
+         بيانات محدده
+          </option>
+        </select>
+        
+        {/* مؤشر التحميل */}
+        {/* {updatingId === row._id && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 rounded-md">
+            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )} */}
+      </div>
+    ),
+    sortable: true,
+    selector: (row) => row.accses,
+  },
 
     {
     name: "حالة المراجعة",

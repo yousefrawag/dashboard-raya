@@ -330,6 +330,24 @@ try {
     sortable: true,
     selector: (row) => row.accses,
   },
+    {
+        name: "مركزى - مؤسسه",
+        selector: (row) => row?.sourceType,
+         width:"150px" ,
+        cell: (row) => (
+          <span
+            style={{
+          
+              whiteSpace: "wrap",
+           
+    
+            }}
+          >
+            {" "}
+           { row?.sourceType === "Institutions" ? " مؤسسه" : "مركزى" }
+          </span>
+        )
+      },
        {
         name: "حالة العميل",
       width:"99px" ,

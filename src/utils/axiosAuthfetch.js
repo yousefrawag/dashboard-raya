@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const authFetch = axios.create({
-    baseURL:"http://localhost:3300/api" /* "http://localhost:3300/api" */,
+    baseURL:"https://new-raya.vercel.app/api" /* "http://localhost:3300/api" */,
     // "https://new-raya.vercel.app/api"
 })
 

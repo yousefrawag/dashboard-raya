@@ -115,7 +115,11 @@ try {
            },,
            {
             name: "نوع المستخدم",
-            selector: (row) => row?.type === "admin" ? "أدمن" :  row?.type === "brokker"  ? "مسوق تحت التدريب" : "" || " موظف",
+            selector: (row) => row?.type === "admin" ? "أدمن" :  row?.type === "brokker"  ? "مسوق تحت التدريب" : row?.type === "InstitutionsUser" ? "تابع لمؤسسه" : " موظف",
+          },
+                     {
+            name: "المؤسسه",
+            selector: (row) => row?.institution?.name || " -",
           },
         {
           name: "الصلاحية",
