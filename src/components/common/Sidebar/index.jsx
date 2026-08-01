@@ -169,7 +169,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         { label: 'التقارير والتوصيات', path: '/Boardin-Reports', icon: FaChartPie, permission: 'canViewReports' },
         { label: 'تقارير المهام', path: '/missions-repoart', icon: FaClipboardList, permission: 'canViewReports' },
         { label: 'تقارير العملاء', path: '/cutomer-reports', icon: FaFileInvoice, permission: 'canViewReports' },
-        { label: 'تقارير دوام موفين', path: '/employee-reports', icon: FaClock, permission: 'canViewReports' },
+        { label: 'تقارير دوام موظفين', path: '/employee-reports', icon: FaClock, permission: 'canViewReports' },
         { label: 'تقرير اليومى', path: '/all-dealyReport', icon: FaCalendarDay, permission: 'canViewReports' },
         { label: 'مقارنه الاداء العام', path: '/compare-prevormance', icon: FaBalanceScale, permission: 'canViewReports' },
         { label: 'تقرير اليومى لمسوقين تحت التدريب', path: '/brokers-deaily-reports', icon: FaCalendarDay, permission: 'canViewReports' },

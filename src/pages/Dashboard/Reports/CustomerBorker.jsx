@@ -241,7 +241,7 @@ try {
     cell: (row) => (
       <div className="relative">
         <select
-         
+            value={row.accses || "full"}
           onChange={(e) => handleAcsessDataChange(row._id, e.target.value)}
         //   disabled={updatingId === row._id}
           className={`
