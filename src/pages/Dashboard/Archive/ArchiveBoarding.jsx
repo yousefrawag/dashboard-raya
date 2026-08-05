@@ -13,7 +13,7 @@ const archives = [
   {
     title: "أرشيف المشاريع",
     icon: <FaProjectDiagram className="w-10 h-10 text-green-600" />,
-    description: "جميع المشاريع السابقة والملغاة",
+    description: "جميع المشاريع قيد المراجعه والملغاة",
     link: "/archive/projects",
   },
   {

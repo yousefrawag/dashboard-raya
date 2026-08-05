@@ -113,6 +113,8 @@ useEffect(() => {
         for (const key in userData) {
             if (key === "allowedProjects") {
                 formData.append(key, JSON.stringify(userData[key]));
+            } else if (key === "institution" && userData.institution === "") {
+                    continue;
             } else if (key === "password" && userData.password === "") {
                 // إذا كانت كلمة المرور فارغة، لا نرسلها (لن يتم تحديثها)
                 continue;

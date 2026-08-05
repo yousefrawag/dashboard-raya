@@ -25,8 +25,9 @@ import { Getprojects  , AddProject , Updateproject,GetprojectSatuts , Getproject
           { path: "/projects-area", element: <ProjectArea /> },
           { path: "/projects/properties", element: <GetProperties /> },
             { path: "/project/property/:id/:propertyId", element: <GetPropertyInfo /> },
+             { path: "/project/property/edit/:id/:propertyId", element: <EditProperty /> },
              { path: "/Add-property", element: <AddDirectProperty /> },  
                { path: "/propertyStauts", element: <PropertyStauts /> },
-                 { path: "/project/property/edit/:id/:propertyId", element: <EditProperty /> }
+                
 
     ];
