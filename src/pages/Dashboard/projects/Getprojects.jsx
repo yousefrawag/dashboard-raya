@@ -23,6 +23,8 @@ import { FiFilter, FiX } from "react-icons/fi";
 const Getprojects = () => {
   const { data, isLoading } = useQuerygetiteams("projects", "projects");
   const { deleteIteam } = useQueryDelete("projects", "projects");
+     const {updateiteam:ReviewStatus} = useQueryupdate("projects" , "projects")
+  
   const {updateiteam} = useQueryupdate("projects" , "projects")
   const { CanAdd, CanDelte, CanEdit, CanView, isAdmin } = useGetUserAuthentications("Projects");
   const [isSectionOpen , setIssectionOpen] = useState(false)
@@ -87,6 +89,21 @@ try {
   
 }
  } 
+   const ReviewStatushandelr = (id , status) => {
+ try {
+   const data = {
+   projectReviewStatus: status
+   }
+      ReviewStatus( { id , data }, {
+         onSuccess: () => {
+     
+           toast.success("تم تغير حالة المراجعة");
+         },
+       });
+ } catch (error) {
+   
+ }
+  } 
   const columns = [
 
     {
@@ -101,11 +118,79 @@ try {
        width:"170px" ,
       cell: (row) => <Link to={`/projects-main/${row._id}`}>{row?.projectName  || row?._id} </Link>,
     },
+          {
+        name: "مركزى - مؤسسه",
+        selector: (row) => row?.sourceType,
+         width:"150px" ,
+        cell: (row) => (
+          <span
+            style={{
+          
+              whiteSpace: "wrap",
+           
+    
+            }}
+          >
+            {" "}
+           { row?.sourceType === "Institutions" ? " مؤسسه" : "مركزى" }
+          </span>
+        )
+      },
+        {
+    name: "حالة المراجعة",
+    width: "140px",
+    cell: (row) => (
+      <div className="relative">
+        <select
+          value={row.projectReviewStatus || "reviewed"}
+          onChange={(e) => ReviewStatushandelr(row._id, e.target.value)}
+        //   disabled={updatingId === row._id}
+          className={`
+            w-full px-2 py-1.5 text-sm rounded-md border-2 cursor-pointer
+            ${row.projectReviewStatus === "underReview" 
+              ? 'bg-yellow-50 border-yellow-300 text-yellow-700' 
+              : 'bg-green-50 border-green-300 text-green-700'
+            }
+            focus:outline-none focus:ring-2 focus:ring-opacity-50
+            ${row.projectReviewStatus === "underReview" ? 'focus:ring-yellow-400' : 'focus:ring-green-400'}
+            disabled:opacity-50 disabled:cursor-wait
+            transition-all duration-200
+          `}
+          style={{
+            direction: 'rtl',
+          }}
+        >
+          <option value="underReview" className="bg-yellow-50 text-yellow-700">
+             قيد المراجعة
+          </option>
+          <option value="reviewed" className="bg-green-50 text-green-700">
+             تمت المراجعة
+          </option>
+        </select>
+        
+        {/* مؤشر التحميل */}
+        {/* {updatingId === row._id && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 rounded-md">
+            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )} */}
+      </div>
+    ),
+    sortable: true,
+    selector: (row) => row.projectReviewStatus,
+  },
+
+    {
+      name: "نوع  المساهمه",
+       width:"170px" ,
+      selector: (row) => row?.contrbuetType || " غير متوفر",
+    },
     {
       name: "نوع العقار",
        width:"170px" ,
       selector: (row) => row?.estateType,
     },
+
            {
       name: " حاله المشروع",
         

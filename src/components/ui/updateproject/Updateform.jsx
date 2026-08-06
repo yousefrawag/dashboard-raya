@@ -442,7 +442,7 @@ installments:CurrentProject?.installments,
 
   availableFloors: CurrentProject?.availableFloors || [],
   contrbuetType:CurrentProject?.contrbuetType ,
-  InstitutionsCompany:CurrentProject?.InstitutionsCompany ,
+  InstitutionsCompany:CurrentProject?.InstitutionsCompany?._id ,
   Barkaaraemater: CurrentProject?.Barkaaraemater,
   countOfperiod: CurrentProject?.countOfperiod,
   installmentPeriod: CurrentProject?.installmentPeriod,

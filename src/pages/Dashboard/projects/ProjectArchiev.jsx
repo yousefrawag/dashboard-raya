@@ -115,6 +115,24 @@ try {
        width:"150px" ,
       cell: (row) => <Link to={`/projects-main/${row._id}`}>{row?.projectName} </Link>,
     },
+      {
+        name: "مركزى - مؤسسه",
+        selector: (row) => row?.sourceType,
+         width:"150px" ,
+        cell: (row) => (
+          <span
+            style={{
+          
+              whiteSpace: "wrap",
+           
+    
+            }}
+          >
+            {" "}
+           { row?.sourceType === "Institutions" ? " مؤسسه" : "مركزى" }
+          </span>
+        )
+      },
         {
     name: "حالة المراجعة",
     width: "140px",
