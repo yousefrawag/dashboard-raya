@@ -18,6 +18,8 @@ const AddprojectForm = () => {
   const {addIteam , isLoading} = useQueryadditeam("projects" , "projects")
   const { data:regionData } = useQuerygetiteams("region", "region");
   const { data:projectStatuts } = useQuerygetiteams("projectStatuts", "projectStatuts");
+  const { data: propertySatuts } = useQuerygetiteams('propertySatuts', 'propertySatuts');
+  
   const { data:locations } = useQuerygetiteams("location", "location");
   const { data:Currency } = useQuerygetiteams("currency", "currency");
   const { data:FirsPaymentData } = useQuerygetiteams("firstpayment", "firstpayment");
@@ -60,6 +62,7 @@ const AddprojectForm = () => {
     projectads:"" ,
     projectSatatus:"" ,
     pymentType:"" ,
+    CurrentStatus:"",
     estatePrice:"" ,
     materPriec:"" ,
     installmentsFirstPyment:"" ,
@@ -666,7 +669,32 @@ if(!projectData.projectName){
                 </div>
          }       
 
+     <div className="flex flex-col gap-2">
 
+            <label className="text-sm font-bold text-gray-700">
+
+                حالة  المشروع
+            </label>
+
+            <select
+          onChange={handelInputschage} 
+          value={projectData.CurrentStatus}
+              name="CurrentStatus"
+              className="h-14 rounded-2xl border border-gray-200 px-4 outline-none focus:ring-2 focus:ring-main"
+            >
+              <option value="">اختر النوع</option>
+
+              {propertySatuts?.data?.data?.map((item) => (
+                <option
+                  key={item._id}
+                  value={item.name}
+                >
+                  {item.name}
+                </option>
+              ))}
+            </select>
+
+          </div>
 
 
                 <div className="mb-6 flex flex-col  gap-2">
@@ -674,7 +702,7 @@ if(!projectData.projectName){
                             htmlFor="projectSatatus"
                             className="w-full text-lg font-medium text-black dark:text-white"
                         >
-                         حالة المشروع
+                         حالة بناء المشروع
                         </label>
                         <select   onChange={handelInputschage} value={projectData.projectSatatus} name="projectSatatus"  className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full  outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"                        >
                         <option value="">

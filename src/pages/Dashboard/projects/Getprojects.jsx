@@ -190,9 +190,35 @@ try {
        width:"170px" ,
       selector: (row) => row?.estateType,
     },
+      {
+  name: 'حالة المشروع',
+  width: '120px',
+  cell: (row, index, updatePropertyStatus) => (
+    <span
+ 
+      // onChange={(e) => updatePropertyStatus(index, e.target.value)}
+      className={`px-3 py-2 rounded-xl border-2 outline-none transition-all ${
+        row.CurrentStatus === 'متاحة' 
+          ? 'border-green-400 bg-green-50 text-green-700' 
+          : row.CurrentStatus === 'محجوزه' 
+          ? 'border-yellow-400 bg-yellow-50 text-yellow-700'
+          : row.CurrentStatus === 'مباعة' 
+          ? 'border-red-400 bg-red-50 text-red-700'
+          : row.CurrentStatus === 'قيد التعاقد'
+          ? 'border-blue-400 bg-blue-50 text-blue-700'
+          : 'border-gray-300 bg-gray-50 text-gray-700'
+      }`}
+    >
+{
+  row.CurrentStatus || "غير متوفر"
+}
+    
+    </span>
+  ),
+},
 
            {
-      name: " حاله المشروع",
+      name: " حاله  بناء المشروع",
         
        width:"170px" ,
       selector: (row) => row?.projectSatatus,

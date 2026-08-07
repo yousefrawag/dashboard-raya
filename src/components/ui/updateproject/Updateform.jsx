@@ -38,6 +38,8 @@ const Updateform = ({ id }) => {
     'firstpayment',
     'firstpayment',
   );
+    const { data: propertySatuts } = useQuerygetiteams('propertySatuts', 'propertySatuts');
+  
       const { data:MonthlyPaymentData } = useQuerygetiteams("monthPayment", "monthPayment");
     const { data:FloorNumbertData } = useQuerygetiteams("FloorNumber", "FloorNumber");
 
@@ -66,7 +68,7 @@ const Updateform = ({ id }) => {
     projectName: '',
     estateType: '',
     detailedAddress: '',
-   
+   CurrentStatus:"",
     projectDetails: '',
     projectads: '',
     projectSatatus: '',
@@ -413,7 +415,7 @@ setPropertyRelated(CurrentRegion?.relatedRegions)
    setprojectData({
   projectOwner: CurrentProject?.projectOwner,
   projectOwnerPhone: CurrentProject?.projectOwnerPhone,
-
+  CurrentStatus:CurrentProject?.CurrentStatus ,
   governoate: CurrentProject?.governoate,
   projectName: CurrentProject?.projectName,
   estateType: CurrentProject?.estateType,
@@ -749,12 +751,40 @@ console.log("project" , data);
                     
                 </div>
          }  
+
+         
+     <div className="flex flex-col gap-2">
+
+            <label className="text-sm font-bold text-gray-700">
+
+                حالة  المشروع
+            </label>
+
+            <select
+          onChange={handelInputschage} 
+          value={projectData.CurrentStatus}
+              name="CurrentStatus"
+              className="h-14 rounded-2xl border border-gray-200 px-4 outline-none focus:ring-2 focus:ring-main"
+            >
+              <option value="">اختر النوع</option>
+
+              {propertySatuts?.data?.data?.map((item) => (
+                <option
+                  key={item._id}
+                  value={item.name}
+                >
+                  {item.name}
+                </option>
+              ))}
+            </select>
+
+          </div>
         <div className="mb-6 flex flex-col  gap-2">
           <label
             htmlFor="projectSatatus"
             className="w-full text-lg font-medium text-black dark:text-white"
           >
-            حالة المشروع
+            حالة بناء المشروع
           </label>
           <select
             value={projectStauts}
