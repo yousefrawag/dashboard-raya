@@ -80,11 +80,19 @@ const Updateuser = () => {
         });
     };
 useEffect(() => {
-  if (userData?.institution) {
+  if (userData?.institution || userData?.type === "brokker") {
     const fetchProjects = async () => {
       try {
-        const response = await authFetch(`/projects/InstiutionProject/${userData.institution}`);
-        setInstitionProjects(response?.data?.data || []);
+        if(userData?.institution) {
+         const response = await authFetch(`/projects/InstiutionProject/${userData.institution}`);
+
+       return setInstitionProjects( response?.data?.data || []); 
+        }
+        // const response = await authFetch(`/projects/InstiutionProject/${userData.institution}`);
+        const PuplicProjects = await authFetch("/projects")
+     
+        
+        setInstitionProjects(PuplicProjects?.data?.data || []);
       } catch (error) {
         console.error("Error fetching institution projects:", error);
         setInstitionProjects([]);
@@ -94,7 +102,7 @@ useEffect(() => {
   } else {
     setInstitionProjects([]); // مسح القائمة عند إلغاء اختيار المؤسسة
   }
-}, [userData?.institution]);
+}, [userData?.institution , userData?.type]);
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -246,8 +254,13 @@ useEffect(() => {
                 ))}
               </select>
             </div>
-{
-  userData?.institution &&  <div className="mb-6 flex flex-col gap-2">
+
+           
+          </>
+        )}
+        {
+  (userData?.institution || userData?.type === "brokker")  && (
+      <div className="mb-6 flex flex-col gap-2">
               <label className="w-full text-lg font-medium text-black dark:text-white">المشاريع المسموح له العمل عليها</label>
               <div className="border rounded-md p-2 max-h-40 overflow-y-auto">
                 <div className="grid grid-cols-1 gap-2">
@@ -265,10 +278,9 @@ useEffect(() => {
               </div>
               <small className="text-gray-500">اختر مشروعاً أو أكثر</small>
             </div>
+  ) 
+
 }
-           
-          </>
-        )}
 
                 <div className="mb-6 flex flex-col gap-2">
                     <label className="w-full text-lg font-medium text-black dark:text-white">كلمة المرور (اتركها فارغة إذا لم ترد التغيير)</label>

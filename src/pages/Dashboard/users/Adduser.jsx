@@ -34,12 +34,21 @@ const [institionProjects , setInstitionProjects] = useState([])
     setImage({ file, view: URL.createObjectURL(file) });
     e.target.value = "";
   };
+
 useEffect(() => {
-  if (userData?.institution) {
+  if (userData?.institution || userData?.type === "brokker") {
     const fetchProjects = async () => {
       try {
-        const response = await authFetch(`/projects/InstiutionProject/${userData.institution}`);
-        setInstitionProjects(response?.data?.data || []);
+        if(userData?.institution) {
+         const response = await authFetch(`/projects/InstiutionProject/${userData.institution}`);
+
+       return setInstitionProjects( response?.data?.data || []); 
+        }
+        // const response = await authFetch(`/projects/InstiutionProject/${userData.institution}`);
+        const PuplicProjects = await authFetch("/projects")
+     
+        
+        setInstitionProjects(PuplicProjects?.data?.data || []);
       } catch (error) {
         console.error("Error fetching institution projects:", error);
         setInstitionProjects([]);
@@ -49,7 +58,8 @@ useEffect(() => {
   } else {
     setInstitionProjects([]); // مسح القائمة عند إلغاء اختيار المؤسسة
   }
-}, [userData?.institution]);
+}, [userData?.institution , userData?.type]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData(prev => ({ ...prev, [name]: value }));
@@ -91,19 +101,23 @@ useEffect(() => {
     };
 
     // إذا كان هناك صورة، نضيفها إلى FormData لأن الملفات تتعامل معها بشكل أفضل
-    const formData = new FormData();
-    for (const key in payload) {
-      if (key === "allowedProjects") {
-        // إرسال المصفوفة كـ JSON string أو كـ key متكرر
-        // الأفضل إرسالها كـ JSON string ثم فكها في الخادم
-        formData.append(key, JSON.stringify(payload[key]));
-      } else {
-        formData.append(key, payload[key]);
-      }
-    }
-    if (image.file) {
-      formData.append("image", image.file);
-    }
+      const formData = new FormData();
+        // نضيف كل الحقول مع معالجة allowedProjects
+        for (const key in userData) {
+            if (key === "allowedProjects") {
+                formData.append(key, JSON.stringify(userData[key]));
+            } else if (key === "institution" && userData.institution === "") {
+                    continue;
+            } else if (key === "password" && userData.password === "") {
+                // إذا كانت كلمة المرور فارغة، لا نرسلها (لن يتم تحديثها)
+                continue;
+            } else {
+                formData.append(key, userData[key]);
+            }
+        }
+        if (image.file) {
+            formData.append("image", image.file);
+        }
 
     try {
       await addIteam(formData, {
@@ -215,8 +229,13 @@ useEffect(() => {
                 ))}
               </select>
             </div>
+
+           
+          </>
+        )}
+
 {
-  userData?.institution &&  <div className="mb-6 flex flex-col gap-2">
+  (userData?.institution  || userData.type === "brokker")&&  <div className="mb-6 flex flex-col gap-2">
               <label className="w-full text-lg font-medium text-black dark:text-white">المشاريع المسموح له العمل عليها</label>
               <div className="border rounded-md p-2 max-h-40 overflow-y-auto">
                 <div className="grid grid-cols-1 gap-2">
@@ -235,10 +254,6 @@ useEffect(() => {
               <small className="text-gray-500">اختر مشروعاً أو أكثر</small>
             </div>
 }
-           
-          </>
-        )}
-
         <div className="mb-6 flex flex-col gap-2">
           <label className="w-full text-lg font-medium text-black dark:text-white">كلمة المرور</label>
           <input

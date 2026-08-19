@@ -198,6 +198,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         { label: 'استبيان موظفين', path: '/raya-Survey', icon: FaPoll, permission: 'canViewAdministration' },
         { label: 'استبيان تطوير الافكار', path: '/raya-improve', icon: FaLightbulb, permission: 'canViewAdministration' },
         { label: 'أرشيف البيانات', path: '/archive-boarding', icon: FaArchive, permission: 'canViewAdministration' },
+        { label: 'تحميل جميع الداتا', path: '/permissions', icon: FaUserShield, permission: 'canViewAdministration' },
 
       ],
       
