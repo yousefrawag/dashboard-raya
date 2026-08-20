@@ -49,7 +49,7 @@ const Updateform = ({ id }) => {
   );
   const cashTypes = ['نعم', 'لا'];
   const [chasSelectedtype, setCahselectedType] = useState('');
-  const finishing_c = ['بيع', 'شراء', 'تبديل', 'ضمان', 'إستثمار'];
+const finishing_c = ["بيع" , "شراء" ,"تبديل"  , "ضمان" ,   "إستثمار" , "إيجار" ]
   const [opeartionType, setOpeartiontype] = useState('');
   const [governote, setGovernote] = useState('');
   const [EstateType, setEstateType] = useState('');

@@ -137,7 +137,7 @@ setRelatedType(CurrentRegion?.relatedRegions)
         setRelatedType([])
       } }
   };
-  const finishing_c = ["بيع" , "شراء" ,"تبديل"  , "ضمان" ,   "إستثمار" ]
+  const finishing_c = ["بيع" , "شراء" ,"تبديل"  , "ضمان" ,   "إستثمار" , "إيجار" ]
   const [opeartionType , setOpeartiontype] = useState("")
 
   const navigate = useNavigate()
