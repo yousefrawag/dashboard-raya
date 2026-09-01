@@ -143,6 +143,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       children: [
         { label: 'جميع مشاريع', path: '/projects-main', icon: FaFolderOpen, permission: 'canViewProjects' },
         { label: 'الشقق', path: '/projects/properties', icon: FaHome, permission: 'canViewProjects' },
+        { label: 'طلبات المشاريع', path: '/sharedProperty', icon: FaHome, permission: 'canViewAdministration' },
+
       ],
     },
 

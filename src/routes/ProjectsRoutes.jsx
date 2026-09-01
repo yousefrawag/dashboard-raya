@@ -2,7 +2,7 @@ import { Getprojects  , AddProject , Updateproject,GetprojectSatuts , Getproject
   UpdatePrivetproject,
   ProjectArchiev ,
   GetPrivetprojectByid,AddPrivetproject , AddDirectProperty, GetProperties ,
-  GetPropertyInfo, PrievtProjectArchiev ,  DropProjects,ProjectArea , PropertyStauts ,EditProperty} from "../pages";
+  GetPropertyInfo, PrievtProjectArchiev , SharedProperty , DropProjects,ProjectArea , PropertyStauts ,EditProperty} from "../pages";
   import store from "../store/index"
   import Checkuserautherzationview from "../middleware/Checkuserautherzationview"; 
   export const ProjectsRoutes = [
@@ -28,6 +28,7 @@ import { Getprojects  , AddProject , Updateproject,GetprojectSatuts , Getproject
              { path: "/project/property/edit/:id/:propertyId", element: <EditProperty /> },
              { path: "/Add-property", element: <AddDirectProperty /> },  
                { path: "/propertyStauts", element: <PropertyStauts /> },
+               { path: "/SharedProperty", element: <SharedProperty /> },
                 
 
     ];

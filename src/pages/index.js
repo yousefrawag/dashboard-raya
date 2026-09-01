@@ -93,6 +93,7 @@ import Links from './Dashboard/Links';
 import CountrbuetsTypes from './Dashboard/CountrbuetsTypes';
 import InstitutionsCompany from './Dashboard/InstitutionsCompany';
 import InstuitionByid from './Dashboard/InstuitionByid';
+import SharedProperty from './Dashboard/sharedproperty/SharedProperty';
 export {
   UserTaskes,
   Getprojects,
@@ -185,5 +186,6 @@ export {
   Links ,
   CountrbuetsTypes ,
   InstitutionsCompany ,
-  InstuitionByid
+  InstuitionByid ,
+  SharedProperty
 };
