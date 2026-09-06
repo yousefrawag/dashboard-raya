@@ -8,6 +8,7 @@ import { useDashboardContext } from '../../../context/DashboardProviedr';
 import { GrFormView } from 'react-icons/gr';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { MdOutlineEditNote } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import useQueryDelete from '../../../services/useQueryDelete';
 import Loader from '../../../components/common/Loader';
@@ -18,7 +19,7 @@ const SharedProperty = () => {
   const { data, isLoading, isError } = useQuerygetiteams('sharedProperty', 'sharedProperty');
   const { deleteIteam } = useQueryDelete('sharedProperty', 'sharedProperty'); // تصحيح الـ query key
 const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
-  const { CanDelte, isAdmin } = useGetUserAuthentications('Administration');
+  const { CanDelte, isAdmin  , CanAdd} = useGetUserAuthentications('Administration');
 
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -177,6 +178,11 @@ const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
           >
             <GrFormView size={22} />
           </button>
+                {
+                      isAdmin || CanEdit ? <Link to={`/sharedProperty-edit/${row._id}`} className="hover:text-primary">
+                        <MdOutlineEditNote size={20} />
+                      </Link> : null
+                }
           {(isAdmin || CanDelte) && (
             <button
               className="text-red-500 hover:text-red-700 transition"
@@ -186,6 +192,7 @@ const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
               <AiTwotoneDelete size={22} />
             </button>
           )}
+         
         </div>
       ),
     },
@@ -206,7 +213,8 @@ const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="w-full flex justify-between items-center mb-6">
-        <Breadcrumb pageName="طلبات المشاريع" />
+               <HeadPagestyle isAdmin={isAdmin} CanAdd={CanAdd}  pageName="طلبات المشاريع" to="/SharedProperty/add" title="إضافة طلب"/>
+
       </div>
 
       <div className="bg-white shadow-lg rounded-2xl p-4 overflow-hidden">
@@ -297,14 +305,38 @@ const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
                 <div className="bg-gray-50 p-4 rounded-xl md:col-span-2">
                   <h3 className="text-lg font-semibold text-amber-600 mb-3">صور المشروع</h3>
                   <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
-                    {selectedProperty.project.imagesURLs.map((img, idx) => (
-                      <img
-                        key={idx}
-                        src={img.fileURL}
-                        alt={`صورة ${idx + 1}`}
-                        className="w-full h-24 object-cover rounded-lg border hover:scale-105 transition"
-                      />
-                    ))}
+                {selectedProperty.project.imagesURLs.map((img, idx) => (
+        <div key={idx} className="relative group">
+          <a
+            href={img.fileURL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block relative"
+          >
+            <img
+              src={img.fileURL}
+              alt={`صورة ${idx + 1}`}
+              className="w-full h-24 object-cover rounded-lg border hover:scale-105 transition"
+            />
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6M7 10h6"
+                />
+              </svg>
+            </div>
+          </a>
+        </div>
+      ))}
                   </div>
                 </div>
               )}

@@ -94,6 +94,8 @@ import CountrbuetsTypes from './Dashboard/CountrbuetsTypes';
 import InstitutionsCompany from './Dashboard/InstitutionsCompany';
 import InstuitionByid from './Dashboard/InstuitionByid';
 import SharedProperty from './Dashboard/sharedproperty/SharedProperty';
+import AddSharedProperty from "./Dashboard/sharedproperty/AddSharedProperty"
+import UpdateSharedProperty from './Dashboard/sharedproperty/UpdateAskProperty';
 export {
   UserTaskes,
   Getprojects,
@@ -187,5 +189,7 @@ export {
   CountrbuetsTypes ,
   InstitutionsCompany ,
   InstuitionByid ,
-  SharedProperty
+  SharedProperty ,
+  AddSharedProperty ,
+  UpdateSharedProperty
 };
