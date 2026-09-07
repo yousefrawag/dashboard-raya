@@ -14,11 +14,15 @@ import useQueryDelete from '../../../services/useQueryDelete';
 import Loader from '../../../components/common/Loader';
 import toast from 'react-hot-toast';
 import useQueryupdate from '../../../services/useQueryupdate';
+import { RiFileTransferLine } from 'react-icons/ri';
 
 const SharedProperty = () => {
   const { data, isLoading, isError } = useQuerygetiteams('sharedProperty', 'sharedProperty');
   const { deleteIteam } = useQueryDelete('sharedProperty', 'sharedProperty'); // تصحيح الـ query key
+  
 const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
+  
+const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sharedProperty")
   const { CanDelte, isAdmin  , CanAdd} = useGetUserAuthentications('Administration');
 
   const [selectedProperty, setSelectedProperty] = useState(null);
@@ -52,6 +56,21 @@ const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
  }
   } 
 
+  const handleConvertToProject = (id) => {
+     try {
+   const data = {
+   status:"تحديث"
+   }
+      ConvertItem( { id , data }, {
+         onSuccess: () => {
+     
+           toast.success("تم  تحويل الطلب الى مشروع فعلى");
+         },
+       });
+ } catch (error) {
+   
+ }
+  }
   // أعمدة الجدول
   const columns = [
     {
@@ -157,7 +176,7 @@ const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
     },
     {
       name: 'تاريخ الإنشاء',
-       width:"150px",
+       width:"300px",
       selector: (row) => row.createdAt,
       cell: (row) => (
         <span>
@@ -170,7 +189,7 @@ const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
       name: 'إجراء',
       selector: (row) => row.procedure,
       cell: (row) => (
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-1 w-full">
           <button
             onClick={() => handleView(row)}
             className="text-blue-600 hover:text-blue-800 transition"
@@ -178,6 +197,13 @@ const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
           >
             <GrFormView size={22} />
           </button>
+          <button
+  onClick={() => handleConvertToProject(row._id)}
+  className="text-green-600 hover:text-green-800 transition"
+  title="تحويل إلى مشروع"
+>
+  <RiFileTransferLine  size={22} />
+</button>
                 {
                       isAdmin || CanEdit ? <Link to={`/sharedProperty-edit/${row._id}`} className="hover:text-primary">
                         <MdOutlineEditNote size={20} />

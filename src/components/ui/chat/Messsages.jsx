@@ -14,6 +14,49 @@ const arabicTimeAgo = (date) => {
     return timeAgo
        
 };
+const formatMessageWithLinks = (text) => {
+  if (!text) return text;
+
+  // تعبير منتظم للبحث عن روابط تبدأ بـ http:// أو https://
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const elements = [];
+  let lastIndex = 0;
+  let match;
+
+  // البحث عن جميع الروابط في النص
+  while ((match = urlRegex.exec(text)) !== null) {
+    const start = match.index;
+    const end = start + match[0].length;
+
+    // إضافة النص العادي قبل الرابط
+    if (start > lastIndex) {
+      elements.push(text.slice(lastIndex, start));
+    }
+
+    // إضافة الرابط كعنصر <a> قابل للنقر
+    elements.push(
+      <a
+        key={start}
+        href={match[0]}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-500 underline hover:text-blue-700 transition"
+      >
+        {match[0]}
+      </a>
+    );
+
+    lastIndex = end;
+  }
+
+  // إضافة النص المتبقي بعد آخر رابط
+  if (lastIndex < text.length) {
+    elements.push(text.slice(lastIndex));
+  }
+
+  // إذا لم يتم العثور على روابط، نعيد النص الأصلي
+  return elements.length ? elements : text;
+};
 
 const Messages = ({ chatID }) => {
     const { data, isLoading } = useQuerygetSpacficIteam("messages", "messages", chatID);
@@ -109,7 +152,9 @@ console.log(formData);
                             {arabicTimeAgo(item?.createdAt)}
                         </span>
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300">{item?.content}</p>
+                <p className="text-gray-700 dark:text-gray-300">
+  {formatMessageWithLinks(item?.content)}
+</p>
                     <div className='flex flex-col lg:flex-row gap-3'>
      {
                          item?.imagesURLs[0] &&
