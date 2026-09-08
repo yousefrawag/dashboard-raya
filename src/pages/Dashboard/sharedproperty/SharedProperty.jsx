@@ -97,20 +97,32 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
 {
   name: 'حالة الطلب',
   width: "150px",
+
   cell: (row) => {
     const status = row?.status || 'جديد';
-    // تعريف ألوان الخلفية للحالة الحالية (للعرض على الـ select نفسه)
+
     const getColor = (s) => {
-      if (s === 'جديد') return 'bg-blue-100 text-blue-800 border-blue-300';
-      if (s === 'تم التواصل') return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      if (s === 'تم الاتفاق') return 'bg-green-100 text-green-800 border-green-300';
-      if (s === 'لم يتم الاتفاق') return 'bg-red-100 text-red-800 border-red-300';
+      if (s === 'جديد')
+        return 'bg-blue-100 text-blue-800 border-blue-300';
+
+      if (s === 'تم التواصل')
+        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+
+      if (s === 'تم الاتفاق')
+        return 'bg-green-100 text-green-800 border-green-300';
+
+      if (s === 'لم يتم الاتفاق')
+        return 'bg-red-100 text-red-800 border-red-300';
+
+      if (s === 'تم تحويله إلى مشروع')
+        return 'bg-purple-100 text-purple-800 border-purple-300';
+
       return 'bg-gray-100 text-gray-800 border-gray-300';
     };
 
     const handleChange = (e) => {
       const newStatus = e.target.value;
-      // استدعاء دالة التحديث - يجب على المستخدم تعريفها
+
       ReviewStatushandelr(row._id, newStatus);
     };
 
@@ -119,16 +131,32 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
         value={status}
         onChange={handleChange}
         className={`${getColor(status)} px-2 py-1 rounded-full text-xs font-semibold border outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 cursor-pointer w-full`}
-        dir="rtl" // لأن النصوص عربية
+        dir="rtl"
       >
-        <option value="جديد">جديد</option>
-        <option value="تم التواصل">تم التواصل</option>
-        <option value="تم الاتفاق">تم الاتفاق</option>
-        <option value="لم يتم الاتفاق">لم يتم الاتفاق</option>
+        <option value="جديد">
+          جديد
+        </option>
+
+        <option value="تم التواصل">
+          تم التواصل
+        </option>
+
+        <option value="تم الاتفاق">
+          تم الاتفاق
+        </option>
+
+        <option value="لم يتم الاتفاق">
+          لم يتم الاتفاق
+        </option>
+
+        <option value="تم تحويله إلى مشروع">
+          تم تحويله إلى مشروع
+        </option>
       </select>
     );
   },
-  sortable: true, // يمكن الاحتفاظ بها أو إزالتها لأن السورت على الـ select قد يكون غريباً، لكني سأبقيها اختيارية. سأزيلها لأنها قائمة منسدلة.
+
+  sortable: false,
 } ,
     {
       name: 'نوع العقار',
@@ -159,6 +187,15 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
       cell: (row) => (
         <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
           {row?.project?.operationType || '-'}
+        </span>
+      ),
+    },
+     {
+      name: 'نوع العمله',
+      selector: (row) => row?.project?.pymentType || '-',
+      cell: (row) => (
+        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
+          {row?.project?.pymentType || '-'}
         </span>
       ),
     },
@@ -304,6 +341,7 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
               <div className="bg-gray-50 p-4 rounded-xl md:col-span-2">
                 <h3 className="text-lg font-semibold text-amber-600 mb-3">البيانات المالية</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div><span className="font-medium">العمله:</span> {selectedProperty?.project?.pymentType || '-'}</div>
                   <div><span className="font-medium">السعر الإجمالي:</span> {selectedProperty?.project?.estatePrice ? Number(selectedProperty.project.estatePrice).toLocaleString() : '-'}</div>
                   <div><span className="font-medium">سعر المتر:</span> {selectedProperty?.project?.materPriec ? Number(selectedProperty.project.materPriec).toLocaleString() : '-'}</div>
                   <div><span className="font-medium">الدفعة الأولى:</span> {selectedProperty?.project?.installmentsFirstPyment ? Number(selectedProperty.project.installmentsFirstPyment).toLocaleString() : '-'}</div>

@@ -264,7 +264,7 @@ try {
     },
    {
       name: "العملة",
-      selector: (row) => row?.estatePrice,
+      selector: (row) => row?.pymentType,
      
       cell: (row) => <div   
       style={{
