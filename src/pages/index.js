@@ -96,6 +96,7 @@ import InstuitionByid from './Dashboard/InstuitionByid';
 import SharedProperty from './Dashboard/sharedproperty/SharedProperty';
 import AddSharedProperty from "./Dashboard/sharedproperty/AddSharedProperty"
 import UpdateSharedProperty from './Dashboard/sharedproperty/UpdateAskProperty';
+import ImportRequests from './Dashboard/importRequests/ImportRequests';
 export {
   UserTaskes,
   Getprojects,
@@ -191,5 +192,6 @@ export {
   InstuitionByid ,
   SharedProperty ,
   AddSharedProperty ,
-  UpdateSharedProperty
+  UpdateSharedProperty ,
+  ImportRequests
 };

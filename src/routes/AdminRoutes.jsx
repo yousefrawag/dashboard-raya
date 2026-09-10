@@ -7,7 +7,7 @@ import {
   import Calnder from "../pages/Dashboard/Calnder";
   import { GoogaleCalnder  , JopAplication ,
   GetFullAplication , PreFormance, CustomerBorker ,   GetImproveFullData ,
-  GetAllimprovmentAplications , GetSurveyAplicationId, InstuitionByid , InstitutionsCompany ,CountrbuetsTypes,GetFullServyAplications,ReportType, ProjectTypesArchiev, RegionArchiev ,MissionArchev, FloorNumber,FirstPayments ,UsersArchiev  , PaymentMonthly, CompaiginPage , GetcompainByid , CurrencyAPP , WhatsAppExcelCampaign, WhatsAppFilterCampaign ,  Expensess , ArchiveBoarding , CustomersArchiev , WhatsappBoarding , Links} from "../pages";
+  GetAllimprovmentAplications , GetSurveyAplicationId,ImportRequests , InstuitionByid , InstitutionsCompany ,CountrbuetsTypes,GetFullServyAplications,ReportType, ProjectTypesArchiev, RegionArchiev ,MissionArchev, FloorNumber,FirstPayments ,UsersArchiev  , PaymentMonthly, CompaiginPage , GetcompainByid , CurrencyAPP , WhatsAppExcelCampaign, WhatsAppFilterCampaign ,  Expensess , ArchiveBoarding , CustomersArchiev , WhatsappBoarding , Links} from "../pages";
 export const AdminRoutes = [
     { path: "/dashboard", element: <ECommerce /> },
     { path: "/Googale-calnder", element: <GoogaleCalnder /> },
@@ -41,6 +41,7 @@ export const AdminRoutes = [
       { path: "/contrubutesTypes", element: <CountrbuetsTypes /> },
        { path: "/InstitutionsCompany", element: <InstitutionsCompany /> },
         { path: "/InstitutionsCompany/:id", element: <InstuitionByid /> },
+         { path: "/ImportRequests", element: <ImportRequests /> },
 
 
 
