@@ -196,7 +196,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         { label: 'المصاريف', path: '/expenss', icon: FaMoneyBillWave, permission: 'canViewexpensee' },
         { label: 'الصلاحيات', path: '/permissions', icon: FaUserShield, permission: 'canViewAdministration' },
         { label: 'المؤسسات والشركاء', path: '/InstitutionsCompany', icon: FaArchive, permission: 'canViewAdministration' },
-        { label: 'طلبات الاستيراد والتصدير', path: '/ImportRequests', icon: FaArchive, permission: 'canViewAdministration' },
+        // { label: 'طلبات الاستيراد والتصدير', path: '/ImportRequests', icon: FaArchive, permission: 'canViewAdministration' },
         { label: 'طلبات التوظيف', path: '/raya-jops', icon: FaUserPlus, permission: 'canViewAdministration' },
         { label: 'استبيان موظفين', path: '/raya-Survey', icon: FaPoll, permission: 'canViewAdministration' },
         { label: 'استبيان تطوير الافكار', path: '/raya-improve', icon: FaLightbulb, permission: 'canViewAdministration' },

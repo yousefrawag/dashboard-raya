@@ -15,15 +15,39 @@ import Loader from '../../../components/common/Loader';
 import toast from 'react-hot-toast';
 import useQueryupdate from '../../../services/useQueryupdate';
 import { RiFileTransferLine } from 'react-icons/ri';
+import { FaFile, FaVideo, FaImage, FaFilePdf, FaFileWord, FaDownload, FaEye } from 'react-icons/fa';
+
+// ✅ دالة لتصنيف الملف حسب الامتداد
+const getFileType = (url = '') => {
+  const cleanUrl = url.split('?')[0].toLowerCase();
+  const ext = cleanUrl.split('.').pop();
+
+  const imageExts = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg'];
+  const videoExts = ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'];
+  const docExts = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'];
+
+  if (imageExts.includes(ext)) return 'image';
+  if (videoExts.includes(ext)) return 'video';
+  if (docExts.includes(ext)) return 'doc';
+  return 'other';
+};
+
+// ✅ أيقونة حسب نوع المستند
+const getDocIcon = (url = '') => {
+  const ext = url.split('?')[0].toLowerCase().split('.').pop();
+  if (ext === 'pdf') return <FaFilePdf className="text-red-500" size={20} />;
+  if (ext === 'doc' || ext === 'docx') return <FaFileWord className="text-blue-600" size={20} />;
+  return <FaFile className="text-gray-500" size={20} />;
+};
 
 const SharedProperty = () => {
   const { data, isLoading, isError } = useQuerygetiteams('sharedProperty', 'sharedProperty');
-  const { deleteIteam } = useQueryDelete('sharedProperty', 'sharedProperty'); // تصحيح الـ query key
-  
-const {updateiteam} = useQueryupdate("sharedProperty" , "sharedProperty")
-  
-const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sharedProperty")
-  const { CanDelte, isAdmin  , CanAdd} = useGetUserAuthentications('Administration');
+  const { deleteIteam } = useQueryDelete('sharedProperty', 'sharedProperty');
+
+  const { updateiteam } = useQueryupdate("sharedProperty", "sharedProperty");
+
+  const { updateiteam: ConvertItem } = useQueryupdate("sharedProperty/convert", "sharedProperty");
+  const { CanDelte, isAdmin, CanAdd } = useGetUserAuthentications('Administration');
 
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -40,43 +64,34 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
     setSelectedProperty(null);
   };
 
-   const ReviewStatushandelr = (id , status) => {
- try {
-   const data = {
-   status
-   }
-      updateiteam( { id , data }, {
-         onSuccess: () => {
-     
-           toast.success("تم تغير حالة الطلب");
-         },
-       });
- } catch (error) {
-   
- }
-  } 
+  const ReviewStatushandelr = (id, status) => {
+    try {
+      const data = { status };
+      updateiteam({ id, data }, {
+        onSuccess: () => {
+          toast.success("تم تغير حالة الطلب");
+        },
+      });
+    } catch (error) { }
+  }
 
   const handleConvertToProject = (id) => {
-     try {
-   const data = {
-   status:"تحديث"
-   }
-      ConvertItem( { id , data }, {
-         onSuccess: () => {
-     
-           toast.success("تم  تحويل الطلب الى مشروع فعلى");
-         },
-       });
- } catch (error) {
-   
- }
+    try {
+      const data = { status: "تحديث" };
+      ConvertItem({ id, data }, {
+        onSuccess: () => {
+          toast.success("تم تحويل الطلب الى مشروع فعلى");
+        },
+      });
+    } catch (error) { }
   }
+
   // أعمدة الجدول
   const columns = [
     {
       name: 'اسم العميل',
       selector: (row) => row?.client?.fullName || '-',
-      width:"150px",
+      width: "150px",
       cell: (row) => (
         <span className="font-medium text-slate-700">{row?.client?.fullName || '-'}</span>
       ),
@@ -84,80 +99,53 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
     },
     {
       name: 'البريد الإلكتروني',
-       width:"150px",
+      width: "150px",
       selector: (row) => row?.client?.email || '-',
       cell: (row) => <span>{row?.client?.email || '-'}</span>,
     },
     {
       name: 'رقم الجوال',
-       width:"150px",
+      width: "150px",
       selector: (row) => row?.client?.phone || '-',
       cell: (row) => <span dir="ltr">{row?.client?.phone || '-'}</span>,
     },
-{
-  name: 'حالة الطلب',
-  width: "150px",
+    {
+      name: 'حالة الطلب',
+      width: "150px",
+      cell: (row) => {
+        const status = row?.status || 'جديد';
 
-  cell: (row) => {
-    const status = row?.status || 'جديد';
+        const getColor = (s) => {
+          if (s === 'جديد') return 'bg-blue-100 text-blue-800 border-blue-300';
+          if (s === 'تم التواصل') return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+          if (s === 'تم الاتفاق') return 'bg-green-100 text-green-800 border-green-300';
+          if (s === 'لم يتم الاتفاق') return 'bg-red-100 text-red-800 border-red-300';
+          if (s === 'تم تحويله إلى مشروع') return 'bg-purple-100 text-purple-800 border-purple-300';
+          return 'bg-gray-100 text-gray-800 border-gray-300';
+        };
 
-    const getColor = (s) => {
-      if (s === 'جديد')
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        const handleChange = (e) => {
+          const newStatus = e.target.value;
+          ReviewStatushandelr(row._id, newStatus);
+        };
 
-      if (s === 'تم التواصل')
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-
-      if (s === 'تم الاتفاق')
-        return 'bg-green-100 text-green-800 border-green-300';
-
-      if (s === 'لم يتم الاتفاق')
-        return 'bg-red-100 text-red-800 border-red-300';
-
-      if (s === 'تم تحويله إلى مشروع')
-        return 'bg-purple-100 text-purple-800 border-purple-300';
-
-      return 'bg-gray-100 text-gray-800 border-gray-300';
-    };
-
-    const handleChange = (e) => {
-      const newStatus = e.target.value;
-
-      ReviewStatushandelr(row._id, newStatus);
-    };
-
-    return (
-      <select
-        value={status}
-        onChange={handleChange}
-        className={`${getColor(status)} px-2 py-1 rounded-full text-xs font-semibold border outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 cursor-pointer w-full`}
-        dir="rtl"
-      >
-        <option value="جديد">
-          جديد
-        </option>
-
-        <option value="تم التواصل">
-          تم التواصل
-        </option>
-
-        <option value="تم الاتفاق">
-          تم الاتفاق
-        </option>
-
-        <option value="لم يتم الاتفاق">
-          لم يتم الاتفاق
-        </option>
-
-        <option value="تم تحويله إلى مشروع">
-          تم تحويله إلى مشروع
-        </option>
-      </select>
-    );
-  },
-
-  sortable: false,
-} ,
+        return (
+          <select
+            value={status}
+            onChange={handleChange}
+            className={`${getColor(status)} px-2 py-1 rounded-full text-xs font-semibold border outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 cursor-pointer w-full`}
+            dir="rtl"
+          >
+            <option value="جديد">جديد</option>
+            <option value="تم التواصل">تم التواصل</option>
+            <option value="تم الاتفاق">تم الاتفاق</option>
+            <option value="لم يتم الاتفاق">لم يتم الاتفاق</option>
+            <option value="تم تحويله إلى مشروع">تم تحويله إلى مشروع</option>
+          </select>
+        );
+      },
+      sortable: false,
+    },
     {
       name: 'نوع العقار',
       selector: (row) => row?.project?.estateType || '-',
@@ -190,7 +178,7 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
         </span>
       ),
     },
-     {
+    {
       name: 'نوع العمله',
       selector: (row) => row?.project?.pymentType || '-',
       cell: (row) => (
@@ -201,7 +189,7 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
     },
     {
       name: 'السعر الإجمالي',
-       width:"150px",
+      width: "150px",
       selector: (row) => row?.project?.estatePrice,
       cell: (row) => (
         <span>
@@ -213,7 +201,7 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
     },
     {
       name: 'تاريخ الإنشاء',
-       width:"300px",
+      width: "300px",
       selector: (row) => row.createdAt,
       cell: (row) => (
         <span>
@@ -235,17 +223,17 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
             <GrFormView size={22} />
           </button>
           <button
-  onClick={() => handleConvertToProject(row._id)}
-  className="text-green-600 hover:text-green-800 transition"
-  title="تحويل إلى مشروع"
->
-  <RiFileTransferLine  size={22} />
-</button>
-                {
-                      isAdmin || CanEdit ? <Link to={`/sharedProperty-edit/${row._id}`} className="hover:text-primary">
-                        <MdOutlineEditNote size={20} />
-                      </Link> : null
-                }
+            onClick={() => handleConvertToProject(row._id)}
+            className="text-green-600 hover:text-green-800 transition"
+            title="تحويل إلى مشروع"
+          >
+            <RiFileTransferLine size={22} />
+          </button>
+          {
+            isAdmin || CanEdit ? <Link to={`/sharedProperty-edit/${row._id}`} className="hover:text-primary">
+              <MdOutlineEditNote size={20} />
+            </Link> : null
+          }
           {(isAdmin || CanDelte) && (
             <button
               className="text-red-500 hover:text-red-700 transition"
@@ -255,7 +243,6 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
               <AiTwotoneDelete size={22} />
             </button>
           )}
-         
         </div>
       ),
     },
@@ -273,11 +260,16 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
     );
   }
 
+  // ✅ تصنيف المرفقات
+  const allAttachments = selectedProperty?.project?.imagesURLs || [];
+  const imagesFiles = allAttachments.filter((f) => getFileType(f?.fileURL) === 'image');
+  const videosFiles = allAttachments.filter((f) => getFileType(f?.fileURL) === 'video');
+  const docsFiles = allAttachments.filter((f) => getFileType(f?.fileURL) === 'doc');
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="w-full flex justify-between items-center mb-6">
-               <HeadPagestyle isAdmin={isAdmin} CanAdd={CanAdd}  pageName="طلبات المشاريع" to="/SharedProperty/add" title="إضافة طلب"/>
-
+        <HeadPagestyle isAdmin={isAdmin} CanAdd={CanAdd} pageName="طلبات المشاريع" to="/SharedProperty/add" title="إضافة طلب" />
       </div>
 
       <div className="bg-white shadow-lg rounded-2xl p-4 overflow-hidden">
@@ -364,44 +356,137 @@ const {updateiteam:ConvertItem} = useQueryupdate("sharedProperty/convert" , "sha
                 </div>
               </div>
 
-              {/* الصور إن وجدت */}
-              {selectedProperty?.project?.imagesURLs?.length > 0 && (
+              {/* =========================================== */}
+              {/* ✅ قسم الصور - منفصل */}
+              {/* =========================================== */}
+              {imagesFiles.length > 0 && (
                 <div className="bg-gray-50 p-4 rounded-xl md:col-span-2">
-                  <h3 className="text-lg font-semibold text-amber-600 mb-3">صور المشروع</h3>
+                  <h3 className="text-lg font-semibold text-amber-600 mb-3 flex items-center gap-2">
+                    <FaImage className="text-amber-500" /> صور المشروع
+                    <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full">
+                      {imagesFiles.length}
+                    </span>
+                  </h3>
                   <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
-                {selectedProperty.project.imagesURLs.map((img, idx) => (
-        <div key={idx} className="relative group">
-          <a
-            href={img.fileURL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block relative"
-          >
-            <img
-              src={img.fileURL}
-              alt={`صورة ${idx + 1}`}
-              className="w-full h-24 object-cover rounded-lg border hover:scale-105 transition"
-            />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6M7 10h6"
-                />
-              </svg>
-            </div>
-          </a>
-        </div>
-      ))}
+                    {imagesFiles.map((img, idx) => (
+                      <div key={idx} className="relative group">
+                        <a
+                          href={img.fileURL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block relative"
+                        >
+                          <img
+                            src={img.fileURL}
+                            alt={`صورة ${idx + 1}`}
+                            className="w-full h-24 object-cover rounded-lg border hover:scale-105 transition"
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
+                            <FaEye className="h-6 w-6 text-white" />
+                          </div>
+                        </a>
+                      </div>
+                    ))}
                   </div>
+                </div>
+              )}
+
+              {/* =========================================== */}
+              {/* ✅ قسم الفيديوهات - منفصل */}
+              {/* =========================================== */}
+              {videosFiles.length > 0 && (
+                <div className="bg-gray-50 p-4 rounded-xl md:col-span-2">
+                  <h3 className="text-lg font-semibold text-amber-600 mb-3 flex items-center gap-2">
+                    <FaVideo className="text-amber-500" /> فيديوهات المشروع
+                    <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full">
+                      {videosFiles.length}
+                    </span>
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {videosFiles.map((video, idx) => (
+                      <div key={idx} className="relative group">
+                        <video
+                          src={video.fileURL}
+                          controls
+                          className="w-full h-48 object-cover rounded-lg border bg-black"
+                        />
+                        <a
+                          href={video.fileURL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="absolute top-2 right-2 bg-amber-500 hover:bg-amber-600 text-white p-1.5 rounded-md shadow-md transition"
+                          title="فتح في نافذة جديدة"
+                        >
+                          <FaEye size={14} />
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* =========================================== */}
+              {/* ✅ قسم المستندات والملفات - منفصل */}
+              {/* =========================================== */}
+              {docsFiles.length > 0 && (
+                <div className="bg-gray-50 p-4 rounded-xl md:col-span-2">
+                  <h3 className="text-lg font-semibold text-amber-600 mb-3 flex items-center gap-2">
+                    <FaFile className="text-amber-500" /> مستندات وملفات المشروع
+                    <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full">
+                      {docsFiles.length}
+                    </span>
+                  </h3>
+                  <div className="space-y-2">
+                    {docsFiles.map((doc, idx) => {
+                      const fileName = decodeURIComponent(
+                        doc.fileURL.split('/').pop().split('?')[0]
+                      );
+                      return (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            {getDocIcon(doc.fileURL)}
+                            <span
+                              className="text-sm text-slate-700 truncate"
+                              title={fileName}
+                            >
+                              {fileName}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <a
+                              href={doc.fileURL}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:text-blue-800 p-1.5 rounded-md hover:bg-blue-50 transition"
+                              title="عرض"
+                            >
+                              <FaEye size={16} />
+                            </a>
+                            <a
+                              href={doc.fileURL}
+                              download
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-green-600 hover:text-green-800 p-1.5 rounded-md hover:bg-green-50 transition"
+                              title="تحميل"
+                            >
+                              <FaDownload size={16} />
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* في حال لم يوجد أي مرفق */}
+              {allAttachments.length === 0 && (
+                <div className="bg-gray-50 p-4 rounded-xl md:col-span-2 text-center text-gray-500 text-sm">
+                  لا توجد مرفقات لهذا الطلب
                 </div>
               )}
             </div>
