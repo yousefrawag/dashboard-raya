@@ -193,7 +193,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       icon: FaTasks,
       children: [
         { label: 'العملاء', path: '/import-clinets', icon: FaUser, permission: 'canViewPrivetProjects' },
-        { label: 'طلبات الاستيراد والتصدير', path: '/ImportRequests', icon: FaArchive, permission: 'canViewAdministration' },
+        { label: 'عروض الاستيراد والتصدير', path: '/ImportRequests', icon: FaArchive, permission: 'canViewAdministration' },
+        { label: 'الطلبات', path: '/ImportOrdear', icon: FaArchive, permission: 'canViewAdministration' },
 
       ],
     },

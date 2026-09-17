@@ -13,7 +13,10 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
     BrokerReports ,
     DropCustomers,
   ReportMatchClient ,
-  GetReportMatchByid
+  GetReportMatchByid ,
+  GetClients ,
+  AddImportClient ,
+  GetClientOverview
   } from "../pages";
     import store from "../store/index"
  import Checkuserautherzationview from "../middleware/Checkuserautherzationview";   
@@ -36,5 +39,8 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
           { path: "/drop-customers", element: <DropCustomers /> } ,
            { path: "/reportMatch", element: <ReportMatchClient /> } ,
            { path: "/reportMatch/:id", element: <GetReportMatchByid /> } ,
+           { path: "/import-clinets", element: <GetClients /> }  ,
+             { path: "/import-clinets/add", element: <AddImportClient /> }  ,
+               { path: "/import-clinets/:id", element: <GetClientOverview /> }  ,
 
       ];

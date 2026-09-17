@@ -668,52 +668,7 @@ if (name === 'project') {
  }
   </select>
 </div>
-              // <div className="mb-6 flex flex-col gap-2">
-              //   <label
-              //     htmlFor="firstPayment"
-              //     className="w-full text-lg font-medium text-black dark:text-white"
-              //   >
-              //     الدفعه الأولى *
-              //   </label>
-              //   <select
-              //     name="firstPayment"
-              //     id="firstPayment"
-              //     onChange={handelInputschage}
-              //     value={formsData.firstPayment}
-              //     className="focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-main p-3 w-full outline-0 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500"
-              //   >
-              //     <option value="">اختر الدفعة</option>
-              //     <option value="100000">100,000</option>
-              //     <option value="150000">150,000</option>
-              //     <option value="200000">200,000</option>
-              //     <option value="250000">250,000</option>
-              //     <option value="300000">300,000</option>
-              //     <option value="350000">350,000</option>
-              //     <option value="400000">400,000</option>
-              //     <option value="450000">450,000</option>
-              //     <option value="500000">500,000</option>
-              //     <option value="550000">550,000</option>
-              //     <option value="600000">600,000</option>
-              //     <option value="650000">650,000</option>
-              //     <option value="700000">700,000</option>
-              //     <option value="750000">750,000</option>
-              //     <option value="800000">800,000</option>
-              //     <option value="850000">850,000</option>
-              //     <option value="900000">900,000</option>
-              //     <option value="950000">950,000</option>
-              //     <option value="1000000">1,000,000</option>
-              //     <option value="1050000">1,050,000</option>
-              //     <option value="1100000">1,100,000</option>
-              //     <option value="1150000">1,150,000</option>
-              //     <option value="1200000">1,200,000</option>
-              //     <option value="1250000">1,250,000</option>
-              //     <option value="1300000">1,300,000</option>
-              //     <option value="1350000">1,350,000</option>
-              //     <option value="1400000">1,400,000</option>
-              //     <option value="1450000">1,450,000</option>
-              //     <option value="1500000">1,500,000</option>
-              //   </select>
-              // </div>
+        
             ) : null}
 
             {formsData.cashOption === 'تقسيط' ? (

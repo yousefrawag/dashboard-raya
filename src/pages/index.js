@@ -97,6 +97,12 @@ import SharedProperty from './Dashboard/sharedproperty/SharedProperty';
 import AddSharedProperty from "./Dashboard/sharedproperty/AddSharedProperty"
 import UpdateSharedProperty from './Dashboard/sharedproperty/UpdateAskProperty';
 import ImportRequests from './Dashboard/importRequests/ImportRequests';
+import GetClients from './Dashboard/importClinets/GetClients';
+import AddImportClient from './Dashboard/importClinets/AddImportClient';
+import GetClientOverview from './Dashboard/importClinets/GetClientOverview';
+import AddImportExportOrdears from './Dashboard/importClinets/AddImportExportOrdears';
+import ImportOrdaers from './Dashboard/importClinets/ImportOrdaers';
+import GetOrdearOverview from './Dashboard/importClinets/GetOrdearOverview';
 export {
   UserTaskes,
   Getprojects,
@@ -193,5 +199,11 @@ export {
   SharedProperty ,
   AddSharedProperty ,
   UpdateSharedProperty ,
-  ImportRequests
+  ImportRequests ,
+  GetClients ,
+  AddImportClient ,
+  GetClientOverview ,
+  AddImportExportOrdears ,
+  ImportOrdaers ,
+  GetOrdearOverview
 };
