@@ -150,6 +150,9 @@ const ImportRequests = () => {
         return 'bg-blue-100 text-blue-800 border-blue-300';
       case 'processing':
         return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      case"contacting":
+   return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        
       case 'completed':
         return 'bg-green-100 text-green-800 border-green-300';
       case 'canceled':
@@ -169,6 +172,8 @@ const ImportRequests = () => {
         return 'مكتمل';
       case 'canceled':
         return 'ملغي';
+        case "contacting":
+          return "تم التواصل"
       default:
         return 'جديد';
     }
@@ -235,6 +240,7 @@ const ImportRequests = () => {
             dir="rtl"
           >
             <option value="pending">جديد</option>
+             <option value="contacting">تم التواصل</option>
             <option value="processing">قيد المعالجة</option>
             <option value="completed">مكتمل</option>
             <option value="canceled">ملغي</option>

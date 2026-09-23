@@ -13,6 +13,7 @@ import useQuerygetiteams from '../../../services/Querygetiteams';
 import useQueryupdate from '../../../services/useQueryupdate';
 import useGetUserAuthentications from '../../../middleware/GetuserAuthencations';
 import PopupCheckdelete from '../../../components/common/popupmdules/PopupCheckdelete';
+import useQueryDelete from '../../../services/useQueryDelete';
 
 /* =========================================================
    Options
@@ -103,6 +104,7 @@ const ImportOrdaers = () => {
   /* ==================== Data ==================== */
   const { isLoading, data } = useQuerygetiteams('ordears', 'ordears');
   const { updateiteam } = useQueryupdate('ordears', 'ordears');
+  const {deleteIteam} = useQueryDelete("ordears" , "ordears")
   const { CanAdd, CanEdit, CanDelte, isAdmin } =
     useGetUserAuthentications('Clients');
 
@@ -189,7 +191,13 @@ const ImportOrdaers = () => {
     }
     return text;
   };
-
+const handelDelateItem = (id) => {
+  try {
+    deleteIteam(id)
+  } catch (error) {
+    toast.error("هناك خطاء فى الحذف- تواصل مع الدعم الفنى")
+  }
+}
   /* ==================== Columns ==================== */
   const columns = [
     /* العميل */
@@ -363,7 +371,7 @@ const ImportOrdaers = () => {
           {(isAdmin || CanDelte) && (
             <button
               type="button"
-              onClick={() => setDeleteId(row._id)}
+              onClick={() => handelDelateItem(row._id)}
               className="text-red-500 hover:text-red-700 transition-colors"
               title="حذف"
             >
