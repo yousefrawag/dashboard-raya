@@ -103,6 +103,7 @@ import GetClientOverview from './Dashboard/importClinets/GetClientOverview';
 import AddImportExportOrdears from './Dashboard/importClinets/AddImportExportOrdears';
 import ImportOrdaers from './Dashboard/importClinets/ImportOrdaers';
 import GetOrdearOverview from './Dashboard/importClinets/GetOrdearOverview';
+import UpdateOrdear from './Dashboard/importClinets/UpdateOrdear';
 export {
   UserTaskes,
   Getprojects,
@@ -205,5 +206,6 @@ export {
   GetClientOverview ,
   AddImportExportOrdears ,
   ImportOrdaers ,
-  GetOrdearOverview
+  GetOrdearOverview ,
+  UpdateOrdear
 };

@@ -351,7 +351,7 @@ const ImportOrdaers = () => {
           {/* تعديل */}
           {(isAdmin || CanEdit) && (
             <Link
-              to={`/import-clients/orders/edit/${row._id}`}
+              to={`/ImportOrdear/edit/${row._id}`}
               className="text-blue-500 hover:text-blue-700 transition-colors"
               title="تعديل"
             >
