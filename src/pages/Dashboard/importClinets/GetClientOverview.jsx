@@ -21,7 +21,7 @@ import useQuerygetSpacficIteam from '../../../services/QuerygetSpacficIteam';
 import StatusFilterTabs from '../../../components/common/StatusFilterTabs';
 import ImportFoloowUpdata from './importFoloowUpdata';
 import Loader from '../../../components/common/Loader';
-
+import GetClientOrdears from './GetClientOrdears';
 /* =========================================================
    دالة format آمنة - بتمنع RangeError: Invalid time value
    ========================================================= */
@@ -225,7 +225,7 @@ const GetClientOverview = () => {
       ============================================ */}
       {activeTab === 'ordears' && (
         <div className="p-8 text-center text-gray-500 border border-dashed border-gray-300 rounded-md m-5">
-          قريباً — عرض طلبات العميل
+         <GetClientOrdears  clientId={id}/>
         </div>
       )}
     </div>

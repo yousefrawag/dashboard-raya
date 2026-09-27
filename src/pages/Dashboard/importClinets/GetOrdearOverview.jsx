@@ -137,7 +137,7 @@ const GetOrdearOverview = () => {
       {/* ==================== Actions ==================== */}
       <div className="flex gap-4 m-5 flex-wrap">
         <Link
-          to={`/import-clients/orders/edit/${id}`}
+          to={`/ImportOrdear/edit/${id}`}
           className="py-2 px-6 bg-main text-white rounded-md flex items-center gap-2 hover:bg-blue-700 transition-colors"
         >
           <FiEdit /> تعديل الطلب

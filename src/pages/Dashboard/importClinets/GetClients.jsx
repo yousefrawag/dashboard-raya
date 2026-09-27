@@ -13,6 +13,8 @@ import useQuerygetiteams from "../../../services/Querygetiteams"
 import Loader from '../../../components/common/Loader';
 import { MdOutlineAddIcCall } from "react-icons/md";
 import { FiFilter, FiX } from "react-icons/fi";
+import {  FiEye, FiEdit2 } from 'react-icons/fi';
+import { MdOutlineDelete } from 'react-icons/md';
 import { useState , useMemo } from 'react';
 import FiltertionHook from '../../../hooks/FiltertionHook';
 import useQueryupdate from '../../../services/useQueryupdate';
@@ -36,6 +38,7 @@ const GetClients = () => {
   const { isError , isLoading , data} = useQuerygetiteams("importClients" , "importClients" , paramsapi)
   
   const {updateiteam} = useQueryupdate("importClients" , "importClients")
+  const {deleteIteam} = useQueryDelete("importClients" , "importClients")
   const {CanAdd , CanDelte , CanEdit , CanView , isAdmin} = useGetUserAuthentications("Clients")
 const [isSectionOpen , setIssectionOpen] = useState(false)
    
@@ -70,13 +73,14 @@ const [isSectionOpen , setIssectionOpen] = useState(false)
         , {value:"notes", name:"ملاحظات"} 
      
       ];
-      const arabicTimeAgo = (date) => {
-        const timeAgo = formatDistanceToNow(new Date(date), { addSuffix: true });
+
+    //   const arabicTimeAgo = (date) => {
+    //     const timeAgo = formatDistanceToNow(new Date(date), { addSuffix: true });
     
-        // Replace English words with Arabic equivalents
-        return timeAgo
+    //     // Replace English words with Arabic equivalents
+    //     return timeAgo
            
-    };
+    // };
 const filteredData = useMemo(() => {
   if (!data?.data?.data) return [];
 
@@ -114,22 +118,14 @@ const filteredData = useMemo(() => {
     } 
     return text
   }
-   const handleModuleTypeChange = (id , status) => {
-try {
-  const data = {
-   accses: status
+
+const handelDelateItem = (id) => {
+  try {
+    deleteIteam(id)
+  } catch (error) {
+    toast.error("هناك خطاء فى الحذف- تواصل مع الدعم الفنى")
   }
-     updateiteam( { id , data }, {
-        onSuccess: () => {
-    
-          toast.success("تم تحديث صلاحيه مشاهده بيانات العميل");
-        },
-      });
-} catch (error) {
-  
 }
- }
- console.log("data" , data);
  
 
     const columns = [
@@ -298,50 +294,7 @@ try {
       
   
 
-// {
-//   name: "متطلبات العميل",
-//   width: "160px",
-//   cell: (row) => {
-//     const firstRequirement = row?.clientRequirements?.[0];
 
-//     const text = firstRequirement
-//       ? `${firstRequirement.requireType || ""} - ${
-//           firstRequirement.rquireLocation || ""
-//         }`
-//       : "-";
-
-//     return (
-//       <div
-//         title={text}
-//         style={{
-//           maxWidth: "120px",
-//           whiteSpace: "nowrap",
-//           overflow: "hidden",
-//           textOverflow: "ellipsis",
-//           fontSize: "12px",
-//         }}
-//       >
-//         {text}
-//       </div>
-//     );
-//   },
-// }
- , 
-//          {
-//         name: "عدد متطلبات ",
-//           sortable: true ,
-//             selector: (row) => row?.clientRequirements?.length,
-//           width:"150px" ,
-//         cell: (row) => (
-//           <span
-//   className='flex items-center justify-center w-6 h-6 bg-green-500 text-white rounded-full'
-          
-//           >
-//             {" "}
-//            {row.clientRequirements?.length || 0}
-//           </span>
-//         )
-//       },
        {
         name: "عدد المتابعات",
           sortable: true ,
@@ -449,41 +402,7 @@ try {
   },
 }
 ,
-//   {
-//   name: " أخر حالة",
-//   selector: (row) => row.clientendRequr,
-//   width:"120px" ,
-//   cell: (row) => {
-//     const lastFollow = row.SectionFollow?.length
-//       ? [...row.SectionFollow].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]
-//       : null;
 
-//     if (!lastFollow) return <span>لا يوجد</span>;
-
-
-
- 
-
-//     return (
-//       <div
-//     className='flex flex-col gap-3'
-//     title={lastFollow.details}
-//       >
-//         <span className='flex flex-col ' >
-
-   
-//         </span>
-//         {
-//          lastFollow?.CustomerDealsatuts
-//         }
-//       {
-      
-//       }
-//       </div>
-//     );
-//   },
-// }
-,
       {
         name: "ملاحظات",
         selector: (row) => row?.notes,
@@ -504,7 +423,44 @@ try {
            width:"150px",
           cell: (row) => <span style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace:"wrap"}}>{format(new Date(row.createdAt), "dd MMMM, yyyy")}</span>
         },
+        {
+            name: 'إجراءات',
+            cell: (row) => (
+              <div className="flex items-center gap-3">
+                {/* عرض */}
+                <Link
+                  to={`/import-clinets/${row._id}`}
+                  className="text-main hover:text-blue-700 transition-colors"
+                  title="عرض التفاصيل"
+                >
+                  <FiEye size={18} />
+                </Link>
       
+                {/* تعديل */}
+                {(isAdmin || CanEdit) && (
+                  <Link
+                    to={`/edit-import-client/${row._id}`}
+                    className="text-blue-500 hover:text-blue-700 transition-colors"
+                    title="تعديل"
+                  >
+                    <FiEdit2 size={17} />
+                  </Link>
+                )}
+      
+                {/* حذف */}
+                {(isAdmin || CanDelte) && (
+                  <button
+                    type="button"
+                    onClick={() => handelDelateItem(row._id)}
+                    className="text-red-500 hover:text-red-700 transition-colors"
+                    title="حذف"
+                  >
+                    <MdOutlineDelete size={18} />
+                  </button>
+                )}
+              </div>
+            ),
+          },
        
       ];
 
