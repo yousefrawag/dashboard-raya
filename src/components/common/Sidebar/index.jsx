@@ -195,6 +195,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         { label: 'العملاء', path: '/import-clinets', icon: FaUser, permission: 'canViewPrivetProjects' },
         { label: 'عروض الاستيراد والتصدير', path: '/ImportRequests', icon: FaArchive, permission: 'canViewAdministration' },
         { label: 'الطلبات', path: '/ImportOrdear', icon: FaArchive, permission: 'canViewAdministration' },
+        { label: 'الموردين', path: '/supliers', icon: FaUser, permission: 'canViewAdministration' },
+
 
       ],
     },

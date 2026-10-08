@@ -85,6 +85,8 @@ const EMPTY_ORDER = {
   currency: '',
   requiredDeliveryDate: '',
   supplierRequired: '',
+  supplierCountry: '', // ✅ جديد: دولة المورد
+  suplier: '',         // ✅ جديد: سيحمل الـ ID الخاص بالمورد
   customsRequired: '',
   status: 'new',
   notes: '',
@@ -119,10 +121,14 @@ const UpdateOrdear = () => {
 
   const currentOrder = orderData?.data;
 
-  /* ============ جلب كل العملاء ============ */
+  /* ============ جلب كل العملاء والموردين ============ */
   const { data: clientsData, isLoading: clientsLoading } = useQuerygetiteams(
     'importClients',
     'importClients'
+  );
+  const { data: SupliersData, isLoading: SupliersDataLoading } = useQuerygetiteams(
+    'supliers',
+    'supliers'
   );
 
   /* ============ endpoint تعديل الطلب ============ */
@@ -137,9 +143,27 @@ const UpdateOrdear = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
+  /* ============ استخراج بيانات الموردين وفلترتها ============ */
+  const allSuppliers = SupliersData?.data?.data || [];
+
+  // استخراج قائمة فريدة بالدول المتاحة لدى الموردين
+  const supplierCountries = [...new Set(allSuppliers.map(s => s.country || s.producingCountry).filter(Boolean))];
+
+  // فلترة الموردين حسب الدولة المختارة
+  const filteredSuppliers = formData.supplierCountry
+    ? allSuppliers.filter(s => (s.country === formData.supplierCountry || s.producingCountry === formData.supplierCountry))
+    : [];
+
+  /* ============ تعبئة الفورم عند وصول بيانات الأوردر ============ */
   /* ============ تعبئة الفورم عند وصول بيانات الأوردر ============ */
   useEffect(() => {
-    if (currentOrder && !isDataLoaded) {
+    // ✅ الشرط الجديد: ننتظر حتى يتم تحميل الطلب والعملاء والموردين معاً
+    if (
+      currentOrder && 
+      !isDataLoaded && 
+      !clientsLoading && 
+      !SupliersDataLoading
+    ) {
       const order = currentOrder;
 
       // استخراج clientId سواء كان object أو string
@@ -155,6 +179,16 @@ const UpdateOrdear = () => {
           order.clientId.phoneNumber || ''
         }`;
       }
+
+      // استخراج suplierId سواء كان object أو string
+      const suplierId =
+        typeof order.suplier === 'object'
+          ? order.suplier?._id || ''
+          : order.suplier || '';
+
+      // 🛑 خطوة للتشخيص: اطبع القيم في الـ Console لتراها
+      console.log("قيمة دولة المورد المحفوظة:", order.supplierCountry);
+      console.log("قيمة معرف المورد المحفوظ:", suplierId);
 
       setFormData({
         clientId,
@@ -174,6 +208,9 @@ const UpdateOrdear = () => {
         currency: order.currency || '',
         requiredDeliveryDate: formatDateForInput(order.requiredDeliveryDate),
         supplierRequired: order.supplierRequired || '',
+        // ✅ استخدام trim() لتجنب مشاكل المسافات الزائدة
+        supplierCountry: order.supplierCountry?.trim() || '', 
+        suplier: suplierId,                          
         customsRequired: order.customsRequired || '',
         status: order.status || 'new',
         notes: order.notes || '',
@@ -182,7 +219,7 @@ const UpdateOrdear = () => {
       setClientSearch(clientDisplay);
       setIsDataLoaded(true);
     }
-  }, [currentOrder, isDataLoaded]);
+  }, [currentOrder, isDataLoaded, clientsLoading, SupliersDataLoading]); // ✅ إضافة حالات التحميل للاعتماديات
 
   /* ============ فلترة العملاء حسب البحث ============ */
   useEffect(() => {
@@ -203,6 +240,16 @@ const UpdateOrdear = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // ✅ دالة خاصة لتغيير دولة المورد لتصفير المورد المختار تلقائياً
+  const handleCountryChange = (e) => {
+    const value = e.target.value;
+    setFormData((prev) => ({ 
+      ...prev, 
+      supplierCountry: value, 
+      suplier: '' // تصفير المورد عند تغيير الدولة
+    }));
   };
 
   /* ============ اختيار عميل ============ */
@@ -231,6 +278,16 @@ const UpdateOrdear = () => {
     }
     if (!formData.quantityUnit) {
       return toast.error('وحدة الكمية مطلوبة');
+    }
+    
+    // ✅ التحقق من حقول المورد إذا تم اختيار "نعم"
+    if (formData.supplierRequired === 'yes') {
+      if (!formData.supplierCountry) {
+        return toast.error('يجب اختيار دولة المورد');
+      }
+      if (!formData.suplier) {
+        return toast.error('يجب اختيار المورد');
+      }
     }
 
     // تنظيف الحقول الفارغة
@@ -632,6 +689,55 @@ const UpdateOrdear = () => {
                 ))}
               </select>
             </div>
+
+            {/* ✅ حقول الموردين تظهر فقط إذا تم اختيار "نعم" */}
+            {formData.supplierRequired === 'yes' && (
+              <>
+                {/* دولة المورد */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-lg font-medium text-black dark:text-white">
+                    دولة المورد *
+                  </label>
+                  <select
+                    name="supplierCountry"
+                    value={formData.supplierCountry}
+                    onChange={handleCountryChange}
+                    className={inputClass}
+                  >
+                    <option value="">اختر الدولة</option>
+                    {supplierCountries.map((country, idx) => (
+                      <option key={idx} value={country}>
+                        {country}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* اختيار المورد */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-lg font-medium text-black dark:text-white">
+                    المورد *
+                  </label>
+                  <select
+                    name="suplier"
+                    value={formData.suplier}
+                    onChange={handleChange}
+                    className={inputClass}
+                    disabled={!formData.supplierCountry} // تعطيل الحقل حتى يتم اختيار الدولة
+                  >
+                    <option value="">اختر المورد</option>
+                    {filteredSuppliers.map((supplier) => (
+                      <option key={supplier._id} value={supplier._id}>
+                        {supplier.companyName || supplier.name || 'مورد بدون اسم'}
+                      </option>
+                    ))}
+                  </select>
+                  {formData.supplierCountry && filteredSuppliers.length === 0 && (
+                    <p className="text-xs text-red-500">لا يوجد موردين متاحين في هذه الدولة</p>
+                  )}
+                </div>
+              </>
+            )}
 
             {/* هل يحتاج تخليص جمركي؟ */}
             <div className="flex flex-col gap-2">

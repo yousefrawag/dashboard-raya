@@ -271,6 +271,25 @@ const handelDelateItem = (id) => {
         </span>
       ),
     },
+    {
+      name: 'هل يحتاج مورد',
+      width:"150px",
+      selector: (row) => row?.supplierRequired,
+      cell: (row) => (
+        <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-700 border border-gray-200">
+          {row?.supplierRequired === "yes" ? "نعم" :"لا"}
+        </span>
+      ),
+    },
+        {
+      name: 'المورد',
+      selector: (row) => row?.suplier,
+      cell: (row) => (
+        <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-700 border border-gray-200">
+          {row?.suplier?.companyName}
+        </span>
+      ),
+    },
 
     /* السعر */
     {

@@ -762,58 +762,169 @@ const ProjectByid = () => {
              
      </div>
      <br />
-     <h2 className='mb-10 mt-5'>مرفقات المشروع</h2>
-     <div className='w-full h-full grid grid-cols-1 gap-2 xl:grid-cols-2'>
-      {
-        Currentitem?.imagesURLs?.map((item) => {
-          return <div key={item?.fileID}  className="relative rounded-lg overflow-hidden group">
-                    
+ <h2 className="mb-10 mt-5">مرفقات المشروع</h2>
+
+{/* =========================
+    IMAGES
+========================= */}
+
+{Currentitem?.imagesURLs?.length > 0 && (
+  <>
+    <h3 className="mb-4 text-lg font-semibold text-gray-700 dark:text-white">
+      صور المشروع
+    </h3>
+
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+
+      {Currentitem.imagesURLs.map((item, index) => (
+
+        <div
+          key={item?.fileID || index}
+          className="relative rounded-lg overflow-hidden group bg-gray-100"
+        >
+
           <img
-          src={item?.fileURL}
-          
-          className="w-full h-40 object-cover"
+            src={item?.fileURL}
+            alt={`Project Image ${index + 1}`}
+            className="w-full h-48 object-cover"
           />
-          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col justify-between p-2 transition">
-          <a
-          href={item?.fileURL}
-              className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-main text-white"
-            target="_blank"
-          >
+
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+
+            <a
+              href={item?.fileURL}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-main text-white"
+              target="_blank"
+              rel="noreferrer"
+            >
               <HiMiniViewfinderCircle />
-          </a>
-          
+            </a>
+
           </div>
-      
-  </div>
-        })
-      }
-          
-            
-         
-     </div>
-     <br />
-     <div className='mt-10 w-full h-full grid grid-cols-1 gap-2 xl:grid-cols-2'>
-      {
-        Currentitem?.docsURLs?.map((item) => {
-          return  <div
-                  key={item?.fileID}        
+
+        </div>
+
+      ))}
+
+    </div>
+  </>
+)}
+
+
+{/* =========================
+    VIDEOS
+========================= */}
+
+{Currentitem?.videosURLs?.length > 0 && (
+  <>
+    <h3 className="mb-4 mt-10 text-lg font-semibold text-gray-700 dark:text-white">
+      فيديوهات المشروع
+    </h3>
+
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
+
+      {Currentitem.videosURLs.map((item, index) => (
+
+        <div
+          key={item?.fileID || index}
+          className="relative rounded-lg overflow-hidden bg-black shadow-md"
+        >
+
+          <video
+            src={item?.fileURL}
+            controls
+            preload="metadata"
+            className="w-full h-64 object-contain bg-black"
+          >
+            المتصفح لا يدعم تشغيل الفيديو.
+          </video>
+
+          <div className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800">
+
+            <span className="text-sm text-gray-600 dark:text-gray-200">
+              فيديو {index + 1}
+            </span>
+
+            <a
+              href={item?.fileURL}
+              target="_blank"
+              rel="noreferrer"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-main text-white"
+            >
+              <HiMiniViewfinderCircle />
+            </a>
+
+          </div>
+
+        </div>
+
+      ))}
+
+    </div>
+  </>
+)}
+
+
+{/* =========================
+    DOCUMENTS
+========================= */}
+
+{Currentitem?.docsURLs?.length > 0 && (
+  <>
+    <h3 className="mb-4 mt-10 text-lg font-semibold text-gray-700 dark:text-white">
+      مستندات المشروع
+    </h3>
+
+    <div className="w-full grid grid-cols-1 gap-3">
+
+      {Currentitem.docsURLs.map((item, index) => (
+
+        <div
+          key={item?.fileID || index}
           className="relative flex items-center justify-between p-4 h-16 bg-red-100 rounded-lg group"
         >
- 
-          <FaFilePdf className="text-4xl text-red-500" />
+
+          <div className="flex items-center gap-3">
+
+            <FaFilePdf className="text-4xl text-red-500" />
+
+            <span className="text-gray-700">
+              مستند {index + 1}
+            </span>
+
+          </div>
+
           <a
-           href={item?.fileURL}
-            className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-main text-white opacity-0 group-hover:opacity-100 transition"
-              target="_blank"
+            href={item?.fileURL}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-main text-white"
+            target="_blank"
+            rel="noreferrer"
           >
             <HiMiniViewfinderCircle />
           </a>
-</div>
-        })
-      }
-             
-      
-     </div>
+
+        </div>
+
+      ))}
+
+    </div>
+  </>
+)}
+
+
+{/* =========================
+    NO ATTACHMENTS
+========================= */}
+
+{(!Currentitem?.imagesURLs?.length &&
+  !Currentitem?.videosURLs?.length &&
+  !Currentitem?.docsURLs?.length) && (
+
+  <div className="p-6 text-center text-gray-500">
+    لا توجد مرفقات لهذا المشروع
+  </div>
+
+)}
 </>
 }
 

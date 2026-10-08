@@ -105,6 +105,8 @@ import ImportOrdaers from './Dashboard/importClinets/ImportOrdaers';
 import GetOrdearOverview from './Dashboard/importClinets/GetOrdearOverview';
 import UpdateOrdear from './Dashboard/importClinets/UpdateOrdear';
 import UpdateImportClient from './Dashboard/importClinets/UpdateImportClient';
+import AddSuplier from './Dashboard/Supliers/AddSuplier';
+import GetSupliers from './Dashboard/Supliers/GetSupliers';
 export {
   UserTaskes,
   Getprojects,
@@ -209,5 +211,7 @@ export {
   ImportOrdaers ,
   GetOrdearOverview ,
   UpdateOrdear ,
-  UpdateImportClient
+  UpdateImportClient ,
+  AddSuplier ,
+  GetSupliers
 };

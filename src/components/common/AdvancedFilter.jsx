@@ -1313,12 +1313,12 @@ const chasOptionsFields = ["كاش" , "تقسيط" , "معاملة بنكية"]
                   {projects?.data?.allproject
                     ?.filter((item) =>
                       item.projectName
-                        .toLowerCase()
-                        .includes(projectSearch.toLowerCase()),
+                        ?.toLowerCase()
+                        .includes(projectSearch?.toLowerCase()),
                     )
                     ?.map((item) => {
                       const isSelected = formData.project?.includes(
-                        item.projectName,
+                        item?.projectName,
                       );
                       return (
                         <div
