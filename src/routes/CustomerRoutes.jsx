@@ -17,7 +17,8 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
   GetClients ,
   AddImportClient ,
   GetClientOverview ,
-  UpdateImportClient
+  UpdateImportClient ,
+  CustomerRealStaeRequiremnts
   } from "../pages";
     import store from "../store/index"
  import Checkuserautherzationview from "../middleware/Checkuserautherzationview";   
@@ -43,6 +44,7 @@ import {GetCustomers , AddCustomer ,  GetCustomerByid ,
            { path: "/import-clinets", element: <GetClients /> }  ,
              { path: "/import-clinets/add", element: <AddImportClient /> }  ,
                { path: "/import-clinets/:id", element: <GetClientOverview /> }  ,
-                      { path: "/edit-import-client/:id", element: <UpdateImportClient /> }  ,
+              { path: "/edit-import-client/:id", element: <UpdateImportClient /> }  ,
+                { path: "/cutomer/Requirements", element: <CustomerRealStaeRequiremnts /> }  ,
 
       ];

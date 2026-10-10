@@ -125,7 +125,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       icon: FaUsers,
       children: [
         { label: 'العملاء', path: '/cutomers', icon: FaUser, permission: 'canViewClients' },
-        { label: 'تنبيهات العملاء', path: '/User-Reminder', icon: FaBell },
+        { label: 'طلبات العملاء', path: '/cutomer/Requirements', icon: FaBell , permission:"canViewAdministration"},
         { label: 'بحث متقدم', path: '/Recommendations', icon: FaSearch, permission: 'canViewClients' },
         { label: 'تقارير العملاء', path: '/cutomer-reports', icon: FaRegFileAlt, permission: 'canViewReports' },
         { label: 'عملاء الحملات', path: '/customers-leads', icon: FaBullhorn, permission: 'canViewClients' },

@@ -107,6 +107,7 @@ import UpdateOrdear from './Dashboard/importClinets/UpdateOrdear';
 import UpdateImportClient from './Dashboard/importClinets/UpdateImportClient';
 import AddSuplier from './Dashboard/Supliers/AddSuplier';
 import GetSupliers from './Dashboard/Supliers/GetSupliers';
+import CustomerRealStaeRequiremnts from "./Dashboard/Customer/CustomerRealStaeRequiremnts"
 export {
   UserTaskes,
   Getprojects,
@@ -213,5 +214,6 @@ export {
   UpdateOrdear ,
   UpdateImportClient ,
   AddSuplier ,
-  GetSupliers
+  GetSupliers ,
+  CustomerRealStaeRequiremnts
 };
